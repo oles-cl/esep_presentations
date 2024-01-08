@@ -1,957 +1,445 @@
 ---
-title: "The untold story of palmerpenguins 🐧"
-author:
-  - Dr. Kristen Gorman, University of Alaska Fairbanks
-  - Dr. Allison Horst, UC Santa Barbara
-  - Dr. Alison Hill, Voltron Data
+title: "Estudio de Percepciones de Seguridad y Policias en Chile 2023-2025"
+subtitle: "Reporte de resultados Ola 0"
+author: "Observatorio de Violencia y Legitimidad Social"
+date: 01-03-2024
 format: 
   revealjs:
+    logo: img/oles_logo.png
     multiplex: true
-    footer: "[apreshill.github.io/palmerpenguins-useR-2022/](https://apreshill.github.io/palmerpenguins-useR-2022/)"
     theme: ["pp.scss"]
+    footer: "[Visita nuestro sitio web www.oles.cl](https://oles2.netlify.app/)"
     slide-number: c/t
-    incremental: true
-    title-slide-attributes:
-      data-background-image: img/penguin-highway.jpg
-      data-background-size: cover  
 editor: visual
 ---
 
 ```{r setup}
 #| include: false
 
-library(palmerpenguins)
+pacman::p_load(tidyverse,
+               ggplot2,
+               knitr,
+               kableExtra,
+               haven,
+               labelled,
+               sjlabelled,
+               ggrepel,
+               mdthemes,
+               readxl
+               )
 
-# for interactive plots
-library(ggiraph)
-library(patchwork)
-library(shadowtext)
+level_likert_1 <- c(
+  "Muy en desacuerdo",
+  "En desacuerdo",
+  "Ni de acuerdo ni en desacuerdo",
+  "De acuerdo",         
+  "Muy de acuerdo")
 
-# for color
-library(paletteer)
+palette_likert_5 <- c(
+  "#ffbaba",
+  "#ff7b7b",
+  "#ff5252",
+  "#ff0000",
+  "#a70000"
+)
 
-# for cran plots
-library(cranlogs)
-library(tidyverse)
-library(scales)
+palette_likert_4 <-c(
+  "#ffbaba",
+  "#ff7b7b",
+  "#ff0000",
+  "#a70000"
+)
 
-# for fonts
-library(showtext)
-font_add_google("Jost", "Jost")
-showtext_auto()
-theme_set(theme_minimal(base_family = "Jost"))
+palette_oles_4 <-c(
+  "#a70000",
+  "#ff7b7b",
+  "#6EB1D6",
+  "#1B5886"
+)
 
-library(recipes)
-library(broom)
-# for reporting cran downloads
-start_date <- "2020-07-23"
-end_date <- "2022-06-15"
+palette_oles_3 <- c(
+  "#a70000",
+  "#1B5886",
+  "#5D3587"
+)
+
+palette_oles_2 <- c(
+  "#a70000",
+  "#1B5886"
+)
+
+data_ola0 <- haven::read_sav("data/data_ola_0.sav")
+
+demographics_ola_0 <- read_xlsx("data/demographics_oles_0.xlsx") |>
+  select(SbjNum, region_, sexo=Sexo, edad="Año de nacimiento") |>
+  mutate(edad=to_numeric(edad),
+    edad=2023-edad)
+
+data_ola0_demo<-merge(data_ola0,demographics_ola_0)
 ```
+
+## Qué es OLES?
+
+::: columns
+::: column
+OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile con el objetivo de contribuir a la comprensión de los mecanismos de legitimidad policial y justificación de la violencia mediante el desarrollo de investigaciones bajo criterios de Ciencia Abierta y en diálogo con actores sociales.
+
+:::
+
+::: column
+
+OLES cuenta de financiamiento y alianzas con las siguientes instituciones
+
+::: {layout-ncol=2}
+![](img/oles_coes.png)
+![](img/oles_uahc.png)
+![](img/oles_udp.png)
+:::
+
+:::
+:::
+
+## Hitos Enero-Febrero
+
+Acá añadir un punteo de hitos relevantes del trabajo de Ismael.
+
+
+## Ficha técnica del Estudio
 
 ```{r}
-#| eval: false
-#| include: false
-# do this just once
-dl <- cranlogs::cran_downloads("palmerpenguins",
-                               from = start_date,
-                               to = end_date) %>% 
-  as_tibble() 
-saveRDS(dl, file = "data/cran-downloads.RDS") 
+readxl::read_xlsx(path = file.path('data/tablas_manual.xlsx'), 
+                         sheet = 'ficha') |>
+  
+  kbl(booktabs = TRUE) |>
+    kable_styling(latex_options = c("repeat_header","hold_position"),
+                bootstrap_options = "bordered",full_width = T) |>
+  kable_classic_2()
 ```
 
-## What is palmerpenguins?
 
-::: columns
-::: column
--   An R package featuring the `penguins` dataset
+# Percepción de seguridad {.r-fit-text background-image="img/oles_delincuencia.jpg"}
 
--   `r nrow(penguins)` penguins
+---
 
--   `r n_distinct(penguins$species)` penguin species (Adélie, chinstrap, and gentoo)
+#### Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país…
 
--   `Inf` fun
-:::
-
-::: column
-```{r}
-#| fig.alt: "Scatterplot showing linear relationships between penguin body mass and flipper length, both across and within species (Adelie, Chinstrap and Gentoo)."
-# make the base plot
-penguin_linear_base <-
-  penguins %>%
-  mutate(species = as.character(species)) %>%
-  mutate(species = case_when(
-    species == "Adelie" ~ "Adélie",
-    TRUE ~ species
-  )) %>%
-  ggplot(aes(x = flipper_length_mm, y = body_mass_g)) +
-  scale_color_paletteer_d("colorblindr::OkabeIto") +
-  theme(legend.position = c(0.2,0.85)) +
-  labs(x = "Flipper length (mm)",
-       y = "Body mass (g)") +
-  theme(plot.title.position = "plot",
-        #panel.grid = element_blank(),
-        panel.border = element_rect(fill = NA, color = "gray70"),
-        legend.title = element_blank())
-
-# add interactivity
-penguins_tooltip <- c(str_c("Flipper length (mm) = ", penguins$flipper_length_mm,
-                           "\n Body mass (g) = ", penguins$body_mass_g,
-                           "\n Species = ", penguins$species))
-
-penguin_linear_int <-
-  penguin_linear_base +
-  geom_point_interactive(aes(color = species,
-                             shape = species,
-                             tooltip = penguins_tooltip,
-                             data_id = species),
-                         size = 2,
-                         alpha = .8
-                         ) +
-  geom_smooth_interactive(aes(group = species,
-                              color = species,
-                              data_id= species),
-                          method = lm,
-                          se = FALSE
-                          )
-
-girafe(ggobj = penguin_linear_int,
-       options = list(
-         opts_hover_inv(css = "opacity:0.2;"),
-         opts_hover(css = "opacity:1; filter: brightness(90%);")
-       ))
-```
-:::
-:::
-
-::: notes
-Kristen presents
-:::
-
-## palmerpenguins popularity
+-   Casi el 90% de la población en Chile declara que la delincuencia ha aumentado en los últimos 12 meses.
+-   Solo un 1.7% de la población considera que la delincuencia disminuyo.
+-   Una amplia mayoría del país percibe que la delincuencia va en aumento durante el año.
 
 ```{r}
-dl <- readRDS("data/cran-downloads.RDS")
+#| label: fig-b1
+#| fig-cap: "Aumento de delincuencia"
+
+data_ola0 |>
+  mutate(b1=to_label(b1)) |>
+  count(b1) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(b1!="No sabe (No leer)") |>
+  filter(b1!="No responde (No leer)") |>
+
+  ggplot(aes(x=ola,y=prop,color=b1))+
+  
+  geom_point()+
+  geom_line()+
+  geom_text_repel(aes(label = paste0(prop,"%")))+
+  mdthemes::md_theme_classic(base_size = 12) +
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(6, 6, 6, 6),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+    )+
+  labs(
+    caption = "El porcentaje se calcula sumando al total los casos perdidos
+    Proporción de casos perdidos = 0.36%",
+    color="Respuesta"
+  ) +
+  scale_color_manual(values = palette_oles_3)
 ```
 
-::: columns
-::: {.column width="80%"}
-```{r cran-trend}
-#| fig.alt: "Line graph showing palmerpenguins package downloads from CRAN, which increases quickly since published in 2020 and has leveled off near 1000 downloads per day."
-#| fig.height: 4
-# from https://github.com/hadley/cran-downloads/blob/master/server.R
-show_trend <- function(df) {
-  count_ts <- ts(df$count, frequency = 7)
-  stl <- tryCatch(
-    as.data.frame(stl(count_ts, "periodic")$time.series),
-    error = function(e) data.frame(trend = df$count, remainder = 0)
-  )
-  df$trend <- stl$trend
-  df$remainder <- stl$remainder
-  df
-}
-trend <- dl %>% group_by(package) %>% do(show_trend(.))
-ggplot(trend, aes(date)) +
-  geom_linerange(aes(ymin = trend, ymax = trend + remainder), colour = "grey70", alpha = .5, lwd = 1) +
-  geom_line(aes(y = trend), color = "#FB7967", lwd = 1) +
-  labs(y = "Daily downloads (smoothed)", x = NULL) 
+---
+
+#### ¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?
+
+-   Más del 75% de la población declara sentirse inseguro/a o muy inseguro/a caminando por su barrio en la noche.
+-   Alrededor de un 20% se siente seguro/a o muy seguro/a
+
+```{r}
+#| label: fig-b2
+#| fig-cap: "Seguridad barrial"
+
+data_ola0 |>
+  mutate(b2=to_label(b2),
+         b2=dplyr::recode(b2,"Muy inseguro/a" = "Inseguro/a + Muy inseguro/a",
+                             "Inseguro/a" = "Inseguro/a + Muy inseguro/a",
+                             "Seguro/a" = "Seguro/a + Muy seguro/a",
+                             "Muy seguro/a" = "Seguro/a + Muy seguro/a")) |>
+  count(b2) |> 
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(b2!="No sabe (No leer)") |>
+  filter(b2!="No responde (No leer)") |>
+
+  ggplot(aes(x=ola,y=prop,color=b2))+
+  
+  geom_point()+
+  geom_line()+
+  geom_text_repel(aes(label = paste0(prop,"%")))+
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  mdthemes::md_theme_classic(base_size = 12) +
+  theme(
+    legend.position = c(.95, .95),
+    legend.justification = c("right", "top"),
+    legend.box.just = "right",
+    legend.margin = margin(6, 6, 6, 6),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+    )+
+  labs(
+    caption = "El porcentaje se calcula sumando al total los casos perdidos [Proporción de casos perdidos = 0.50%]",
+    color="Respuesta"
+  ) +
+  scale_color_manual(values = palette_oles_2)
 ```
 
--   \> `r scales::number(sum(dl$count), big.mark = ",", accuracy = 100)` CRAN downloads since `r start_date`
+# Legitimidad de carabineros {.r-fit-text background-image="img/oles_carabineros.webp"}
 
--   Used globally in courses, workshops, blog posts, and other learning materials
+---
 
--   `penguins` now in [Python](https://github.com/mcnakhaee/palmerpenguins), [Julia](https://juliahub.com/ui/Packages/PalmerPenguins/L7ZJc/0.1.4), and [TensorFlow](https://www.tensorflow.org/datasets/catalog/penguins)
-:::
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
 
-::: {.column width="20%"}
-[![palmerpenguins hex sticker by Allison Horst](https://allisonhorst.github.io/palmerpenguins/reference/figures/palmerpenguins.png){fig-alt="palmerpenguins hex sticker with all three penguin species by Allison Horst"}](https://allisonhorst.github.io/palmerpenguins/index.html)
-:::
-:::
+-   Más del 65% de la población en Chile está en desacuerdo o muy en desacuerdo con que Carabineros logra controlar ni el problema de la delincuencia ni el del narcotráfico.
+-   Se observan opiniones dispersas respecto a las afinidades que hay sobre lo bueno y lo malo entre la ciudadanía chilena y Carabineros.
+-   Alrededor del 70% de la población chilena está de acuerdo con respetar las decisiones que toma carabineros aunque no se esté de acuerdo con ellas.
+```{r}
 
-::: notes
-Kristen presents
-:::
+rbind(
+data_ola0 |>
+  count(Variable=to_label(c1_1))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Carabineros logra controlar el problema de la delincuencia en Chile"),
+data_ola0 |>
+  count(Variable=to_label(c1_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Carabineros logra controlar el problema del narcotráfico en Chile"),
+data_ola0 |>
+  count(Variable=to_label(c1_3))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"),
+data_ola0 |>
+  count(Variable=to_label(c1_4))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas")
+) |>
+  
+filter(Variable!="No sabe (No leer)") |>
+filter(Variable!="No responde (No leer)") |>
+  
+mutate(Item=str_wrap(Item, width = 60)) |>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  facet_wrap(~Item) +
+  md_theme_classic(base_size = 9) +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  scale_fill_manual(values = palette_likert_5)+
+  guides(fill=FALSE)
 
-##  {background-image="img/penguins.png"}
+```
 
-### How the penguins came to be {.r-fit-text}
+---
 
-## The research
+####  Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros…?
+
+-   La población en Chile tiende a preferir las posiciones intermedias a la hora de juzgar la frecuencia en que las decisiones de carabineros son justas e imparciales.
+-   La población en Chile considera que los carabineros tiende a tener más tratos respuestos que irrespetuosos.
+```{r}
+rbind(
+data_ola0 |>
+  count(Variable=to_label(c2_1))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="tratan a las personas con respeto en Chile"),
+data_ola0 |>
+  count(Variable=to_label(c2_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Toman decisiones justas e imparciales en los casos que se ocupa?")
+) |>
+
+filter(Variable!="No sabe (No leer)") |>
+filter(Variable!="No responde (No leer)") |>
+  
+mutate(Item=str_wrap(Item, width = 60)) |>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  facet_wrap(~Item,ncol = 1) +
+  mdthemes::md_theme_classic(base_size = 12) +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  scale_fill_manual(values = palette_likert_5)+
+  guides(fill=FALSE)
+```
+
+# Legitimidad de Policía de Investigaciones {.r-fit-text background-image="img/oles_pdi.jpg"}
+
+---
+
+##### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con la siguiente afirmación sobre la Policía de Investigaciones de Chile (PDI)?
+
+-   El 50% de la población declara estar en desacuerdo o muy en desacuerdo con que la PDI logra controlar el problema de la delincuencia en Chile.
+-   Aproximadamente, un 30% considera estar de acuerdo o muy de acuerdo con que la PDI logra controlar el problema de la delincuencia en Chile.
+
+
+```{r}
+data_ola0 |>
+  count(Variable=to_label(c3))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="La PDI logra controlar el problema de la delincuencia en Chile?") |>
+  
+filter(Variable!="No sabe (No leer)") |>
+filter(Variable!="No responde (No leer)") |>
+  
+mutate(Item=str_wrap(Item, width = 60)) |>
+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic(base_size = 12) +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  scale_fill_manual(values = palette_likert_5)+
+  guides(fill=FALSE)
+```
+
+---
+
+##### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI…?
+
+-   La población en Chile tiende a preferir posiciones intermedias a la hora de juzgar la frecuencia con que las decisiones de la PDI son justas e imparciales, y la frecuencia con que tienen tratos respetuosos con la gente.
+```{r}  
+rbind(
+data_ola0 |>
+  count(Variable=to_label(c4_1)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="tratan a las personas con respeto en Chile?"),
+data_ola0 |>
+  count(Variable=to_label(c4_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="toman decisiones justas e imparciales en los casos que se ocupa?")
+) |>
+
+filter(Variable!="No sabe (No leer)") |>
+filter(Variable!="No responde (No leer)") |>
+  
+mutate(Item=str_wrap(Item, width = 60)) |>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  facet_wrap(~Item,ncol = 1) +
+  mdthemes::md_theme_classic(base_size = 12) +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  scale_fill_manual(values = palette_likert_5)+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  guides(fill=FALSE)
+```
+
+---
+
+#### A continuación le voy a leer los nombres de dos instituciones. De acuerdo con las alternativas de la tarjeta, ¿Podría Ud. decirme cuánta confianza tiene en cada una de ellas? 
+
+-   Más del 70% de los casos se posiciona en los valores intermedios para declarar su confianza en las instituciones policiales en Chile.
+-   La población declara tener menor confianza en Carabineros de Chile que en la Policía de Investigaciones.
+
+```{r}
+rbind(
+data_ola0 |>
+  count(Variable=to_label(c5_1)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Carabineros de Chile"),
+data_ola0 |>
+  count(Variable=to_label(c5_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Policía de Investigaciones")
+) |>
+
+filter(Variable!="No sabe (No leer)") |>
+filter(Variable!="No responde (No leer)") |>
+  
+mutate(Item=str_wrap(Item, width = 60)) |>
+  
+  ggplot(aes(x=Item,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic(base_size = 14) +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  scale_fill_manual(values = palette_likert_4)+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2),position = position_dodge(1),vjust=0.5,hjust=-0.1) +
+  coord_flip()+
+  labs(fill="")
+```
+
+---
+
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
 
 ::: columns
-::: {.column width="50%"}
-![Dr. Kristen Gorman in the field, surrounded by penguins, at islands near Palmer Archipelago, Antarctica](img/kristen.png){fig-alt="Dr. Kristen Gorman in the field, surrounded by penguins, at islands near Palmer Archipelago, Antarctica"}
-:::
-
-::: {.column width="50%"}
--   An integrative study of the breeding ecology and population structure of Pygoscelis penguins along the western Antarctic Peninsula as part of the Palmer LTER Program (US NSF)
-
--   The data were [originally published](https://doi.org/10.1371/journal.pone.0090081) in PLoS ONE in 2014[^1]
-
--   All data were made available through the [Environmental Data Initiative](https://environmentaldatainitiative.org)
-:::
-:::
-
-[^1]: Gorman KB, Williams TD, Fraser WR (2014). Ecological sexual dimorphism and environmental variability within a community of Antarctic penguins (genus Pygoscelis). PLoS ONE 9(3):e90081. <https://doi.org/10.1371/journal.pone.0090081>
-
-::: notes
-Kristen presents
-:::
-
-##  {background-image="img/avian-island.jpeg"}
-
-### Little did the penguin research team know... {.r-fit-text}
-
-## Wanted: an alternative to iris
-
-::: columns
-::: column
-[![Measurements of an iris flower (source: Science Direct)](img/iris.jpeg){fig-alt="Measurements of an iris flower"}](https://www.sciencedirect.com/topics/mathematics/virginica)
-:::
-
-::: column
--   Collected by botanist Edgar Anderson in 1935
-
--   Used *everywhere* in data science teaching & resources
-
--   `r nrow(iris)` size measurements for `r n_distinct(iris$Species)` species of iris
-
--   No missing values
-
--   Lacks metadata
-
--   Variables like `Sepal.Width`
-
--   Published in The Annals of Eugenics (RA Fisher, 1936)
-:::
-:::
-
-::: notes
-Allison presents
-:::
-
-## If something is a problem, offer a solution
-
-1.  Keep using `iris` and use it as an opportunity to learn/teach about its problematic aspects.
-
-2.  Find a better dataset to replace `iris`.
-
-##  {background-image="img/penguin.jpeg"}
-
-### The eternal search for (better) useful datasets for teaching {.r-fit-text}
-
-## Serendipity
-
-::: columns
-::: {.column width="60%"}
--   Allison stumbles upon [Gorman et al.](https://dx.plos.org/10.1371/journal.pone.0090081) and shares it with Alison
-
--   Alison writes a [blog post](https://www.apreshill.com/blog/2020-02-take-a-sad-script-make-it-better-tidymodels-edition/) with penguins after Allison shares it with her
-
-    [![Screenshot from Alison's first blog post using penguins from Allison](img/blog-post.png)](https://www.apreshill.com/blog/2020-02-take-a-sad-script-make-it-better-tidymodels-edition/)
-:::
 
 ::: {.column width="40%"}
-[![Art by Rohan Chakravarty](https://www.apreshill.com/blog/2020-02-take-a-sad-script-make-it-better-tidymodels-edition/penguins-of-the-world.JPG){fig-alt="21 of the described species with their respective IUCN status. Aquatic and flightless birds with remarkable swimming adaptations, penguins inhabit the Southern hemisphere (except the Galapagos Penguin). They range in size from the 45 kg Emperor Penguin to the 1.5 kg Little Penguin. Penguins are threatened by habitat loss and climate change, and the African, Galapagos and Yellow-eyed are some of the most endangered penguin species." width="80%"}](https://www.greenhumour.com/2018/04/penguins-of-world.html)
-:::
-:::
-
-::: notes
-Allison presents
+-   Aproximadamente, 4 de cada 5 chilenos suele estar de acuerdo o muy de acuerdo con endurecer las penas a quienes atenten contra las policías en Chile.
+-   Aproximadamente, 3 de cada 4 chilenos está de acuerdo o muy de acuerdo con entregar mayores facilidades a carabineros para utilizar sus armas de servicio.
 :::
 
-## Finding the one
-
-::: columns
-::: column
--   Meanwhile, Allison keeps playing with the penguins
-
--   And plotting with the penguins
-
--   And looking at more penguin pictures
-
--   Aligns eerily well with iris data
-:::
-
-::: column
-```{r}
-#| fig.alt: "Scatterplots highlighting linear relationships between penguin body mass and flipper length (left) and iris petal length and petal width (right), both across and within the three species for each dataset."
-# Iris linear relationships (petal dimensions):
-iris_linear_base <- ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) +
-  scale_color_manual(values = c("gray70","gray40","black")) +
-  theme(legend.position = c(0.2, 0.85)) +
-  labs(x = "Petal length (cm)",
-       y = "Petal width (cm)") +
-  theme(plot.title.position = "plot",
-        #panel.grid = element_blank(),
-        panel.border = element_rect(fill = NA, color = "gray70"),
-        legend.title = element_blank())
-
-iris_tooltip <- c(str_c("Petal length = ", iris$Petal.Length,
-                        "\n Petal width = ", iris$Petal.Width,
-                        "\n Species = ", iris$Species))
-
-iris_linear_int <-
-  iris_linear_base +
-  geom_point_interactive(aes(color = Species,
-                             shape = Species,
-                             tooltip = iris_tooltip,
-                             data_id = Species),
-                         size = 2,
-                         alpha = .8
-                         ) +
-  geom_smooth_interactive(aes(group = Species,
-                              color = Species,
-                              data_id= Species),
-                          method = lm,
-                          se = FALSE
-  )
-
-girafe(code = print(penguin_linear_int + iris_linear_int),
-       width_svg = 8,
-       height_svg = 4,
-       options = list(
-         opts_hover_inv(css = "opacity:0.2;"),
-         opts_hover(css = "opacity:1; filter: brightness(90%);")
-       ))
-```
-:::
-:::
-
-::: notes
-Allison presents
-:::
-
-## June 2020 \~4 months into lockdown ☣️
-
-::: columns
 ::: {.column width="60%"}
--   June 4: 🐦 In excitement, Allison Horst tweets about the penguins data
 
-    -   📦 Alison asks "Do you wanna build a package?"
+```{r}  
+rbind(
+data_ola0 |>
+  count(Variable=to_label(c7_1)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="**Endurecer las penas** contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"),
+data_ola0 |>
+  count(Variable=to_label(c7_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Dar **mayores facilidades para que los carabineros puedan usar su arma de servicio** cuando lo estimen necesario")
+) |>
 
-    -   ❓Allison deletes tweet to sort out license
-
--   1 day later: 🔏 Allison emails Kristen about use & license
-
--   3 days later (June 8): 🚀 palmerpenguins power team assembles for the first time!
-
--   Same day (June 8): 🏆 Allison Horst tweets (again) --- with clear license info
-
--   45 days later (July 23): 🎁 available on [CRAN](https://cran.r-project.org/web/packages/palmerpenguins/index.html)
-:::
-
-::: {.column width="40%"}
-```{=html}
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">🐧🐧🐧<br><br>This penguin data is a great alternative to iris &amp; available for use by CC0 🤩 Thank you Dr. Kristen Gorman w/ <a href="https://twitter.com/UAFcfos?ref_src=twsrc%5Etfw">@UAFcfos</a>, Marty Downs w/ <a href="https://twitter.com/USLTER?ref_src=twsrc%5Etfw">@USLTER</a>, &amp; <a href="https://twitter.com/PalmerLTER?ref_src=twsrc%5Etfw">@PalmerLTER</a> for help, info &amp; making it available for use 🎉<br><br>Data, examples, &amp; use info here: <a href="https://t.co/dSIqWNFlVw">https://t.co/dSIqWNFlVw</a> 🧵 1/6 <a href="https://t.co/2Eu4AxoeZl">pic.twitter.com/2Eu4AxoeZl</a></p>&mdash; Allison Horst (@allison_horst) <a href="https://twitter.com/allison_horst/status/1270046399418138625?ref_src=twsrc%5Etfw">June 8, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-```
-:::
-:::
-
-::: notes
-Allison presents
-:::
-
-##  {background-image="img/iceberg.jpeg"}
-
-### The making of... {.r-fit-text}
-
-## For educators, by educators
-
-```{r echo=TRUE}
-library(palmerpenguins)
-path_to_file()
-path_to_file("penguins_raw.csv")
-head(read.csv(path_to_file("penguins.csv")))
-```
-
-## To tibble or...
-
-```{r echo=FALSE}
-palmerpenguins::penguins 
-```
-
-## Not to tibble, that is the question
-
-> "I think this gives the best of both worlds --- if you're running in a low dependency environment, you'll get a data frame."
->
-> --- Hadley Wickham[^2]
-
-[^2]: Thanks to Hadley [for this PR!](https://github.com/allisonhorst/palmerpenguins/pull/25)
-
-```{r echo=FALSE}
-palmerpenguins::penguins %>% 
-  as.data.frame()
-```
-
-::: notes
-Alison HILL presents
-:::
-
-##  {background-iframe="https://allisonhorst.github.io/palmerpenguins/"}
-
-## Penguins in the wild {background-image="img/penguins-wilder.png" background-size="contain"}
-
-::: notes
-Alison HILL presents
-:::
-
-## Alison: Why has it been so popular?
-
--   The R package format - so easy to just use
-
--   Reduces time to first pretty plot
-
--   [Allison's art](https://allisonhorst.github.io/palmerpenguins/articles/art.html)
-
-    [![Allison Horst's illustration of the 3 penguin species](img/allison-penguins.png){width="800"}](https://allisonhorst.github.io/palmerpenguins/articles/art.html)
-
-## Allison: Why has it been so popular?
-
-::: columns
-::: column
-The data itself---distributions, linearity
-
-```{r}
-#| fig.alt: "Scatterplots of bill depth versus body mass for the three penguin species, showing a positive linear relationship within species that switches to a negative linear relationship if species is omitted, an example of Simpson’s paradox."
-# Simpson's Paradox example (body mass, omitting species):
-bmass_nospecies_base <- penguins %>%
-  # doing this so ggiraph recognizes species across plots
-  mutate(species = as.character(species)) %>%
-  mutate(species = case_when(
-    species == "Adelie" ~ "Adélie",
-    TRUE ~ species)
-  ) %>%
-  ggplot(aes(x = bill_depth_mm, y = body_mass_g)) +
-  theme(panel.border = element_rect(fill = NA, color = "gray70")) +
-  labs(x = "Bill depth (mm)", y = "Body mass (g)")
-
-# Body mass, including species:
-bmass_wspecies_base <-
-  penguins %>%
-  mutate(species = as.character(species)) %>%
-  mutate(species = case_when(
-    species == "Adelie" ~ "Adélie",
-    TRUE ~ species)
-    ) %>%
-  ggplot(aes(x = bill_depth_mm, y = body_mass_g, group = species)) +
-  scale_color_paletteer_d("colorblindr::OkabeIto") +
-  theme(panel.border = element_rect(fill = NA, color = "gray70")) +
-  labs(x = "Bill depth (mm)", y = "Body mass (g)") +
-  guides(color = guide_legend("Species"),
-           shape = guide_legend("Species"))
-
-nospecies_tooltip <- c(str_c("Bill depth (mm) = ", penguins$bill_depth_mm,
-                            "\n Body mass (g) = ", penguins$body_mass_g,
-                            "\n Species = ", penguins$species))
-
-bmass_nospecies_int <-
-  bmass_nospecies_base +
-  geom_point_interactive(aes(tooltip = nospecies_tooltip,
-                             data_id = species),
-                         size = 2,
-                         alpha = 0.8) +
-  geom_smooth_interactive(method = lm,
-                          se = FALSE,
-                          color = "black"
-  )
-
-
-wspecies_tooltip <- c(str_c("Bill depth (mm) = ", penguins$bill_depth_mm,
-                            "\n Body mass (g) = ", penguins$body_mass_g,
-                            "\n Species = ", penguins$species))
-
-bmass_wspecies_int <-
-  bmass_wspecies_base +
-  geom_point_interactive(aes(color = species,
-                             shape = species,
-                             tooltip = wspecies_tooltip,
-                             data_id = species),
-                         size = 2,
-                         alpha = 0.8) +
-  geom_smooth_interactive(aes(color= species,
-                              data_id= species),
-                          method = lm,
-                          se = FALSE
-  )
-
-
-girafe(code = print(bmass_nospecies_int + bmass_wspecies_int),
-       width_svg = 6,
-       height_svg = 3,
-       options = list(
-         opts_hover_inv(css = "opacity:0.2;"),
-         opts_hover(css = "opacity:1; filter: brightness(90%);")
-       ))
-
+filter(Variable!="No sabe (No leer)") |>
+filter(Variable!="No responde (No leer)") |>
+  
+mutate(Item=str_wrap(Item, width = 60)) |>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  facet_wrap(~Item,ncol = 1) +
+  mdthemes::md_theme_classic(base_size = 12) +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  scale_fill_manual(values = palette_likert_5)+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  guides(fill=FALSE)
 ```
 :::
 
-::: column
-Simpson's paradox examples in the wild!
-
-```{r}
-#| fig.alt: "Scatterplot of bill length versus bill depth for the three penguin species, showing a positive linear relationship within species. If species is omitted as a variable, the relationship switches to a negative trend, another example of Simpson’s paradox in the data"
-# Simpson's Paradox example (bill dimensions, omitting species):
-simpson_nospecies_base <- penguins %>%
-  # doing this so ggiraph recognizes species across plots
-  mutate(species = as.character(species)) %>%
-  mutate(species = case_when(
-    species == "Adelie" ~ "Adélie",
-    TRUE ~ species)
-  ) %>%
-  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
-  theme(panel.border = element_rect(fill = NA, color = "gray70")) +
-  labs(x = "Bill length (mm)", y = "Bill depth (mm)")
-
-# Bill dimensions, including species:
-simpson_wspecies_base <-
-  penguins %>%
-  mutate(species = as.character(species)) %>%
-  mutate(species = case_when(
-    species == "Adelie" ~ "Adélie",
-    TRUE ~ species)
-    ) %>%
-  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, group = species)) +
-
-  scale_color_paletteer_d("colorblindr::OkabeIto") +
-  theme(panel.border = element_rect(fill = NA, color = "gray70")) +
-  labs(x = "Bill length (mm)", y = "Bill depth (mm)") +
-  guides(color = guide_legend("Species"),
-           shape = guide_legend("Species"))
-
-nospecies_tooltip <- c(str_c("Bill length (mm) = ", penguins$bill_length_mm,
-                            "\n Bill depth (g) = ", penguins$bill_depth_mm,
-                            "\n Species = ", penguins$species))
-
-simpson_nospecies_int <-
-  simpson_nospecies_base +
-  geom_point_interactive(aes(tooltip = nospecies_tooltip,
-                             data_id = species),
-                         size = 2,
-                         alpha = 0.6) +
-  geom_smooth_interactive(method = lm,
-                          se = FALSE,
-                          color = "black"
-  )
-
-
-wspecies_tooltip <- c(str_c("Bill length (mm) = ", penguins$bill_length_mm,
-                             "\n Bill depth (g) = ", penguins$bill_depth_mm,
-                             "\n Species = ", penguins$species))
-
-simpson_wspecies_int <-
-  simpson_wspecies_base +
-  geom_point_interactive(aes(color = species,
-                             shape = species,
-                             tooltip = wspecies_tooltip,
-                             data_id = species),
-                         size = 2,
-                         alpha = 0.6) +
-  geom_smooth_interactive(aes(color= species,
-                              data_id= species),
-                          method = lm,
-                          se = FALSE
-  )
-
-girafe(code = print(simpson_nospecies_int + simpson_wspecies_int),
-       width_svg = 6,
-       height_svg = 3,
-       options = list(
-         opts_hover_inv(css = "opacity:0.2;"),
-         opts_hover(css = "opacity:1; filter: brightness(90%);")
-       ))
-```
-:::
 :::
 
-## Allison: Why has it been so popular?
-
-Good bones for multivariate analyses
-
-::: columns
-::: column
-Principle Components Analysis
-
-```{r}
-#| fig.alt: "Principal component biplot comparing results for penguins and iris, highlighting strong similarities between the two"
-## ---- pca ---------------------------------------------------------
-# From Alison Hill's post for palmerpenguins pkgdown site
-
-### PENGUINS PCA:
-
-# Omit year
-penguins_noyr <- penguins %>%
-  select(-year) %>%
-  mutate(species = as.character(species)) %>%
-  mutate(species = case_when(
-    species == "Adelie" ~ "Adélie",
-    TRUE ~ species
-  )) %>%
-  mutate(species = as.factor(species))
-
-penguin_recipe <-
-  recipe(~., data = penguins_noyr) %>%
-  update_role(species, island, sex, new_role = "id") %>%
-  step_naomit(all_predictors()) %>%
-  step_normalize(all_predictors()) %>%
-  step_pca(all_predictors(), id = "pca") %>%
-  prep()
-
-penguin_pca <-
-  penguin_recipe %>%
-  tidy(id = "pca")
-
-penguin_percvar <- penguin_recipe %>%
-  tidy(id = "pca", type = "variance") %>%
-  dplyr::filter(terms == "percent variance")
-
-# Make the penguins PCA biplot:
-
-# Get pca loadings into wider format
-pca_wider <- penguin_pca %>%
-  tidyr::pivot_wider(names_from = component, id_cols = terms)
-
-# define arrow style:
-arrow_style <- arrow(length = unit(.05, "inches"),
-                     type = "closed")
-
-penguins_juiced <- juice(penguin_recipe)
-
-# Make the penguins PCA biplot:
-pca_plot <-
-  penguins_juiced %>%
-  ggplot(aes(PC1, PC2)) +
-  coord_cartesian(
-    xlim = c(-3, 4),
-    ylim = c(-2.5, 2))  +
-  scale_color_paletteer_d("colorblindr::OkabeIto") +
-  guides(color = guide_legend("Species"),
-        shape = guide_legend("Species")) +
-  theme(legend.position = "bottom",
-        panel.border = element_rect(color = "gray70", fill = NA))
-# For positioning (above):
-# 1: bill_length
-# 2: bill_depth
-# 3: flipper length
-# 4: body mass
-
-penguins_biplot <- pca_plot +
-  geom_segment(data = pca_wider,
-               aes(xend = PC1, yend = PC2),
-               x = 0,
-               y = 0,
-               arrow = arrow_style) +
-  geom_point(aes(color = species, shape = species),
-             alpha = 0.7,
-             size = 2) +
-  geom_shadowtext(data = pca_wider,
-                  aes(x = PC1, y = PC2, label = terms),
-                  nudge_x = c(0.7,0.7,1.7,1.2),
-                  nudge_y = c(-0.1,-0.2,0.1,-0.1),
-                  size = 4,
-                  color = "black",
-                  bg.color = "white")
-
-### IRIS PCA:
-
-iris_recipe <-
-  recipe(~., data = iris) %>%
-  update_role(Species, new_role = "id") %>%
-  step_normalize(all_predictors()) %>%
-  step_pca(all_predictors(), id = "pca") %>%
-  prep()
-iris_pca <-
-  iris_recipe %>%
-  tidy(id = "pca")
-
-### Iris PCA biplot:
-
-# Get pca loadings into wider format
-iris_wider <- iris_pca %>%
-  tidyr::pivot_wider(names_from = component, id_cols = terms)
-
-# define arrow style:
-arrow_style <- arrow(length = unit(.05, "inches"),
-                     type = "closed")
-
-iris_juiced <- juice(iris_recipe)
-
-# Make the iris PCA biplot:
-iris_pca_plot <-
-  iris_juiced %>%
-  ggplot(aes(PC1, PC2)) +
-  coord_cartesian(
-    xlim = c(-3, 3),
-    ylim = c(-3, 3)) +
-  scale_colour_manual(values = c("gray70","gray40","black")) +
-  theme(panel.background = element_rect(fill = NA, color = "gray70"),
-        legend.position = "bottom")
-
-iris_biplot <- iris_pca_plot  +
-  geom_point(aes(color = Species, shape = Species),
-             alpha = 0.8,
-             size = 2) +
-  geom_segment(data = iris_wider,
-               aes(xend = PC1, yend = PC2),
-               x = 0,
-               y = 0,
-               arrow = arrow_style) +
-  geom_shadowtext(data = iris_wider,
-                  aes(x = PC1, y = PC2, label = terms),
-                  nudge_x = c(0.5,0.3,1,1.2),
-                  nudge_y = c(-0.1,-0.2,0.1,-0.1),
-                  size = 4,
-                  color = "black",
-                  bg.color = "white")
-
-penguins_biplot_tooltip <- str_c("Species = ", penguins_juiced$species,
-                             "\n PC1 = ", round(penguins_juiced$PC1, 2),
-                             "\n PC2 = ", round(penguins_juiced$PC2, 2))
-
-penguins_biplot_int <- pca_plot +
-  geom_segment_interactive(data = pca_wider,
-               aes(xend = PC1, yend = PC2),
-               x = 0,
-               y = 0,
-               arrow = arrow_style) +
-  geom_point_interactive(aes(color = species, shape = species,
-                             tooltip = penguins_biplot_tooltip,
-                             data_id = species),
-             alpha = 0.7,
-             size = 2) +
-  geom_shadowtext(data = pca_wider,
-                  aes(x = PC1, y = PC2, label = terms),
-                  nudge_x = c(0.7,0.7,1.7,1.2),
-                  nudge_y = c(-0.1,-0.2,0.1,-0.1),
-                  size = 4,
-                  color = "black",
-                  bg.color = "white")
-
-# girafe(ggobj = penguins_biplot_int)
-
-iris_biplot_tooltip <- str_c("Species = ", iris_juiced$Species,
-                               "\n PC1 = ", round(iris_juiced$PC1, 2),
-                               "\n PC2 = ", round(iris_juiced$PC2, 2))
-
-iris_biplot_int <- iris_pca_plot +
-  geom_segment_interactive(data = iris_wider,
-                           aes(xend = PC1, yend = PC2),
-                           x = 0,
-                           y = 0,
-                           arrow = arrow_style) +
-  geom_point_interactive(aes(color = Species, shape = Species,
-                             tooltip = iris_biplot_tooltip,
-                             data_id = Species),
-                         alpha = 0.7,
-                         size = 2) +
-  geom_shadowtext(data = iris_wider,
-                  aes(x = PC1, y = PC2, label = terms),
-                  nudge_x = c(0.5,0,1,1),
-                  nudge_y = c(-0.1,-0.2,0.2,-0.1),
-                  size = 4,
-                  color = "black",
-                  bg.color = "white")
-
-girafe(code = print(penguins_biplot_int | iris_biplot_int),
-       width_svg = 6,
-       height_svg = 3,
-       options = list(
-         opts_hover_inv(css = "opacity:0.2;"),
-         opts_hover(css = "opacity:1; filter: brightness(90%);")
-       ))
-
-```
-:::
-
-::: column
-K-means
-
-```{r}
-#| fig.alt: "Compared k-means clustering scatterplots for penguins and iris."
-## ---- kmeans ---------------------------------------------------------
-
-# TWO VARIABLE k-means comparison
-# Penguins: Bill length vs. bill depth
-pb_species <- penguins %>%
-  select(species, starts_with("bill")) %>%
-  drop_na() %>%
-  mutate(species = as.character(species)) %>%
-  mutate(species = case_when(
-    species == "Adelie" ~ "Adélie",
-    TRUE ~ species
-  )) %>%
-  mutate(species = as.factor(species))
-
-# Prep penguins for k-means:
-pb_nospecies <- pb_species %>%
-  select(-species) %>%
-  recipe() %>%
-  step_normalize(all_numeric()) %>%
-  prep() %>%
-  juice()
-
-# Perform k-means on penguin bill dimensions (k = 3, w/20 centroid starts)
-
-# Save augmented data
-set.seed(100)
-pb_clust <-
-  pb_nospecies %>%
-  kmeans(centers = 3, nstart = 20) %>%
-  broom::augment(pb_species)
-
-# Get counts in each cluster by species
-pb_clust_n <- pb_clust %>%
-  count(species, .cluster) %>%
-  pivot_wider(names_from = species, values_from = n, names_sort = TRUE) %>%
-  arrange(.cluster) %>%
-  replace_na(list(`Adelie` = 0))
-
-### Iris k-means
-# Iris: petal length vs. petal width
-
-# Select only petal dimensions:
-ip_species <- iris %>%
-  select(Species, starts_with("Petal"))
-
-# Remove species factor & scale petal dimensions:
-ip_nospecies <- ip_species %>%
-  select(-Species) %>%
-  recipe() %>%
-  step_normalize(all_numeric()) %>%
-  prep() %>%
-  juice()
-
-# Perform k-means on iris petal dimensions (k = 3, w/20 centroid starts):
-set.seed(100)
-ip_clust <-
-  ip_nospecies %>%
-  kmeans(centers = 3, nstart = 20) %>%
-  broom::augment(ip_species)
-
-# Get iris counts in each cluster by species:
-ip_clust_n <- ip_clust %>%
-  count(Species, .cluster) %>%
-  pivot_wider(names_from = Species, values_from = n, names_sort = TRUE) %>%
-  arrange(.cluster) %>%
-  replace_na(list(`setosa` = 0, `versicolor` = 0, `virginica` = 0))
-
-
-# Plot penguin k-means clusters:
-# make a base plot b/c https://github.com/plotly/plotly.R/issues/1942
-pb_kmeans_base <-
-  pb_clust %>%
-  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
-  scale_color_paletteer_d("colorblindr::OkabeIto") +
-  scale_fill_paletteer_d("colorblindr::OkabeIto") +
-  scale_x_continuous(limits = c(30, 60),
-                     breaks = c(30, 40, 50, 60)) +
-  theme(legend.position = "bottom",
-        panel.border = element_rect(fill = NA, color = "gray70")) +
-  labs(x = "Bill length (mm)",
-       y = "Bill depth (mm)",
-       color = "Species")
-
-# Plot iris k-means clusters:
-# make a base plot b/c https://github.com/plotly/plotly.R/issues/1942
-ip_kmeans_base <-
-  ip_clust %>%
-  ggplot(aes(x = Petal.Length, y = Petal.Width)) +
-  theme(legend.position = "bottom",
-        panel.border = element_rect(fill = NA, color = "gray70")) +
-  scale_color_manual(values = c("gray70","gray50","black"))  +
-  labs(x = "Petal length (cm)",
-       y = "Petal width (cm)")
-
-pb_tooltip <- str_c("Cluster: ", pb_clust$.cluster,
-                      "\n Species: ", pb_clust$species,
-                      "\n Bill length (mm): ", pb_clust$bill_length_mm,
-                      "\n Bill depth (mm) : ", pb_clust$bill_depth_mm)
-
-pb_kmeans_int <- pb_kmeans_base +
-  geom_text_interactive(aes(
-    label = .cluster,
-    color = species,
-    tooltip = pb_tooltip,
-    data_id = species),
-    size = 3,
-    check_overlap = TRUE)
-
-ip_tooltip <- str_c("Cluster: ", ip_clust$.cluster,
-                      "\n Species: ", ip_clust$Species,
-                      "\n Petal Length (cm): ", ip_clust$Petal.Length,
-                      "\n Petal Width (cm): ", ip_clust$Petal.Width)
-
-ip_kmeans_int <- ip_kmeans_base +
-  geom_text_interactive(aes(
-    label = .cluster,
-    color = Species,
-    tooltip = ip_tooltip,
-    data_id = Species),
-    size = 3,
-    check_overlap = TRUE)
-
-girafe(code = print(pb_kmeans_int + ip_kmeans_int),
-       width_svg = 6,
-       height_svg = 3,
-       options = list(
-         opts_hover_inv(css = "opacity:0.1;"),
-         opts_hover(css = "opacity:1; filter: brightness(90%);")
-       ))
-```
-:::
-:::
-
-## Kristen: Why has it been so popular?
-
-::: columns
-::: column
--   Penguins! (rare to see IRL, but so easy to see & say)
-
--   Understandable structural measurements
-
--   [Open license](https://allisonhorst.github.io/palmerpenguins/LICENSE.html) underlying the data
-
--   Ecology of species is relevant to global climate change
-:::
-
-::: column
-![Penguin bills art by Allison Horst](https://allisonhorst.github.io/palmerpenguins/reference/figures/culmen_depth.png){alt="Penguin bills art by Allison Horst" fig-alt="Penguin bill length is measured from start to tip of bill, whereas bill depth is measured from top of bill to bottom" fig-align="right"}
-:::
-:::
-
-::: notes
-Kristen presents
-:::
-
-## From polar research project to global teaching product
-
-::: columns
-::: column
--   Antarctic data should be available to the world - no geopolitical boundaries
-
--   When you collect data as a scientist, you are collecting knowledge that you may not even imagine how it will be used
-:::
-
-::: column
-![Map of Antarctica by Kristen Gorman](img/antarctic-modis.jpg){fig-alt="Map of Antarctica by Kristen Gorman" fig-align="center"} <!--[![Map of Antarctica by R. M. Chapin](img/map.jpg){fig-alt="Map of Antarctica by R. M. Chapin" fig-align="center"}](https://www.flickr.com/photos/crossettlibrary/6941620363)-->
-:::
-:::
-
-## Thank you!
-
-What questions do you have?
-
-We wish to thank:
-
--   Marty Downs at LTER
-
--   Hadley Wickham (RStudio)
-
--   Laura Navarro for [this plot](https://lauranavarroviz.wordpress.com/2020/08/01/palmer-penguins/)
-
--   Cédric Scherer for [this plot](https://www.behance.net/gallery/101517403/Bill-Dimensions-of-Penguins)
-
--   Silvia Canelón for her [great tutorial](https://www.silviacanelon.com/talk/2020-tour-of-the-tidyverse/)
-
--   The #rstats community for blogging, tweeting, visualizing, analyzing, teaching, and sharing about `palmerpenguins`
