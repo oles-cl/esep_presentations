@@ -168,51 +168,47 @@ En caso de querer contactarse con el Observatorio de Violencia y Legitimidad Soc
 
 # ¿Qué es el Observatorio de Violencia y Legitimidad Social (OLES)?
 
-El Observatorio de Violencia y Legitimidad Social[^oles] es una plataforma que desarrolla investigación colaborativa en temáticas relacionadas con la **violencia**, explorando sus sentidos, formas de justificación, así como diversas formas en que la sociedad chilena ha desarrollado procesos de construcción de **legitimidad social** frente a las autoridades, considerando el rol de la **justicia** como elemento clave en la comprensión de las transformaciones sociales que vive actualmente el país.
+El Observatorio de Violencia y Legitimidad Social (OLES) es una plataforma que desarrolla investigación colaborativa en temáticas relacionadas con la **violencia**, explorando sus sentidos, formas de justificación, así como diversas formas en que la sociedad chilena ha desarrollado procesos de construcción de **legitimidad social** frente a las autoridades, considerando el rol de la **justicia** como elemento clave en la comprensión de las transformaciones sociales que vive actualmente el país.
 
-OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile con el objetivo de aunar esfuerzos para contribuir a la comprensión de los mecanismos de legitimidad policial y justificación de la violencia mediante el desarrollo de investigaciones bajo criterios de Ciencia Abierta y en diálogo con actores sociales. Asimismo, la plataforma opera como un espacio de formación de estudiantes y jóvenes con intereses académicos.
+OLES agrupa a investigadores e investigadoras de diferentes disciplinas y universidades en Chile con el objetivo de aunar esfuerzos para contribuir a la comprensión de los mecanismos de legitimidad policial y justificación de la violencia mediante el desarrollo de investigaciones bajo criterios de Ciencia Abierta y en diálogo con actores sociales. Asimismo, la plataforma opera como un espacio de formación de estudiantes y jóvenes con intereses académicos.
 
-OLES fue fundado el año 2020, en vistas de los casos de represión y violencia policial acontecidos durante el estallido social en 2019. A partir de estos años, ha desarrollado múltiples publicaciones académicas, intervenciones en prensa y conferencias para aportar antecedentes y evidencia al debate sobre el resguardo de los derechos humanos, la relación ciudadanía-carabineros, y el control de la violencia en Chile. Se espera fortalecer el despliegue de políticas públicas en estos ámbitos.
+OLES fue fundado el año 2020, en vistas de los casos de violencia policial y violencia en la protesta acontecidos durante el estallido social del año 2019. A partir de estos años, ha desarrollado múltiples publicaciones académicas, intervenciones en prensa y seminarios para aportar antecedentes y evidencia al debate sobre el resguardo de los derechos humanos, la relación ciudadanía-carabineros, y el control de la violencia en Chile. A futuro, se espera fortalecer el despliegue de políticas públicas en estos ámbitos.
 
-Actualmente, OLES cuenta con el apoyo del Centro de Estudios de Conflicto y Cohesión Social (COES), la Universidad Diego Portales (UDP), la Universidad de O’Higgins (UOH) y la Universidad Católica del Norte (UCN). También cuenta con reconocimiento de la European Association of Social Psychology (EASP) y recibe financiamiento con fondos ANID a través de la adjucación de Fondecyt Regular.
+Actualmente, OLES cuenta con el apoyo de la Universidad Diego Portales (UDP), la Universidad de O’Higgins (UOH), la Universidad Católica del Norte (UCN), así como del Centro de Estudios de Conflicto y Cohesión Social (COES). También cuenta con reconocimiento de la European Association of Social Psychology (EASP) y recibe financiamiento con fondos ANID a través de la adjucación de Fondecyt Regular y Exploración.
 
-Para más información, puede visitar la [página web de OLES: www.oles.cl](https://oles2.netlify.app/post/page/2/)
+Para más información, es posible revisar la [página web de OLES: www.oles.cl](https://oles2.netlify.app/post/page/2/)
 
-[^oles]: De aquí en adelante OLES.
 
 ![Seminario internacional sobre Inseguridad en América Latina organizado por OLES. Agosto 2023](../img/image_intro.jpg)
 
-# ¿Qué es ESEP?
+# ¿Qué es el Estudio de Percepciones de Seguridad y Policías en Chile?
 
-El Estudio de Percepciones de Seguridad y Policías de Chile [^esep] diseñado por el Observatorio de Violencia y legitimidad Social tiene como objetivo conocer las percepciones de la ciudadanía sobre la delincuencia en el país, así como sobre la manera en que las personas se vinculan con las policías. 
+El Estudio de Percepciones de Seguridad y Policías de Chile (ESEP) diseñado por el Observatorio de Violencia y legitimidad Social tiene como objetivo conocer las percepciones de la ciudadanía sobre la delincuencia en el país, así como sobre la manera en que las personas se vinculan con las policías. 
 
-El estudio considera la aplicación de una encuesta longitudinal, esto es, una encuesta donde los y las participantes reportan sus actitudes con cierta regularidad para poder entender cómo estos fenómenos van cambiando en el tiempo. 
+El estudio considera la aplicación de una encuesta longitudinal, esto es, una encuesta donde los y las participantes reportan sus actitudes de manera regular para poder entender cómo estos fenómenos van cambiando en el tiempo. 
 
-Los y las participantes en esta encuesta corresponden a hombres y mujeres de entre 18 y 65 años de edad, residentes de zonas urbanas del país. Los y las encuestados fueron seleccionados al azar para participar en este estudio. Con la participación en este estudio, los y las participantes contribuirán a una mejor comprensión de las percepciones de la ciudadanía sobre la seguridad en Chile, así como de lo que la ciudadanía espera de sus policías.
+Los y las participantes en esta encuesta corresponden a hombres y mujeres de entre 18 y 65 años de edad, residentes de zonas urbanas del país. Los y las encuestados fueron seleccionados a través de un muestreo probabilístico polietápico para participar en este estudio. Con la participación en este estudio, los y las participantes contribuirán a una mejor comprensión de las percepciones de la ciudadanía sobre la seguridad en Chile, así como de lo que la ciudadanía espera de sus policías.
 
-Este estudio se encuentra financiado por la Universidad Diego Portales y la Agencia Nacional de Investigación y Desarrollo (ANID) a través de los fondos Fondecyt Regular N. 1221805 y ANID Exploración N. 13220187. Además, el estudio cuenta con el apoyo técnico de la consultora Statcom Datavoz.
+Este estudio se encuentra financiado por la Universidad Diego Portales y la Agencia Nacional de Investigación y Desarrollo (ANID) a través de los fondos Fondecyt Regular N. 1221805 y ANID Exploración N. 13220187. Además, la recopilación de datos fue realizado por la consultora Statcom Datavoz.
 
-El estudio es dirigido por Mónica Gerber, profesora asociada de la Facultad de Psicología de la Universidad Diego Portales. Si tiene alguna duda sobre el estudio o quiere conocer más sobre el proyecto, puede escribirnos mediante un correo a [contacto.esep@gmail.com](mailto:contacto.esep@gmail.com). Para más información, puede visitar la página web de ESEP [ww.esep.cl](https://esep2.netlify.app/)
+El estudio es dirigido por la Dra. Monica Gerber, profesora titular de la Facultad de Psicología de la Universidad Diego Portales. Dudas pueden ser enviadas al correo electrónico [contacto.esep@gmail.com](mailto:contacto.esep@gmail.com). Para más información sobre el estudio, es posible revisar la página web de ESEP [ww.esep.cl](https://esep2.netlify.app/)
 
-[^esep]: De aquí en adelante ESEP.
 
-# Sobre la ola 0
 
-La ola 0 de ESEP presentada a continuación fue implementada entre septiembre y noviembre de 2023, a través de entrevistas cara a cara con los participantes. Cuenta con un total de XXXX casos representativos de los habitantes de las zonas urbanas en Chile que tienen entre 18 y 65 años. El cuestionario considera una duración de entre 5 y 10 minutos, y cuenta con preguntas de caracterización sociodemográfica, percepción de seguridad y actitudes hacia las policías.
+# Sobre la Ola 0
 
-De acuerdo con los criterios de Ciencia Abierta, OLES se dispone a compartir los instrumentos de medición y las bases de datos del estudio en el [repositorio que aloja nuestra página web](https://oles2.netlify.app/esep/).
+La Ola 0 de ESEP presentada a continuación fue implementada entre septiembre 2023 y febrero 2024, a través de entrevistas cara a cara con los participantes. Cuenta con un total de XXXX casos representativos de los habitantes de las zonas urbanas en Chile que tienen entre 18 y 65 años. El cuestionario considera una duración de entre 5 y 10 minutos, y cuenta con preguntas de caracterización sociodemográfica, percepción de seguridad y actitudes hacia las policías. Este estudio tuvo dos objetivos primordiales: levantar información sobre algunas dimensones fundamentales de seguridad y vinculación entre la ciudadanía y las policías, así como invitar a los y las encuestados a participar del estudio longitudinal que se realizará a continuación. El estudio longitudinal iniciará en marzo-abril 2024 y seguirá con mediciones cada tres meses.
+
+De acuerdo con los criterios de Ciencia Abierta, OLES se dispone a compartir los instrumentos de medición y las bases de datos del estudio en el [repositorio que aloja la página web](https://oles2.netlify.app/esep/).
 
 El trabajo en terreno se realizó dentro de una serie de tensiones, acontecimientos y eventos mediáticos relacionados con la seguridad pública y las policías en Chile. Para entregar al lector una panorámica de los principales eventos e hitos ocurridos durante la medición del estudio, el equipo de OLES entrega una contextualización del escenario noticioso y administrativo sobre las policías en Chile.
 
-Durante septiembre y noviembre de 2023 en Chile:
+Durante septiembre 2023 y febrero 2024 en Chile:
 
 -   Añadir un punteo de los hallazgos del equipo de Ismael.
 
-El presente informe busca presentar los resultados de la encuesta antes mencionada. En primer lugar se presentan los resultados de las preguntas relacionadas con el
 
 # Percepciones sobre seguridad 
-
-Conceptualizar a qué se refiere con Percepción sobre seguridad. Las categorías operacionalizadas y un breve contexto de la situación en Chile.
 
 ## Percepción de aumento de la delincuencia 
 ```{r}
@@ -252,8 +248,7 @@ data_ola0 |>
 La @fig-b1-long sugiere que:
 
 -   Casi el 90% de la población en Chile declara que la delincuencia ha aumentado en los últimos 12 meses.
--   Solo un 1.8% de la población considera que la delincuencia disminuyo.
--   Una amplia mayoría del país percibe que la delincuencia va en aumento durante el año.
+-   Solo un 1.8% de la población considera que la delincuencia disminuyó.
 
 ```{r}
 #| label: fig-b1-demo
@@ -297,11 +292,11 @@ data_ola0 |>
 ```
 La @fig-b1-demo hace pensar que:
 
--   La sensación de que la delincuencia ha aumentado con el tiempo es mayor en mujeres que en hombres.
+-   La sensación de que la delincuencia ha aumentado con el tiempo es mayor entre mujeres que entre hombres.
 -   No existen diferencias relevantes por edad respecto a la percepción de aumento de la delincuencia en Chile.
 
 
-## Seguridad barrial
+## Percepción de seguridad
 
 -   Más del 75% de la población declara sentirse inseguro/a o muy inseguro/a caminando por su barrio en la noche.
 -   Alrededor de un 20% se siente seguro/a o muy seguro/a
@@ -397,10 +392,7 @@ La @fig-b2-demo muestra que:
 
 # Actitudes hacia Carabineros y la PDI
 
-
-Contextualizar el problema de la legitimidad de carabineros. Decir que el estudio se divide entre legitimidad y empoderamiento.
-
-## Legitimidad hacia las policías
+## Legitimidad de las policías
 
 ```{r}
 #| label: fig-c-general
