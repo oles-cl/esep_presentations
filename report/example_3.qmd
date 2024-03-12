@@ -1,15 +1,15 @@
 ---
-title: Estudio Longitudinal de Percepciones de Seguridad y Policías en Chile 
-subtitle: Reporte Ola 0
+title: Estudio de Percepciones de Seguridad y Policías en Chile 
+subtitle: Informe Ola 0
 author:
-  - name: Mónica Gerber
+  - name: Mónica M. Gerber
     affiliations:
       - name: Universidad Diego Portales
-        department: Departamento de Psicología
+        department: Facultad de Psicología
   - name: Cristóbal Moya
     affiliations:
-      - name: Bielefeld University
-        department: Sociology Department
+      - name: Universität Bielefeld, Departamento de Sociología
+        department: Departmento de Sociología; DIW Berlín
   - name: Nicolás Tobar
     affiliations:
       - name: Universidad de Chile
@@ -27,7 +27,7 @@ format:
     titlepage-logo: "img/logos.png"
     titlepage-header: "The Publisher"
     titlepage-footer: |
-      Vistia la página web de OLES\
+      Página web del Observatorio de Violencia y Legitimidad Social\
       [www.oles.cl](https://oles2.netlify.app/)\
       Repositorio GitHub de este informe\
       [https://github.com/oles-cl/esep_presentations](https://github.com/oles-cl/esep_presentations)
@@ -158,15 +158,15 @@ data_ola0<-merge(data_ola0,demographics_ola_0)
 
 # Introducción
 
-La agenda de seguridad y delincuencia se ha vuelto cada vez más relevante en el debate público nacional. Al respecto, estudios como la Encuesta Nacional de Seguridad Ciudadana (ENSUC) elaborada por el Instituto Nacional de Estadísticas (INE), así como el Índice de Paz Ciudadana hecho por la fundación Paz Ciudadana han levantado datos de suma relevancia para sumar evidencias y hallazgos a la complejidad que requiere tratar la percepción de la ciudadanía sobre el crimen, la sensación de inseguridad, la victimización, entre otros.
+La agenda de seguridad y delincuencia se ha vuelto cada vez más relevante en el debate público nacional. Al respecto, estudios como la Encuesta Nacional de Seguridad Ciudadana (ENUSC) elaborada por el Instituto Nacional de Estadísticas (INE), así como el Índice de Paz Ciudadana hecho por la fundación Paz Ciudadana han levantado datos de suma relevancia para sumar evidencias y hallazgos a la complejidad que requiere tratar la percepción de la ciudadanía sobre el crimen, la sensación de inseguridad, la victimización, entre otros.
 
-Sin embargo, a pesar del impacto público y la visibilidad de estos estudios, hay una ausencia de datos que aborden el problema de la seguridad desde la perspectiva de la relación entre la ciudadanía y las instituciones policiales de nuestro país. Una amplia diversidad de investigaciones en el área de las Ciencias Sociales han demostrado que el fomento de las buenas relaciones entre policías y ciudadanos promueve la obediencia y la cooperación mutua para el enfrentamiento de la delincuencia en una sociedad democrática. Preocupados de este fenómeno, el Observatorio de Violencia y Legitimidad Social se encuentra desarrollando una Estudio Longitudinal sobre Percepciones de Seguridad y Policías en Chile.
+Sin embargo, a pesar del impacto público y la visibilidad de estos estudios, hay una ausencia de datos que aborden el problema de la seguridad desde la perspectiva de la relación entre la ciudadanía y las instituciones policiales de nuestro país. Una amplia diversidad de investigaciones en el área de las Ciencias Sociales han demostrado que el fomento de las buenas relaciones entre policías y ciudadanos promueve la cooperación mutua para el enfrentamiento de la delincuencia en una sociedad democrática. Preocupados de este fenómeno, el Observatorio de Violencia y Legitimidad Social se encuentra desarrollando un Estudio Longitudinal sobre Percepciones de Seguridad y Policías en Chile.
 
-Con el fin poner al alcance el conocimiento, el presente documento busca poner a disposición los resultados de la primera ola de la encuesta en cuestión. En el *Informe ESEP Ola 0* el usuario puede encontrar información acerca de nuestra organización, las especificaciones metodológicas del Estudio de Percepciones de Seguridad y Policías en Chile, así como los resultados generales y por cruces demográficos de la encuesta.
+Con el fin poner al alcance el conocimiento generado, el presente documento busca poner a disposición los resultados de la primera ola de la encuesta en cuestión. En el *Informe del Estudio de Percepciones de Seguridad y Policías en Chile (ESEP) Ola 0* el usuario puede encontrar información acerca de nuestra organización, las especificaciones metodológicas del estudio, así como los resultados generales y cruces demográficos de la encuesta.
 
 En caso de querer contactarse con el Observatorio de Violencia y Legitimidad Social, puede escribirnos al presente correo: [contacto.oles@gmail.com](mailto:contacto.oles@gmail.com).
 
-# ¿Qué es OLES?
+# ¿Qué es el Observatorio de Violencia y Legitimidad Social (OLES)?
 
 El Observatorio de Violencia y Legitimidad Social[^oles] es una plataforma que desarrolla investigación colaborativa en temáticas relacionadas con la **violencia**, explorando sus sentidos, formas de justificación, así como diversas formas en que la sociedad chilena ha desarrollado procesos de construcción de **legitimidad social** frente a las autoridades, considerando el rol de la **justicia** como elemento clave en la comprensión de las transformaciones sociales que vive actualmente el país.
 
