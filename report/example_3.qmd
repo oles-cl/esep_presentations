@@ -1,5 +1,5 @@
 ---
-title: Estudio de Percepciones de Seguridad y Policías en Chile 
+title: Informe Estudio de Percepciones de Seguridad y Policías en Chile 
 subtitle: Informe Ola 0
 author:
   - name: Mónica M. Gerber
@@ -141,19 +141,32 @@ plot_propbar_edad <- function(x,fill_column,fill_palette) {
     scale_y_continuous(labels = function(x) paste0(x * 100, "%"))
 }
 
-data_ola0 <- haven::read_sav("../data/data_ola_0.sav")
+#función propbar region
+plot_propbar_region <- function(x,fill_column,fill_palette) {
+  x|>
+  ggplot(aes(x = region, y = n, fill = !!as.name(fill_column))) +
+    geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
+    geom_label(aes(label = paste0(prop, "%")), position = position_fill(vjust = 0.5), size = 2, color = "black") +
+    coord_flip() +
+    theme_classic() +
+    theme(legend.position = "top",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    labs(fill = "Respuesta") +
+    scale_fill_manual(values = fill_palette) +
+    scale_y_continuous(labels = function(x) paste0(x * 100, "%"))
+}
 
-demographics_ola_0 <- read_xlsx("../data/demographics_ola_0.xlsx") |>
-  select(SbjNum, region_, sexo=Sexo, ano_nacimiento="Año de nacimiento") |>
-  mutate(ano_nacimiento=as.numeric(ano_nacimiento),
-         edad=as.numeric(format(Sys.Date(), "%Y")) - ano_nacimiento,
-         edad_recod=case_when(edad <= 25 ~ "25 años o menos",
+data_ola0 <- haven::read_sav("../data/data_ola_0.sav") |>
+   rename(region=region_,
+         edad=edad_encuestado
+         )|>
+   mutate(edad_recod=case_when(edad <= 25 ~ "25 años o menos",
                               edad > 25 & edad <= 40 ~ "Entre 26 y 40 años",
                               edad > 40 & edad <= 60 ~ "Entre 41 y 60 años",
-                              edad > 60 ~ "Más de 60 años")
-)
-
-data_ola0<-merge(data_ola0,demographics_ola_0)
+                              edad > 60 ~ "Más de 60 años"),
+          region=paste0(toupper(substr(region, 1, 1)),tolower(substr(region, 2, nchar(region)))),
+          sexo=to_label(sexo))
 ```
 
 # Introducción
@@ -256,9 +269,10 @@ La @fig-b1-long sugiere que:
 #| fig-subcap:
 #|   - "Por Género"
 #|   - "Por Tramo etario"
+#|   - "Por Región"
 #| layout-ncol: 1 
 
-data_ola0 |>
+b1_demo<- data_ola0 |>
   mutate(b1=to_label(b1)) |>
   group_by(sexo) |>
   count(b1) |>
@@ -269,7 +283,9 @@ data_ola0 |>
   mutate(b1=factor(b1,
                    levels=c("Disminuyó",
                             "Se mantuvo",
-                            "Aumentó"))) |>
+                            "Aumentó"))) 
+
+  b1_demo|>
   plot_propbar_sexo(fill_column="b1",fill_palette=palette_oles_3)
   
 
@@ -289,6 +305,21 @@ data_ola0 |>
   
   plot_propbar_edad(fill_column = "b1",fill_palette = palette_oles_3)
 
+data_ola0 |>
+  mutate(b1=to_label(b1)) |>
+  count(region,b1) |>
+  drop_na()|>
+  group_by(region)|>
+  mutate(prop=(n/sum(n)*100)|>round(1),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(b1!="No sabe (No leer)") |>
+  filter(b1!="No responde (No leer)") |>
+  mutate(b1=factor(b1,
+                   levels=c("Disminuyó",
+                            "Se mantuvo",
+                            "Aumentó"))) |>
+  
+  plot_propbar_region(fill_column = "b1",fill_palette = palette_oles_3)
 ```
 La @fig-b1-demo hace pensar que:
 
@@ -350,6 +381,7 @@ De @fig-b2-long se desprende:
 #| fig-subcap:
 #|   - "Por Género"
 #|   - "Por Tramo etario"
+#|   - "Por Región"
 #| layout-ncol: 1 
 
 data_ola0 |>
@@ -384,6 +416,23 @@ data_ola0 |>
                             "Muy seguro/a"))) |>
   
 plot_propbar_edad(fill_column = "b2",fill_palette = palette_oles_4)
+
+data_ola0 |>
+  mutate(b2=to_label(b2)) |>
+  group_by(region) |>
+  count(b2) |>
+  drop_na() |>
+  mutate(prop=(n/sum(n)*100)|>round(1),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(b2!="No sabe (No leer)") |>
+  filter(b2!="No responde (No leer)") |>
+  mutate(b2=factor(b2,
+                   levels=c("Muy inseguro/a",
+                            "Inseguro/a",
+                            "Seguro/a",
+                            "Muy seguro/a"))) |>
+  
+  plot_propbar_region(fill_column = "b2",fill_palette = palette_oles_4)
 ```
 La @fig-b2-demo muestra que:
 
@@ -503,6 +552,7 @@ Se resume de @fig-c-general que:
 #| fig-subcap:
 #|   - "Por Género"
 #|   - "Por Tramo etario"
+#|   - "Por Región"
 #| layout-ncol: 1
 data_ola0 |>
   mutate(c1_1=to_label(c1_1)) |>
@@ -526,6 +576,18 @@ data_ola0 |>
   filter(c1_1!="No responde (No leer)") |>
   
 plot_propbar_edad(fill_column = "c1_1",fill_palette = palette_likert_5)
+
+data_ola0 |>
+  mutate(c1_1=to_label(c1_1)) |>
+  count(region,c1_1) |>
+  drop_na()|>
+  group_by(region)|>
+  mutate(prop=(n/sum(n)*100)|>round(1),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(c1_1!="No sabe (No leer)") |>
+  filter(c1_1!="No responde (No leer)") |>
+  
+plot_propbar_region(fill_column = "c1_1",fill_palette = palette_likert_5)
 ```
 
 ```{r}
@@ -534,6 +596,7 @@ plot_propbar_edad(fill_column = "c1_1",fill_palette = palette_likert_5)
 #| fig-subcap:
 #|   - "Por Género"
 #|   - "Por Tramo etario"
+#|   - "Por Región"
 #| layout-ncol: 1
 data_ola0 |>
   mutate(c1_2=to_label(c1_2)) |>
@@ -558,6 +621,21 @@ data_ola0 |>
   
   plot_propbar_edad(fill_column = "c1_2",fill_palette = palette_likert_5)
 
+data_ola0 |>
+  mutate(c1_2=to_label(c1_2)) |>
+  count(region,c1_2) |>
+  drop_na()|>
+  group_by(region)|>
+  mutate(prop=(n/sum(n)*100)|>round(1),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(c1_2!="No sabe (No leer)") |>
+  filter(c1_2!="No responde (No leer)") |>
+  
+  plot_propbar_region(fill_column = "c1_2",fill_palette = palette_likert_5) +
+  theme(
+    legend.text = element_text(hjust = 0, margin = margin(r = 0.5)),
+    legend.key.size = unit(0.2, "lines"))
+
 ```
 
 ```{r}
@@ -566,6 +644,7 @@ data_ola0 |>
 #| fig-subcap:
 #|   - "Por Género"
 #|   - "Por Tramo etario"
+#|   - "Por Región"
 #| layout-ncol: 1
 data_ola0 |>
   mutate(c1_3=to_label(c1_3)) |>
@@ -591,6 +670,18 @@ data_ola0 |>
   
   plot_propbar_edad(fill_column = "c1_3",fill_palette = palette_likert_5)
 
+data_ola0 |>
+  mutate(c1_3=to_label(c1_3)) |>
+  count(region,c1_3) |>
+  drop_na()|>
+  group_by(region)|>
+  mutate(prop=(n/sum(n)*100)|>round(1),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(c1_3!="No sabe (No leer)") |>
+  filter(c1_3!="No responde (No leer)") |>
+  
+  plot_propbar_region(fill_column = "c1_3",fill_palette = palette_likert_5)
+
 ```
 
 ```{r}
@@ -599,6 +690,7 @@ data_ola0 |>
 #| fig-subcap:
 #|   - "Por Género"
 #|   - "Por Tramo etario"
+#|   - "Por Región"
 #| layout-ncol: 1
 
 data_ola0 |>
@@ -624,6 +716,18 @@ data_ola0 |>
   filter(c1_4!="No responde (No leer)") |>
   
   plot_propbar_edad(fill_column = "c1_4",fill_palette = palette_likert_5)
+
+data_ola0 |>
+  mutate(c1_4=to_label(c1_4)) |>
+  count(region,c1_4) |>
+  drop_na()|>
+  group_by(region)|>
+  mutate(prop=(n/sum(n)*100)|>round(1),
+         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+  filter(c1_4!="No sabe (No leer)") |>
+  filter(c1_4!="No responde (No leer)") |>
+  
+  plot_propbar_region(fill_column = "c1_4",fill_palette = palette_likert_5)
 
 ```
 
