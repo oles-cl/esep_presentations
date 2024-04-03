@@ -66,7 +66,10 @@ pacman::p_load(tidyverse,
                readxl,
                stringr,
                wrapr,
-               scales
+               scales,
+               janitor,
+               ggpubr,
+               forcats
                )
 
 level_likert_1 <- c(
@@ -76,32 +79,35 @@ level_likert_1 <- c(
   "De acuerdo",         
   "Muy de acuerdo")
 
-palette_likert_5 <- c(
-  "#a70000",
-  "#ff7b7b",
-  "#5D3587",
-  "#6EB1D6",
-  "#1B5886"
-)
-
-palette_likert_4 <-c(
-  "#ffbaba",
-  "#ff7b7b",
-  "#ff0000",
-  "#a70000"
-)
-
 palette_oles_4 <-c(
   "#a70000",
+  "#6EB1D6",
+  "#1B5886",
+  "grey"
+)
+
+palette_oles_5 <-c(
+  "#a70000",
   "#ff7b7b",
   "#6EB1D6",
-  "#1B5886"
+  "#1B5886",
+  "grey"
+
+)
+
+palette_oles_6 <-c(
+  "#a70000",
+  "#ff7b7b",
+  "#efad4a",
+  "#6EB1D6",
+  "#1B5886",
+  "grey"
 )
 
 palette_oles_3 <- c(
   "#a70000",
-  "#5D3587",
-  "#1B5886"
+  "#1B5886",
+  "grey"
 )
 
 palette_oles_2 <- c(
@@ -114,7 +120,7 @@ plot_propbar_sexo<- function(x,fill_column,fill_palette) {
   x |>
   ggplot(aes(x = sexo, y = n, fill = !!as.name(fill_column))) +
     geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
-    geom_label(aes(label = paste0(prop, "%")), position = position_fill(vjust = 0.5), size = 4, color = "black") +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 2, color = "black") +
     coord_flip() +
     theme_classic() +
     theme(legend.position = "top",
@@ -130,7 +136,7 @@ plot_propbar_edad <- function(x,fill_column,fill_palette) {
   x|>
   ggplot(aes(x = edad_recod, y = n, fill = !!as.name(fill_column))) +
     geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
-    geom_label(aes(label = paste0(prop, "%")), position = position_fill(vjust = 0.5), size = 4, color = "black") +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 2, color = "black") +
     coord_flip() +
     theme_classic() +
     theme(legend.position = "top",
@@ -141,12 +147,12 @@ plot_propbar_edad <- function(x,fill_column,fill_palette) {
     scale_y_continuous(labels = function(x) paste0(x * 100, "%"))
 }
 
-#función propbar region
-plot_propbar_region <- function(x,fill_column,fill_palette) {
+#función propbar zona
+plot_propbar_zona <- function(x,fill_column,fill_palette) {
   x|>
-  ggplot(aes(x = region, y = n, fill = !!as.name(fill_column))) +
+  ggplot(aes(x = zona, y = n, fill = !!as.name(fill_column))) +
     geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
-    geom_label(aes(label = paste0(prop, "%")), position = position_fill(vjust = 0.5), size = 2, color = "black") +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 2, color = "black") +
     coord_flip() +
     theme_classic() +
     theme(legend.position = "top",
@@ -157,8 +163,39 @@ plot_propbar_region <- function(x,fill_column,fill_palette) {
     scale_y_continuous(labels = function(x) paste0(x * 100, "%"))
 }
 
-data_ola0 <- haven::read_sav("../data/data_ola_0.sav") |>
-   rename(region=region_,
+#función propbar gse
+plot_propbar_gse <- function(x,fill_column,fill_palette) {
+  x|>
+  ggplot(aes(x = gse_recod, y = n, fill = !!as.name(fill_column))) +
+    geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 2, color = "black") +
+    coord_flip() +
+    theme_classic() +
+    theme(legend.position = "top",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    labs(fill = "Respuesta") +
+    scale_fill_manual(values = fill_palette) +
+    scale_y_continuous(labels = function(x) paste0(x * 100, "%"))
+}
+
+#función base descriptivos
+proc_plot_demo <- function(x, variable, demografico) {
+  x %>%
+    mutate({{ variable }} := to_label({{ variable }})) %>%
+    group_by({{ demografico }}) %>%
+    count({{ variable }}) %>%
+    mutate(prop = round(n / sum(n) * 100, 0),
+           ola = "Ola 0 (Septiembre-Noviembre 2023)",
+           label=ifelse(prop>5,paste0(prop,"%"),NA))
+}
+
+
+
+
+data_ola0 <- readRDS("../data/esep_w0.rds") |>
+  janitor::clean_names()|>
+   rename(
          edad=edad_encuestado
          )|>
    mutate(edad_recod=case_when(edad <= 25 ~ "25 años o menos",
@@ -166,7 +203,29 @@ data_ola0 <- haven::read_sav("../data/data_ola_0.sav") |>
                               edad > 40 & edad <= 60 ~ "Entre 41 y 60 años",
                               edad > 60 ~ "Más de 60 años"),
           region=paste0(toupper(substr(region, 1, 1)),tolower(substr(region, 2, nchar(region)))),
-          sexo=to_label(sexo))
+          zona=case_when(
+            region%in%c("Arica y parinacota","Tarapacá","Antofagasta")~"Norte Grande",
+            region%in%c("Coquimbo","Atacama")~"Norte Chico",
+            region=="Metropolitana"~"Región Metropolitina",
+            region%in%c("Valparaíso","Libertador bernardo o’higgins",
+                        "Maule","Ñuble")~"Zona Central",
+            region%in%c("Biobío","Araucanía","Los lagos","Los ríos")~"Zona Sur",
+            region%in%c("Aysén","Magallanes")~"Zona Austral"
+          ),
+          zona=factor(zona,levels = c("Norte Grande",
+                                      "Norte Chico",
+                                      "Región Metropolitina",
+                                      "Zona Central",
+                                      "Zona Sur",
+                                      "Zona Austral")),
+          gse_recod=case_when(
+            gse%in%c(6,5)~"E/D",
+            gse%in%c(4,3)~"C2/C3",
+            gse%in%c(2,1)~"ABC1/C1",
+            gse==7~"Sin Info."
+          ),
+          sexo=to_label(sexo)
+        ) 
 ```
 
 # Introducción
@@ -228,13 +287,17 @@ Durante septiembre 2023 y febrero 2024 en Chile:
 #| label: fig-b1-long
 #| fig-cap: "Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país..."
 
+val_label(data_ola0$b1,99)<-"NS-NR"
+val_label(data_ola0$b1,88)<-"NS-NR"
+
 data_ola0 |>
-  mutate(b1=to_label(b1)) |>
+    mutate(
+    b1=to_label(b1)
+    )|>
   count(b1) |>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b1!="No sabe (No leer)") |>
-  filter(b1!="No responde (No leer)") |>
+         ola="Ola 0 (Septiembre-Noviembre 2023)"
+         )|>
 
   ggplot(aes(x=ola,y=prop,color=b1))+
   
@@ -252,10 +315,10 @@ data_ola0 |>
     axis.title.y = element_blank()
     )+
   labs(
-    caption = "[Proporción de casos perdidos = 0.36%]",
+    caption = "Fuente: ESEP 2023, ola 0.",
     color="Respuesta"
-  ) +
-  scale_color_manual(values = palette_oles_3)
+  )+
+  scale_color_manual(values = palette_oles_4)
 ```
 
 La @fig-b1-long sugiere que:
@@ -266,60 +329,53 @@ La @fig-b1-long sugiere que:
 ```{r}
 #| label: fig-b1-demo
 #| fig-cap: "Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país... (Cruce demográfico)"
-#| fig-subcap:
-#|   - "Por Género"
-#|   - "Por Tramo etario"
-#|   - "Por Región"
-#| layout-ncol: 1 
 
-b1_demo<- data_ola0 |>
-  mutate(b1=to_label(b1)) |>
-  group_by(sexo) |>
-  count(b1) |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b1!="No sabe (No leer)") |>
-  filter(b1!="No responde (No leer)") |>
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(b1,sexo)|>
   mutate(b1=factor(b1,
                    levels=c("Disminuyó",
                             "Se mantuvo",
-                            "Aumentó"))) 
+                            "Aumentó",
+                            "NS-NR"))) |>
+  plot_propbar_sexo(fill_column="b1",fill_palette=palette_oles_4),
 
-  b1_demo|>
-  plot_propbar_sexo(fill_column="b1",fill_palette=palette_oles_3)
-  
+
+data_ola0 |> 
+  proc_plot_demo(b1,edad_recod)|>
+  mutate(b1=factor(b1,
+                   levels=c("Disminuyó",
+                            "Se mantuvo",
+                            "Aumentó",
+                            "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "b1",fill_palette = palette_oles_4),
 
 data_ola0 |>
-  mutate(b1=to_label(b1)) |>
-  count(edad_recod,b1) |>
-  drop_na()|>
-  group_by(edad_recod)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b1!="No sabe (No leer)") |>
-  filter(b1!="No responde (No leer)") |>
+  proc_plot_demo(b1,zona)|>
   mutate(b1=factor(b1,
                    levels=c("Disminuyó",
                             "Se mantuvo",
-                            "Aumentó"))) |>
-  
-  plot_propbar_edad(fill_column = "b1",fill_palette = palette_oles_3)
+                            "Aumentó",
+                            "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "b1",fill_palette = palette_oles_4),
 
-data_ola0 |>
-  mutate(b1=to_label(b1)) |>
-  count(region,b1) |>
-  drop_na()|>
-  group_by(region)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b1!="No sabe (No leer)") |>
-  filter(b1!="No responde (No leer)") |>
+ data_ola0 |>
+  proc_plot_demo(b1,gse_recod)|>
   mutate(b1=factor(b1,
                    levels=c("Disminuyó",
                             "Se mantuvo",
-                            "Aumentó"))) |>
-  
-  plot_propbar_region(fill_column = "b1",fill_palette = palette_oles_3)
+                            "Aumentó",
+                            "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "b1",fill_palette = palette_oles_4),
+
+ncol = 2, nrow = 2, align = "hv", 
+          common.legend = TRUE
+ 
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
 ```
 La @fig-b1-demo hace pensar que:
 
@@ -335,6 +391,9 @@ La @fig-b1-demo hace pensar que:
 ```{r}
 #| label: fig-b2-long
 #| fig-cap: "¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?"
+
+val_label(data_ola0$b2,99)<-"NS-NR"
+val_label(data_ola0$b2,88)<-"NS-NR"
 
 data_ola0 |>
   mutate(b2=to_label(b2),
@@ -365,10 +424,10 @@ ggplot(aes(x=ola,y=prop,color=b2))+
     legend.key.width = unit(0.5, "lines")
     )+
   labs(
-    caption = "[Proporción de casos perdidos = 0.50%]",
+    caption = "Fuente: ESEP 2023, ola 0.",
     color="Respuesta"
   ) +
-  scale_color_manual(values = palette_oles_2)
+  scale_color_manual(values = palette_oles_3)
 ```
 De @fig-b2-long se desprende:
 
@@ -378,61 +437,54 @@ De @fig-b2-long se desprende:
 ```{r}
 #| label: fig-b2-demo
 #| fig-cap: "¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro? (Cruce demográfico)"
-#| fig-subcap:
-#|   - "Por Género"
-#|   - "Por Tramo etario"
-#|   - "Por Región"
-#| layout-ncol: 1 
 
-data_ola0 |>
-  mutate(b2=to_label(b2)) |>
-  group_by(sexo) |>
-  count(b2) |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b2!="No sabe (No leer)") |>
-  filter(b2!="No responde (No leer)") |>
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(b2,sexo)|>
   mutate(b2=factor(b2,
                    levels=c("Muy inseguro/a",
                             "Inseguro/a",
                             "Seguro/a",
-                            "Muy seguro/a"))) |>
-  
-plot_propbar_sexo(fill_column = "b2",fill_palette = palette_oles_4)
+                            "Muy seguro/a",
+                            "NS-NR"))) |>
+  plot_propbar_sexo(fill_column="b2",fill_palette=palette_oles_5),
 
-data_ola0 |>
-  mutate(b2=to_label(b2)) |>
-  group_by(edad_recod) |>
-  count(b2) |>
-  drop_na() |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b2!="No sabe (No leer)") |>
-  filter(b2!="No responde (No leer)") |>
+
+data_ola0 |> 
+  proc_plot_demo(b2,edad_recod)|>
   mutate(b2=factor(b2,
                    levels=c("Muy inseguro/a",
                             "Inseguro/a",
                             "Seguro/a",
-                            "Muy seguro/a"))) |>
-  
-plot_propbar_edad(fill_column = "b2",fill_palette = palette_oles_4)
+                            "Muy seguro/a",
+                            "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "b2",fill_palette = palette_oles_5),
 
 data_ola0 |>
-  mutate(b2=to_label(b2)) |>
-  group_by(region) |>
-  count(b2) |>
-  drop_na() |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b2!="No sabe (No leer)") |>
-  filter(b2!="No responde (No leer)") |>
+  proc_plot_demo(b2,zona)|>
   mutate(b2=factor(b2,
                    levels=c("Muy inseguro/a",
                             "Inseguro/a",
                             "Seguro/a",
-                            "Muy seguro/a"))) |>
-  
-  plot_propbar_region(fill_column = "b2",fill_palette = palette_oles_4)
+                            "Muy seguro/a",
+                            "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "b2",fill_palette = palette_oles_5),
+
+ data_ola0 |>
+  proc_plot_demo(b2,gse_recod)|>
+  mutate(b2=factor(b2,
+                   levels=c("Muy inseguro/a",
+                            "Inseguro/a",
+                            "Seguro/a",
+                            "Muy seguro/a",
+                            "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "b2",fill_palette = palette_oles_5),
+
+ncol = 2, nrow = 2, align = "hv", 
+          common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 La @fig-b2-demo muestra que:
 
@@ -453,12 +505,14 @@ La @fig-b2-demo muestra que:
 #|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
 #| layout-ncol: 2
 
+val_label(data_ola0$c1_1,99)<-"NS-NR"
+val_label(data_ola0$c1_1,88)<-"NS-NR"
+
 data_ola0 |>
-  count(Variable=to_label(c1_1))|>
+  mutate(c1_1=to_label(c1_1))|>
+  count(Variable=c1_1)|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="Carabineros logra controlar el problema de la delincuencia en Chile")|>
-  filter(Variable!="No sabe (No leer)") |>
-  filter(Variable!="No responde (No leer)") |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
@@ -469,17 +523,18 @@ data_ola0 |>
         axis.title.x = element_blank(),
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
   coord_flip() +
   guides(fill=FALSE)+
   labs(caption = "[Proporción de casos perdidos = 0.30%]")
+
+val_label(data_ola0$c1_2,99)<-"NS-NR"
+val_label(data_ola0$c1_2,88)<-"NS-NR"
 
 data_ola0 |>
   count(Variable=to_label(c1_2))|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="Carabineros logra controlar el problema del narcotráfico en Chile")|>
-  filter(Variable!="No sabe (No leer)") |>
-  filter(Variable!="No responde (No leer)") |>
   mutate(Item=str_wrap(Item, width = 60)) |>
 
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
@@ -491,17 +546,18 @@ data_ola0 |>
         axis.title.x = element_blank(),
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
   coord_flip() +
   guides(fill=FALSE)+
   labs(caption = "[Proporción de casos perdidos = 0.60%]")
+
+val_label(data_ola0$c1_3,99)<-"NS-NR"
+val_label(data_ola0$c1_3,88)<-"NS-NR"
 
 data_ola0 |>
   count(Variable=to_label(c1_3))|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal")|>
-  filter(Variable!="No sabe (No leer)") |>
-  filter(Variable!="No responde (No leer)") |>
   mutate(Item=str_wrap(Item, width = 60)) |>
 
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
@@ -514,16 +570,24 @@ data_ola0 |>
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
   coord_flip() +
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
   guides(fill=FALSE)+
   labs(caption = "[Proporción de casos perdidos = 1.90%]")
 
+
+val_label(data_ola0$c1_4,99)<-"NS-NR"
+val_label(data_ola0$c1_4,88)<-"NS-NR"
+is.na(data_ola0$c1_4)<-"NS-NR"
+
+# Falta arreglar la introducción de NA
 data_ola0 |>
   count(Variable=to_label(c1_4))|>
+  mutate(Variable=ifelse(is.na(Variable),"NS-NR",Variable))|>
+  group_by(Variable)|>
+  summarise(n=sum(n))|>
+  ungroup()|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas")|>
-  filter(Variable!="No sabe (No leer)") |>
-  filter(Variable!="No responde (No leer)") |>
   mutate(Item=str_wrap(Item, width = 60)) |>
 
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
@@ -536,7 +600,7 @@ data_ola0 |>
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
   coord_flip() +
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
   guides(fill=FALSE)+
   labs(caption = "[Proporción de casos perdidos = 0.30%]")
 
@@ -547,187 +611,249 @@ Se resume de @fig-c-general que:
 -   Alrededor del 70% de la población chilena está de acuerdo con respetar las decisiones que toma carabineros aunque no se esté de acuerdo con ellas.
 
 ```{r}
+val_label(data_ola0$c1_1,99)<-"NS-NR"
+val_label(data_ola0$c1_1,88)<-"NS-NR"
+
+val_label(data_ola0$c1_2,99)<-"NS-NR"
+val_label(data_ola0$c1_2,88)<-"NS-NR"
+
+val_label(data_ola0$c1_3,99)<-"NS-NR"
+val_label(data_ola0$c1_3,88)<-"NS-NR"
+
+val_label(data_ola0$c1_4,99)<-"NS-NR"
+val_label(data_ola0$c1_4,88)<-"NS-NR"
+```
+
+```{r}
 #| label: fig-c1_1-demo
 #| fig-cap: "(Cruce demográfico) Carabineros logra controlar el problema de la delincuencia en Chile"
-#| fig-subcap:
-#|   - "Por Género"
-#|   - "Por Tramo etario"
-#|   - "Por Región"
-#| layout-ncol: 1
-data_ola0 |>
-  mutate(c1_1=to_label(c1_1)) |>
-  group_by(sexo) |>
-  count(c1_1) |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_1!="No sabe (No leer)") |>
-  filter(c1_1!="No responde (No leer)") |>
-  
-  plot_propbar_sexo(fill_column = "c1_1",fill_palette = palette_likert_5)
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_1, sexo) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c1_1", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_1, edad_recod) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c1_1", fill_palette = palette_oles_6),
 
 data_ola0 |>
-  mutate(c1_1=to_label(c1_1)) |>
-  count(edad_recod,c1_1) |>
-  drop_na()|>
-  group_by(edad_recod)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_1!="No sabe (No leer)") |>
-  filter(c1_1!="No responde (No leer)") |>
-  
-plot_propbar_edad(fill_column = "c1_1",fill_palette = palette_likert_5)
+  proc_plot_demo(c1_1, zona) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c1_1", fill_palette = palette_oles_6),
 
-data_ola0 |>
-  mutate(c1_1=to_label(c1_1)) |>
-  count(region,c1_1) |>
-  drop_na()|>
-  group_by(region)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_1!="No sabe (No leer)") |>
-  filter(c1_1!="No responde (No leer)") |>
-  
-plot_propbar_region(fill_column = "c1_1",fill_palette = palette_likert_5)
+ data_ola0 |>
+  proc_plot_demo(c1_1, gse_recod) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c1_1", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)
+
+
 ```
 
 ```{r}
 #| label: fig-c1_2-demo
 #| fig-cap: "(Cruce demográfico) Carabineros logra controlar el problema del narcotráfico en Chile"
-#| fig-subcap:
-#|   - "Por Género"
-#|   - "Por Tramo etario"
-#|   - "Por Región"
-#| layout-ncol: 1
-data_ola0 |>
-  mutate(c1_2=to_label(c1_2)) |>
-  group_by(sexo) |>
-  count(c1_2) |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_2!="No sabe (No leer)") |>
-  filter(c1_2!="No responde (No leer)") |>
-  
-  plot_propbar_sexo(fill_column = "c1_2",fill_palette = palette_likert_5)
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_2, sexo) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_sexo(fill_column = "c1_2", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_2, edad_recod) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_edad(fill_column = "c1_2", fill_palette = palette_oles_6),
 
 data_ola0 |>
-  mutate(c1_2=to_label(c1_2)) |>
-  count(edad_recod,c1_2) |>
-  drop_na()|>
-  group_by(edad_recod)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_2!="No sabe (No leer)") |>
-  filter(c1_2!="No responde (No leer)") |>
-  
-  plot_propbar_edad(fill_column = "c1_2",fill_palette = palette_likert_5)
+  proc_plot_demo(c1_2, zona) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |> 
+  plot_propbar_zona(fill_column = "c1_2", fill_palette = palette_oles_6),
 
-data_ola0 |>
-  mutate(c1_2=to_label(c1_2)) |>
-  count(region,c1_2) |>
-  drop_na()|>
-  group_by(region)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_2!="No sabe (No leer)") |>
-  filter(c1_2!="No responde (No leer)") |>
-  
-  plot_propbar_region(fill_column = "c1_2",fill_palette = palette_likert_5) +
-  theme(
-    legend.text = element_text(hjust = 0, margin = margin(r = 0.5)),
-    legend.key.size = unit(0.2, "lines"))
+ data_ola0 |>
+  proc_plot_demo(c1_2, gse_recod) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_gse(fill_column = "c1_2", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)
+
 
 ```
 
 ```{r}
 #| label: fig-c1_3-demo
 #| fig-cap: "(Cruce demográfico) En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
-#| fig-subcap:
-#|   - "Por Género"
-#|   - "Por Tramo etario"
-#|   - "Por Región"
-#| layout-ncol: 1
-data_ola0 |>
-  mutate(c1_3=to_label(c1_3)) |>
-  group_by(sexo) |>
-  count(c1_3) |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_3!="No sabe (No leer)") |>
-  filter(c1_3!="No responde (No leer)") |>
-  
-  plot_propbar_sexo(fill_column = "c1_3",fill_palette = palette_likert_5)
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_3, sexo) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_sexo(fill_column = "c1_3", fill_palette = palette_oles_6),
 
 
-data_ola0 |>
-  mutate(c1_3=to_label(c1_3)) |>
-  count(edad_recod,c1_3) |>
-  drop_na()|>
-  group_by(edad_recod)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_3!="No sabe (No leer)") |>
-  filter(c1_3!="No responde (No leer)") |>
-  
-  plot_propbar_edad(fill_column = "c1_3",fill_palette = palette_likert_5)
+data_ola0 |> 
+  proc_plot_demo(c1_3, edad_recod) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_edad(fill_column = "c1_3", fill_palette = palette_oles_6),
 
 data_ola0 |>
-  mutate(c1_3=to_label(c1_3)) |>
-  count(region,c1_3) |>
-  drop_na()|>
-  group_by(region)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_3!="No sabe (No leer)") |>
-  filter(c1_3!="No responde (No leer)") |>
-  
-  plot_propbar_region(fill_column = "c1_3",fill_palette = palette_likert_5)
+  proc_plot_demo(c1_3, zona) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |> 
+  plot_propbar_zona(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c1_3, gse_recod) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_gse(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)
+
 
 ```
 
 ```{r}
 #| label: fig-c1_4-demo
 #| fig-cap: "(Cruce demográfico) Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
-#| fig-subcap:
-#|   - "Por Género"
-#|   - "Por Tramo etario"
-#|   - "Por Región"
-#| layout-ncol: 1
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_4, sexo) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_sexo(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_4, edad_recod) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_edad(fill_column = "c1_4", fill_palette = palette_oles_6),
 
 data_ola0 |>
-  mutate(c1_4=to_label(c1_4)) |>
-  group_by(sexo) |>
-  count(c1_4) |>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_4!="No sabe (No leer)") |>
-  filter(c1_4!="No responde (No leer)") |>
-  
-  plot_propbar_sexo(fill_column = "c1_4",fill_palette = palette_likert_5)
+  proc_plot_demo(c1_4, zona) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |> 
+  plot_propbar_zona(fill_column = "c1_4", fill_palette = palette_oles_6),
 
+ data_ola0 |>
+  proc_plot_demo(c1_4, gse_recod) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_gse(fill_column = "c1_4", fill_palette = palette_oles_6),
 
-data_ola0 |>
-  mutate(c1_4=to_label(c1_4)) |>
-  count(edad_recod,c1_4) |>
-  drop_na()|>
-  group_by(edad_recod)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_4!="No sabe (No leer)") |>
-  filter(c1_4!="No responde (No leer)") |>
-  
-  plot_propbar_edad(fill_column = "c1_4",fill_palette = palette_likert_5)
-
-data_ola0 |>
-  mutate(c1_4=to_label(c1_4)) |>
-  count(region,c1_4) |>
-  drop_na()|>
-  group_by(region)|>
-  mutate(prop=(n/sum(n)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(c1_4!="No sabe (No leer)") |>
-  filter(c1_4!="No responde (No leer)") |>
-  
-  plot_propbar_region(fill_column = "c1_4",fill_palette = palette_likert_5)
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)
 
 ```
 
@@ -737,20 +863,20 @@ data_ola0 |>
 ```{r}
 #| label: fig-c3_1-general
 #| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con que la Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile?"
+val_label(data_ola0$c3,99)<-"NS-NR"
+val_label(data_ola0$c3,88)<-"NS-NR"
 
 data_ola0 |>
   count(Variable=to_label(c3))|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
          Item="La PDI logra controlar el problema de la delincuencia en Chile",
          Variable=factor(Variable,levels=c(
+                               "NS-NR",
                                "Muy de Acuerdo",
                                "De acuerdo",
                                "Ni de acuerdo ni en desacuerdo",
                                "En desacuerdo",
                                "Muy en desacuerdo"))) |>
-  
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
@@ -760,40 +886,67 @@ filter(Variable!="No responde (No leer)") |>
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
   geom_text(aes(label=paste0(prop,"%"),hjust=-0.1)) +
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
   guides(fill=FALSE)+
   labs(caption="[Proporción de casos perdidos = 1.52%]")+
   coord_flip()
 ```
+
 ```{r}
 #| label: fig-c3-demo
 #| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con que la Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile?"
-#| fig-subcap:
-#|   - "Por Género"
-#|   - "Por Tramo etario"
-#| layout-ncol: 1 
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c3, sexo) |>
+  mutate(c3 = factor(c3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_sexo(fill_column = "c3", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c3, edad_recod) |>
+  mutate(c3 = factor(c3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_edad(fill_column = "c3", fill_palette = palette_oles_6),
 
 data_ola0 |>
-  mutate(c3=to_label(c3)) |>
-  group_by(sexo) |>
-  count(c3) |>
-  mutate(prop=(n/sum(n)*100)|>round(1)) |>
-  filter(c3!="No sabe (No leer)") |>
-  filter(c3!="No responde (No leer)") |>
-  
-  plot_propbar_sexo(fill_column = "c3",fill_palette = palette_likert_5)
+  proc_plot_demo(c3, zona) |>
+  mutate(c3 = factor(c3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |> 
+  plot_propbar_zona(fill_column = "c3", fill_palette = palette_oles_6),
 
+ data_ola0 |>
+  proc_plot_demo(c3, gse_recod) |>
+  mutate(c3 = factor(c3,
+                     levels = c("NS-NR",
+                                "Muy de Acuerdo",
+                                "De acuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "En desacuerdo",
+                                "Muy en desacuerdo"))) |>
+  plot_propbar_gse(fill_column = "c3", fill_palette = palette_oles_6),
 
-data_ola0 |>
-  mutate(c3=to_label(c3)) |>
-  group_by(edad_recod) |>
-  count(c3) |>
-  drop_na() |>
-  mutate(prop=(n/sum(n)*100)|>round(1)) |>
-  filter(c3!="No sabe (No leer)") |>
-  filter(c3!="No responde (No leer)") |>
-  
-  plot_propbar_edad(fill_column = "c3",fill_palette = palette_likert_5)
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)
+
 
 ```
 
@@ -809,15 +962,24 @@ data_ola0 |>
 #|   - "Tratan a las personas con respeto en Chile"
 #| layout-ncol: 1
 
+val_label(data_ola0$c2_1,99)<-"NS-NR"
+val_label(data_ola0$c2_1,88)<-"NS-NR"
+
+val_label(data_ola0$c2_2,99)<-"NS-NR"
+val_label(data_ola0$c2_2,88)<-"NS-NR"
 
 data_ola0 |>
   count(Variable=to_label(c2_1))|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
          Item="tratan a las personas con respeto en Chile")|>
-
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
-  
+  mutate(Variable=factor(Variable,levels=c(
+    "NS-NR",
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre"
+  )))|>
 
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
@@ -827,7 +989,7 @@ filter(Variable!="No responde (No leer)") |>
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
   geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
   guides(fill=FALSE)+
   labs(caption="[Proporción de casos perdidos = 0.61%]")
 
@@ -835,9 +997,14 @@ data_ola0 |>
   count(Variable=to_label(c2_2)) |>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
          Item="Toman decisiones justas e imparciales en los casos que se ocupa?") |>
-  
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
+    mutate(Variable=factor(Variable,levels=c(
+    "NS-NR",
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre"
+  )))|>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
@@ -847,7 +1014,7 @@ filter(Variable!="No responde (No leer)") |>
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
   geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
   guides(fill=FALSE)+
   labs(caption="[Proporción de casos perdidos = 0.86%]")
 ```
