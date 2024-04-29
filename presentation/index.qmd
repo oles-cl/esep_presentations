@@ -36,36 +36,36 @@ level_likert_1 <- c(
   "Muy de acuerdo")
 
 palette_likert_5 <- c(
-  "#ffbaba",
-  "#ff7b7b",
-  "#ff5252",
-  "#ff0000",
-  "#a70000"
+  "#fde725",
+  "#5ec962",
+  "#21918c",
+  "#3b528b",
+  "#440154"
 )
 
 palette_likert_4 <-c(
-  "#ffbaba",
-  "#ff7b7b",
-  "#ff0000",
-  "#a70000"
+  "#fde725",
+  "#35b779",
+  "#31688e",
+  "#440154"
 )
 
 palette_oles_4 <-c(
-  "#a70000",
-  "#ff7b7b",
-  "#6EB1D6",
-  "#1B5886"
+  "#fde725",
+  "#35b779",
+  "#31688e",
+  "#440154"
 )
 
 palette_oles_3 <- c(
-  "#a70000",
-  "#1B5886",
-  "#5D3587"
+  "#fde725",
+  "#21918c",
+  "#440154"
 )
 
 palette_oles_2 <- c(
-  "#a70000",
-  "#1B5886"
+  "#fde725",
+  "#440154"
 )
 
 
@@ -120,6 +120,32 @@ OLES cuenta de financiamiento y alianzas con las siguientes instituciones
 :::
 :::
 :::
+
+## Marco teórico
+### Legitimidad Social: ¿Qué es y por qué importa?
+
+<center>
+
+![](img/confianza_carabineros.png).
+</center>
+
+## Marco teórico
+### Legitimidad Social: ¿Qué es y por qué importa?
+
+::: columns
+::: column
+- Creencia en el derecho de las policías de ejercer su poder y dictar el comportamiento apropiado (Tyler & Jackson, 2013; Jackson, 2018)
+
+:::
+
+::: column
+- Percepción de coincidencia entre los valores de la ciudadanía y los valores de las policías
+- Creencia de que existe la obligación de obedecer a las policías
+
+:::
+:::
+
+
 
 ## Hitos Enero-Febrero
 
