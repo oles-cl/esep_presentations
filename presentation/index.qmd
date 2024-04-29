@@ -68,14 +68,41 @@ palette_oles_2 <- c(
   "#1B5886"
 )
 
-data_ola0 <- haven::read_sav("../data/data_ola_0.sav")
 
-demographics_ola_0 <- read_xlsx("../data/demographics_oles_0.xlsx") |>
-  select(SbjNum, region_, sexo=Sexo, edad="Año de nacimiento") |>
-  mutate(edad=to_numeric(edad),
-    edad=2023-edad)
 
-data_ola0_demo<-merge(data_ola0,demographics_ola_0)
+data_ola0 <- readRDS("../data/esep_w0.rds") |>
+  janitor::clean_names()|>
+   rename(
+         edad=edad_encuestado
+         )|>
+   mutate(edad_recod=case_when(edad <= 25 ~ "25 años o menos",
+                              edad > 25 & edad <= 40 ~ "Entre 26 y 40 años",
+                              edad > 40 & edad <= 60 ~ "Entre 41 y 60 años",
+                              edad > 60 ~ "Más de 60 años"),
+          region=paste0(toupper(substr(region, 1, 1)),tolower(substr(region, 2, nchar(region)))),
+          zona=case_when(
+            region%in%c("Arica y parinacota","Tarapacá","Antofagasta")~"Norte Grande",
+            region%in%c("Coquimbo","Atacama")~"Norte Chico",
+            region=="Metropolitana"~"Región Metropolitina",
+            region%in%c("Valparaíso","Libertador bernardo o’higgins",
+                        "Maule","Ñuble")~"Zona Central",
+            region%in%c("Biobío","Araucanía","Los lagos","Los ríos")~"Zona Sur",
+            region%in%c("Aysén","Magallanes")~"Zona Austral"
+          ),
+          zona=factor(zona,levels = c("Norte Grande",
+                                      "Norte Chico",
+                                      "Región Metropolitina",
+                                      "Zona Central",
+                                      "Zona Sur",
+                                      "Zona Austral")),
+          gse_recod=case_when(
+            gse%in%c(6,5)~"E/D",
+            gse%in%c(4,3)~"C2/C3",
+            gse%in%c(2,1)~"ABC1/C1",
+            gse==7~"Sin Info."
+          ),
+          sexo=to_label(sexo)
+        ) 
 ```
 
 ## Qué es OLES?

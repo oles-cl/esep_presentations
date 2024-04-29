@@ -1,0 +1,4 @@
+- source: index.qmd
+  quarto-pub:
+    - id: bbace28f-5e72-4835-ac0c-96f9f895841a
+      url: 'https://olescl.quarto.pub/prealas-esep'
