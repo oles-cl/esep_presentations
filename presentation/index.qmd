@@ -25,7 +25,14 @@ pacman::p_load(tidyverse,
                sjlabelled,
                ggrepel,
                mdthemes,
-               readxl
+               readxl,
+               stringr,
+               wrapr,
+               scales,
+               janitor,
+               ggpubr,
+               forcats,
+               gt
                )
 
 level_likert_1 <- c(
@@ -67,6 +74,88 @@ palette_oles_2 <- c(
   "#fde725",
   "#440154"
 )
+
+
+
+#funcion demográficas sexo
+plot_propbar_sexo<- function(x,fill_column,fill_palette) {
+  x |>
+  ggplot(aes(x = sexo, y = n, fill = !!as.name(fill_column))) +
+    geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 3, color = "black") +
+    coord_flip() +
+    theme_classic() +
+    theme(legend.position = "top",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    labs(fill = "") +
+    scale_fill_manual(values = fill_palette) +
+    scale_y_continuous(labels = function(x) paste0(x * 100, "%"))+
+    guides(fill = guide_legend(reverse = TRUE))
+}
+
+#función demográficas edad
+plot_propbar_edad <- function(x,fill_column,fill_palette) {
+  x|>
+  ggplot(aes(x = edad_recod, y = n, fill = !!as.name(fill_column))) +
+    geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 3, color = "black") +
+    coord_flip() +
+    theme_classic() +
+    theme(legend.position = "top",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    labs(fill = "") +
+    scale_fill_manual(values = fill_palette) +
+    scale_y_continuous(labels = function(x) paste0(x * 100, "%"))+
+    guides(fill = guide_legend(reverse = TRUE))
+}
+
+#función propbar zona
+plot_propbar_zona <- function(x,fill_column,fill_palette) {
+  x|>
+  ggplot(aes(x = zona, y = n, fill = !!as.name(fill_column))) +
+    geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 3, color = "black") +
+    coord_flip() +
+    theme_classic() +
+    theme(legend.position = "top",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    labs(fill = "") +
+    scale_fill_manual(values = fill_palette) +
+    scale_y_continuous(labels = function(x) paste0(x * 100, "%"))+
+    guides(fill = guide_legend(reverse = TRUE))
+}
+
+#función propbar gse
+plot_propbar_gse <- function(x,fill_column,fill_palette) {
+  x|>
+  ggplot(aes(x = gse_recod, y = n, fill = !!as.name(fill_column))) +
+    geom_bar(position = "fill", stat = "identity", color = "black", width = 0.6) +
+    geom_text(aes(label = label), position = position_fill(vjust = 0.5), size = 3, color = "black") +
+    coord_flip() +
+    theme_classic() +
+    theme(legend.position = "top",
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank()) +
+    labs(fill = "") +
+    scale_fill_manual(values = fill_palette) +
+    scale_y_continuous(labels = function(x) paste0(x * 100, "%"))+
+    guides(fill = guide_legend(reverse = TRUE))
+}
+
+#función base descriptivos
+proc_plot_demo <- function(x, variable, demografico) {
+  x %>%
+    mutate({{ variable }} := to_label({{ variable }})) %>%
+    group_by({{ demografico }}) %>%
+    count({{ variable }}) %>%
+    mutate(prop = round(n / sum(n) * 100, 0),
+           ola = "Ola 0 (Septiembre-Noviembre 2023)",
+           label=ifelse(prop>9,paste0(prop,"%"),NA))
+}
+
 
 
 
@@ -129,6 +218,8 @@ OLES cuenta de financiamiento y alianzas con las siguientes instituciones
 ![](img/confianza_carabineros.png).
 </center>
 
+Fuente: Centro de Estudios Públicos (CEP)
+
 ## Marco teórico
 ### Legitimidad Social: ¿Qué es y por qué importa?
 
@@ -144,6 +235,47 @@ OLES cuenta de financiamiento y alianzas con las siguientes instituciones
 
 :::
 :::
+
+## Marco teórico
+### Legitimidad Social: ¿Qué es y por qué importa?
+
+<center>
+
+![](img/legitimidad.png).
+</center>
+
+## Marco teórico
+### ¿Cómo lograr legitimidad social?
+
+<center>
+
+![](img/jp_legitimidad.png).
+</center>
+
+## Marco teórico
+### ¿Qué es la Justicia Procedimental?
+
+::: columns
+::: column
+- Percepción de que las autoridades operan según procedimientos neutros y tratan a la ciudadanía de manera justa y respetuosa 
+(Tyler & Blader, 2000)
+
+
+:::
+
+::: column
+- Foco en las interacciones entre las policías y la ciudadanía
+
+:::
+:::
+
+## Marco teórico
+### Justicia procedimental
+
+<center>
+
+![](img/jp.png).
+</center>
 
 
 
@@ -169,29 +301,31 @@ readxl::read_xlsx(path = file.path('../data/tablas_manual.xlsx'),
 
 #### Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país...
 
--   Casi el 90% de la población en Chile declara que la delincuencia ha aumentado en los últimos 12 meses.
--   Solo un 1.7% de la población considera que la delincuencia disminuyo.
--   Una amplia mayoría del país percibe que la delincuencia va en aumento durante el año.
-
 ```{r}
-#| label: fig-b1
-#| fig-cap: "Aumento de delincuencia"
+#| label: fig-b1-long
+#| fig-cap: "Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país..."
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$b1,99)<-"NS-NR"
+val_label(data_ola0$b1,88)<-"NS-NR"
 
 data_ola0 |>
-  mutate(b1=to_label(b1)) |>
+    mutate(
+    b1=to_label(b1)
+    )|>
   count(b1) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b1!="No sabe (No leer)") |>
-  filter(b1!="No responde (No leer)") |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
+         ola="Ola 0 (Septiembre-Noviembre 2023)"
+         )|>
 
   ggplot(aes(x=ola,y=prop,color=b1))+
   
   geom_point()+
   geom_line()+
   geom_text_repel(aes(label = paste0(prop,"%")))+
-  mdthemes::md_theme_classic(base_size = 12) +
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  mdthemes::md_theme_classic() +
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
   theme(
     legend.position = c(.95, .95),
     legend.justification = c("right", "top"),
@@ -201,23 +335,24 @@ data_ola0 |>
     axis.title.y = element_blank()
     )+
   labs(
-    caption = "El porcentaje se calcula sumando al total los casos perdidos
-    Proporción de casos perdidos = 0.36%",
+    caption = "Fuente: ESEP 2023, ola 0.",
     color="Respuesta"
-  ) +
-  scale_color_manual(values = palette_oles_3)
+  )+
+  scale_color_manual(values = palette_oles_4)
 ```
 
 ------------------------------------------------------------------------
 
 #### ¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?
 
--   Más del 75% de la población declara sentirse inseguro/a o muy inseguro/a caminando por su barrio en la noche.
--   Alrededor de un 20% se siente seguro/a o muy seguro/a
-
 ```{r}
-#| label: fig-b2
-#| fig-cap: "Seguridad barrial"
+#| label: fig-b2-long
+#| fig-cap: "¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?"
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$b2,99)<-"NS-NR"
+val_label(data_ola0$b2,88)<-"NS-NR"
 
 data_ola0 |>
   mutate(b2=to_label(b2),
@@ -226,31 +361,86 @@ data_ola0 |>
                              "Seguro/a" = "Seguro/a + Muy seguro/a",
                              "Muy seguro/a" = "Seguro/a + Muy seguro/a")) |>
   count(b2) |> 
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          ola="Ola 0 (Septiembre-Noviembre 2023)") |>
   filter(b2!="No sabe (No leer)") |>
   filter(b2!="No responde (No leer)") |>
 
-  ggplot(aes(x=ola,y=prop,color=b2))+
-  
+ggplot(aes(x=ola,y=prop,color=b2))+
   geom_point()+
   geom_line()+
   geom_text_repel(aes(label = paste0(prop,"%")))+
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
-  mdthemes::md_theme_classic(base_size = 12) +
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  mdthemes::md_theme_classic() +
   theme(
-    legend.position = c(.95, .95),
+    legend.position = c(.95, .70),
     legend.justification = c("right", "top"),
     legend.box.just = "right",
     legend.margin = margin(6, 6, 6, 6),
     axis.title.x = element_blank(),
-    axis.title.y = element_blank()
+    axis.title.y = element_blank(),
+    legend.key.size = unit(0.5, "lines"),
+    legend.key.width = unit(0.5, "lines")
     )+
   labs(
-    caption = "El porcentaje se calcula sumando al total los casos perdidos [Proporción de casos perdidos = 0.50%]",
+    caption = "Fuente: ESEP 2023, ola 0.",
     color="Respuesta"
   ) +
-  scale_color_manual(values = palette_oles_2)
+  scale_color_manual(values = palette_oles_3)
+```
+```{r}
+#| label: fig-b2-demo
+#| fig-cap: "¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro? (Cruce demográfico)"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(b2,sexo)|>
+  mutate(b2=factor(b2,
+                   levels=c("Muy inseguro/a",
+                            "Inseguro/a",
+                            "Seguro/a",
+                            "Muy seguro/a",
+                            "NS-NR"))) |>
+  plot_propbar_sexo(fill_column="b2",fill_palette=palette_oles_5),
+
+
+data_ola0 |> 
+  proc_plot_demo(b2,edad_recod)|>
+  mutate(b2=factor(b2,
+                   levels=c("Muy inseguro/a",
+                            "Inseguro/a",
+                            "Seguro/a",
+                            "Muy seguro/a",
+                            "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "b2",fill_palette = palette_oles_5),
+
+data_ola0 |>
+  proc_plot_demo(b2,zona)|>
+  mutate(b2=factor(b2,
+                   levels=c("Muy inseguro/a",
+                            "Inseguro/a",
+                            "Seguro/a",
+                            "Muy seguro/a",
+                            "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "b2",fill_palette = palette_oles_5),
+
+ data_ola0 |>
+  proc_plot_demo(b2,gse_recod)|>
+  mutate(b2=factor(b2,
+                   levels=c("Muy inseguro/a",
+                            "Inseguro/a",
+                            "Seguro/a",
+                            "Muy seguro/a",
+                            "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "b2",fill_palette = palette_oles_5),
+
+ncol = 2, nrow = 2, align = "hv", 
+          common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
 # Legitimidad de carabineros {.r-fit-text background-image="img/oles_carabineros.webp"}
@@ -259,50 +449,121 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
 
--   Más del 65% de la población en Chile está en desacuerdo o muy en desacuerdo con que Carabineros logra controlar ni el problema de la delincuencia ni el del narcotráfico.
--   Se observan opiniones dispersas respecto a las afinidades que hay sobre lo bueno y lo malo entre la ciudadanía chilena y Carabineros.
--   Alrededor del 70% de la población chilena está de acuerdo con respetar las decisiones que toma carabineros aunque no se esté de acuerdo con ellas.
-
 ```{r}
-rbind(
+#| label: fig-c-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
+#| fig-subcap:
+#|   - "Carabineros logra controlar el problema de la delincuencia en Chile"
+#|   - "Carabineros logra controlar el problema del narcotráfico en Chile"
+#|   - "En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
+#|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
+#| layout-ncol: 2
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$c1_1,99)<-"NS-NR"
+val_label(data_ola0$c1_1,88)<-"NS-NR"
+
 data_ola0 |>
-  count(Variable=to_label(c1_1))|>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="Carabineros logra controlar el problema de la delincuencia en Chile"),
-data_ola0 |>
-  count(Variable=to_label(c1_2)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="Carabineros logra controlar el problema del narcotráfico en Chile"),
-data_ola0 |>
-  count(Variable=to_label(c1_3))|>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"),
-data_ola0 |>
-  count(Variable=to_label(c1_4))|>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas")
-) |>
-  
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
-  
-mutate(Item=str_wrap(Item, width = 60)) |>
+  mutate(c1_1=to_label(c1_1))|>
+  count(Variable=c1_1)|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
+         Item="Carabineros logra controlar el problema de la delincuencia en Chile")|>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
-  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
-  facet_wrap(~Item) +
-  md_theme_classic(base_size = 9) +
+  geom_text(aes(label=paste0(prop,"%")),
+            hjust=-0.1) +
+  md_theme_classic() +
   theme(legend.position="top",
         axis.title.x = element_blank(),
         axis.title.y = element_blank())+
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
-  scale_fill_manual(values = palette_likert_5)+
-  guides(fill=FALSE)
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_fill_manual(values = palette_oles_6)+
+  coord_flip() +
+  guides(fill=FALSE)+
+  labs(caption = "[Proporción de casos perdidos = 0.30%]")
+
+val_label(data_ola0$c1_2,99)<-"NS-NR"
+val_label(data_ola0$c1_2,88)<-"NS-NR"
+
+data_ola0 |>
+  count(Variable=to_label(c1_2))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
+         Item="Carabineros logra controlar el problema del narcotráfico en Chile")|>
+  mutate(Item=str_wrap(Item, width = 60)) |>
+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            hjust=-0.1) +
+  md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_fill_manual(values = palette_oles_6)+
+  coord_flip() +
+  guides(fill=FALSE)+
+  labs(caption = "[Proporción de casos perdidos = 0.60%]")
+
+val_label(data_ola0$c1_3,99)<-"NS-NR"
+val_label(data_ola0$c1_3,88)<-"NS-NR"
+
+data_ola0 |>
+  count(Variable=to_label(c1_3))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
+         Item="En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal")|>
+  mutate(Item=str_wrap(Item, width = 60)) |>
+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            hjust=-0.1) +
+  md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  coord_flip() +
+  scale_fill_manual(values = palette_oles_6)+
+  guides(fill=FALSE)+
+  labs(caption = "[Proporción de casos perdidos = 1.90%]")
+
+
+data_ola0 <- data_ola0 %>%
+  mutate(c1_4 = if_else(is.na(c1_4), 99, c1_4))
+
+val_label(data_ola0$c1_4,99)<-"NS-NR"
+val_label(data_ola0$c1_4,88)<-"NS-NR"
+
+# Falta arreglar la introducción de NA
+data_ola0 |>
+  count(Variable=to_label(c1_4))|>
+  group_by(Variable)|>
+  summarise(n=sum(n))|>
+  ungroup()|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
+         Item="Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas")|>
+  mutate(Item=str_wrap(Item, width = 60)) |>
+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            hjust=-0.1) +
+  md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  coord_flip() +
+  scale_fill_manual(values = palette_oles_6)+
+  guides(fill=FALSE)+
+  labs(caption = "[Proporción de casos perdidos = 0.30%]")
 
 ```
-
 ------------------------------------------------------------------------
+
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
 
@@ -341,148 +602,4 @@ mutate(Item=str_wrap(Item, width = 60)) |>
 
 # Legitimidad de Policía de Investigaciones {.r-fit-text background-image="img/oles_pdi.jpg"}
 
-------------------------------------------------------------------------
 
-##### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con la siguiente afirmación sobre la Policía de Investigaciones de Chile (PDI)?
-
--   El 50% de la población declara estar en desacuerdo o muy en desacuerdo con que la PDI logra controlar el problema de la delincuencia en Chile.
--   Aproximadamente, un 30% considera estar de acuerdo o muy de acuerdo con que la PDI logra controlar el problema de la delincuencia en Chile.
-
-```{r}
-data_ola0 |>
-  count(Variable=to_label(c3))|>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="La PDI logra controlar el problema de la delincuencia en Chile?") |>
-  
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
-  
-mutate(Item=str_wrap(Item, width = 60)) |>
-
-  ggplot(aes(x=Variable,y=prop,fill=Variable))+
-  geom_bar(position="dodge", stat="identity",color="black") +
-  mdthemes::md_theme_classic(base_size = 12) +
-  theme(legend.position="top",
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank())+
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
-  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
-  scale_fill_manual(values = palette_likert_5)+
-  guides(fill=FALSE)
-```
-
-------------------------------------------------------------------------
-
-##### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
-
--   La población en Chile tiende a preferir posiciones intermedias a la hora de juzgar la frecuencia con que las decisiones de la PDI son justas e imparciales, y la frecuencia con que tienen tratos respetuosos con la gente.
-
-```{r}
-rbind(
-data_ola0 |>
-  count(Variable=to_label(c4_1)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="tratan a las personas con respeto en Chile?"),
-data_ola0 |>
-  count(Variable=to_label(c4_2)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="toman decisiones justas e imparciales en los casos que se ocupa?")
-) |>
-
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
-  
-mutate(Item=str_wrap(Item, width = 60)) |>
-  
-  ggplot(aes(x=Variable,y=prop,fill=Variable))+
-  geom_bar(position="dodge", stat="identity",color="black") +
-  facet_wrap(~Item,ncol = 1) +
-  mdthemes::md_theme_classic(base_size = 12) +
-  theme(legend.position="top",
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank())+
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
-  scale_fill_manual(values = palette_likert_5)+
-  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
-  guides(fill=FALSE)
-```
-
-------------------------------------------------------------------------
-
-#### A continuación le voy a leer los nombres de dos instituciones. De acuerdo con las alternativas de la tarjeta, ¿Podría Ud. decirme cuánta confianza tiene en cada una de ellas?
-
--   Más del 70% de los casos se posiciona en los valores intermedios para declarar su confianza en las instituciones policiales en Chile.
--   La población declara tener menor confianza en Carabineros de Chile que en la Policía de Investigaciones.
-
-```{r}
-rbind(
-data_ola0 |>
-  count(Variable=to_label(c5_1)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="Carabineros de Chile"),
-data_ola0 |>
-  count(Variable=to_label(c5_2)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="Policía de Investigaciones")
-) |>
-
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
-  
-mutate(Item=str_wrap(Item, width = 60)) |>
-  
-  ggplot(aes(x=Item,y=prop,fill=Variable))+
-  geom_bar(position="dodge", stat="identity",color="black") +
-  mdthemes::md_theme_classic(base_size = 14) +
-  theme(legend.position="top",
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank())+
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
-  scale_fill_manual(values = palette_likert_4)+
-  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2),position = position_dodge(1),vjust=0.5,hjust=-0.1) +
-  coord_flip()+
-  labs(fill="")
-```
-
-------------------------------------------------------------------------
-
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
-
-::: columns
-::: {.column width="40%"}
--   Aproximadamente, 4 de cada 5 chilenos suele estar de acuerdo o muy de acuerdo con endurecer las penas a quienes atenten contra las policías en Chile.
--   Aproximadamente, 3 de cada 4 chilenos está de acuerdo o muy de acuerdo con entregar mayores facilidades a carabineros para utilizar sus armas de servicio.
-:::
-
-::: {.column width="60%"}
-```{r}
-rbind(
-data_ola0 |>
-  count(Variable=to_label(c7_1)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="**Endurecer las penas** contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"),
-data_ola0 |>
-  count(Variable=to_label(c7_2)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="Dar **mayores facilidades para que los carabineros puedan usar su arma de servicio** cuando lo estimen necesario")
-) |>
-
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
-  
-mutate(Item=str_wrap(Item, width = 60)) |>
-  
-  ggplot(aes(x=Variable,y=prop,fill=Variable))+
-  geom_bar(position="dodge", stat="identity",color="black") +
-  facet_wrap(~Item,ncol = 1) +
-  mdthemes::md_theme_classic(base_size = 12) +
-  theme(legend.position="top",
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank())+
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
-  scale_fill_manual(values = palette_likert_5)+
-  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
-  guides(fill=FALSE)
-```
-:::
-:::
