@@ -2,7 +2,7 @@
 title: "Estudio de Percepciones de Seguridad y Policias en Chile 2023-2025"
 subtitle: "Reporte de resultados Ola 0"
 author: "Observatorio de Violencia y Legitimidad Social"
-date: 01-03-2024
+date: 03-05-2024
 format: 
   revealjs:
     logo: img/oles_logo.png
@@ -51,7 +51,15 @@ palette_likert_5 <- c(
 )
 
 palette_oles_5 <- palette_likert_5
-palette_oles_6 <- c(palette_oles_5, "darkslategrey")
+
+palette_oles_6 <- c(
+  "#fde725",
+  "#7ad151",
+  "#22a884",
+  "#2a788e",
+  "#414487",
+  "#440154"
+  )
 
 palette_likert_4 <-c(
   "#fde725",
@@ -213,17 +221,21 @@ OLES cuenta de financiamiento y alianzas con las siguientes instituciones
 :::
 :::
 
-## Marco teórico
+## Legitimidad Social
 
-### Legitimidad Social: ¿Qué es y por qué importa?
+<center>![](img/confianza_carabineros.png){width="60%"}</center>
 
-<center>![](img/confianza_carabineros.png).</center>
+<p style="font-size: small;">
 
 Fuente: Centro de Estudios Públicos (CEP)
 
-## Marco teórico
+</p>
 
-### Legitimidad Social: ¿Qué es y por qué importa?
+------------------------------------------------------------------------
+
+### Legitimidad Social
+
+#### ¿Qué es y por qué importa?
 
 ::: columns
 ::: column
@@ -236,19 +248,15 @@ Fuente: Centro de Estudios Públicos (CEP)
 :::
 :::
 
-## Marco teórico
+------------------------------------------------------------------------
 
-### Legitimidad Social: ¿Qué es y por qué importa?
+### Legitimidad Social
 
-<center>![](img/legitimidad.png).</center>
+#### ¿Cómo lograr legitimidad social?
 
-## Marco teórico
+<center>![](img/jp_legitimidad.png){width="70%"}</center>
 
-### ¿Cómo lograr legitimidad social?
-
-<center>![](img/jp_legitimidad.png).</center>
-
-## Marco teórico
+------------------------------------------------------------------------
 
 ### ¿Qué es la Justicia Procedimental?
 
@@ -262,15 +270,13 @@ Fuente: Centro de Estudios Públicos (CEP)
 :::
 :::
 
-## Marco teórico
+------------------------------------------------------------------------
 
-### Justicia procedimental
+### ¿Qué es la Justicia Procedimental?
 
-<center>![](img/jp.png).</center>
+<center>![](img/jp.png){width="50%"}</center>
 
-## Hitos Enero-Febrero
-
-Acá añadir un punteo de hitos relevantes del trabajo de Ismael.
+------------------------------------------------------------------------
 
 ## Ficha técnica del Estudio
 
@@ -305,7 +311,7 @@ data_ola0 |>
     )|>
   count(b1) |>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)"
+         ola="Ola 0 (Septiembre 2023-Febrero 2024)"
          )|>
 
   ggplot(aes(x=ola,y=prop,color=b1))+
@@ -332,6 +338,64 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
+#### Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país...
+
+```{r}
+#| label: fig-b1-demo
+#| fig-cap: "Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país... (Cruce demográfico)"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(b1,sexo)|>
+  mutate(b1=factor(b1,
+                   levels=c("Disminuyó",
+                            "Se mantuvo",
+                            "Aumentó",
+                            "NS-NR"))) |>
+  plot_propbar_sexo(fill_column="b1",fill_palette=palette_oles_4),
+
+
+data_ola0 |> 
+  proc_plot_demo(b1,edad_recod)|>
+  mutate(b1=factor(b1,
+                   levels=c("Disminuyó",
+                            "Se mantuvo",
+                            "Aumentó",
+                            "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "b1",fill_palette = palette_oles_4),
+
+data_ola0 |>
+  proc_plot_demo(b1,zona)|>
+  mutate(b1=factor(b1,
+                   levels=c("Disminuyó",
+                            "Se mantuvo",
+                            "Aumentó",
+                            "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "b1",fill_palette = palette_oles_4),
+
+ data_ola0 |>
+  proc_plot_demo(b1,gse_recod)|>
+  mutate(b1=factor(b1,
+                   levels=c("Disminuyó",
+                            "Se mantuvo",
+                            "Aumentó",
+                            "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "b1",fill_palette = palette_oles_4),
+
+ncol = 2, nrow = 2, align = "hv", 
+          common.legend = TRUE
+ 
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
 #### ¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?
 
 ```{r}
@@ -351,7 +415,7 @@ data_ola0 |>
                              "Muy seguro/a" = "Seguro/a + Muy seguro/a")) |>
   count(b2) |> 
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
+         ola="Ola 0 (Septiembre 2023 - Febrero 2024)") |>
   filter(b2!="No sabe (No leer)") |>
   filter(b2!="No responde (No leer)") |>
 
@@ -377,6 +441,10 @@ ggplot(aes(x=ola,y=prop,color=b2))+
   ) +
   scale_color_manual(values = palette_oles_3)
 ```
+
+------------------------------------------------------------------------
+
+#### ¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?
 
 ```{r}
 #| label: fig-b2-demo
@@ -433,7 +501,8 @@ ncol = 2, nrow = 2, align = "hv",
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
-# Legitimidad de carabineros {.r-fit-text background-image="img/oles_carabineros.webp"}
+
+# Eficacia de las policías {.r-fit-text background-image="img/oles_carabineros.webp"}
 
 ------------------------------------------------------------------------
 
@@ -444,10 +513,7 @@ ncol = 2, nrow = 2, align = "hv",
 #| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
 #| fig-subcap:
 #|   - "Carabineros logra controlar el problema de la delincuencia en Chile"
-#|   - "Carabineros logra controlar el problema del narcotráfico en Chile"
-#|   - "En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
-#|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
-#| layout-ncol: 2
+#| layout-ncol: 1
 #| echo: false
 #| warning: false
 
@@ -474,6 +540,91 @@ data_ola0 |>
   guides(fill=FALSE)+
   labs(caption = "[Proporción de casos perdidos = 0.30%]")
 
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+
+```{r}
+#| label: fig-c1_1-demo
+#| fig-cap: "(Cruce demográfico) Carabineros logra controlar el problema de la delincuencia en Chile"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_1, sexo) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c1_1", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_1, edad_recod) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c1_1", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c1_1, zona) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c1_1", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c1_1, gse_recod) |>
+  mutate(c1_1 = factor(c1_1,
+                     levels = c(
+                                "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c1_1", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+
+```{r}
+#| label: fig-d-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
+#| fig-subcap:
+#|   - "Carabineros logra controlar el problema del narcotráfico en Chile"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
+
 val_label(data_ola0$c1_2,99)<-"NS-NR"
 val_label(data_ola0$c1_2,88)<-"NS-NR"
 
@@ -496,6 +647,195 @@ data_ola0 |>
   coord_flip() +
   guides(fill=FALSE)+
   labs(caption = "[Proporción de casos perdidos = 0.60%]")
+
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+
+```{r}
+#| label: fig-c1_2-demo
+#| fig-cap: "(Cruce demográfico) Carabineros logra controlar el problema del narcotráfico en Chile"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_2, sexo) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c1_2", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_2, edad_recod) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c1_2", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c1_2, zona) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c1_2", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c1_2, gse_recod) |>
+  mutate(c1_2 = factor(c1_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c1_2", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)?
+
+```{r}
+#| label: fig-c3_1-general
+#| fig-cap: "La Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile"
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$c3,99)<-"NS-NR"
+val_label(data_ola0$c3,88)<-"NS-NR"
+
+data_ola0 |>
+  count(Variable=to_label(c3))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="La PDI logra controlar el problema de la delincuencia en Chile",
+         Variable=factor(Variable,levels=c(
+                               "Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  geom_text(aes(label=paste0(prop,"%"),hjust=-0.1)) +
+  scale_fill_manual(values = palette_oles_6)+
+  guides(fill=FALSE)+
+  labs(caption="[Proporción de casos perdidos = 1.52%]")+
+  coord_flip()
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)?
+
+```{r}
+#| label: fig-c3-demo
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con que la Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile?"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c3, sexo) |>
+  mutate(c3 = factor(c3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c3", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c3, edad_recod) |>
+  mutate(c3 = factor(c3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c3", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c3, zona) |>
+  mutate(c3 = factor(c3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c3", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c3, gse_recod) |>
+  mutate(c3 = factor(c3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c3", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+
+# Legitimidad de Carabineros {.r-fit-text background-image="img/oles_carabineros.webp"}
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+
+```{r}
+#| label: fig-e-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
+#| fig-subcap:
+#|   - "En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
+
 
 val_label(data_ola0$c1_3,99)<-"NS-NR"
 val_label(data_ola0$c1_3,88)<-"NS-NR"
@@ -520,6 +860,86 @@ data_ola0 |>
   guides(fill=FALSE)+
   labs(caption = "[Proporción de casos perdidos = 1.90%]")
 
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+
+```{r}
+#| label: fig-c1_3-demo
+#| fig-cap: "(Cruce demográfico) En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_3, sexo) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_3, edad_recod) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c1_3, zona) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c1_3, gse_recod) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+
+```{r}
+#| label: fig-f-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
+#| fig-subcap:
+#|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
 
 data_ola0 <- data_ola0 %>%
   mutate(c1_4 = if_else(is.na(c1_4), 99, c1_4))
@@ -555,39 +975,692 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
-
--   La población en Chile tiende a preferir las posiciones intermedias a la hora de juzgar la frecuencia en que las decisiones de carabineros son justas e imparciales.
--   La población en Chile considera que los carabineros tiende a tener más tratos respuestos que irrespetuosos.
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
 
 ```{r}
-rbind(
+#| label: fig-c1_4-demo
+#| fig-cap: "(Cruce demográfico) Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_4, sexo) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_4, edad_recod) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c1_4, zona) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c1_4, gse_recod) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+```
+
+
+# Justicia procedimental de las policías {.r-fit-text background-image="img/oles_carabineros.webp"}
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+
+```{r}
+#| label: fig-2_1-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?"
+#| fig-subcap: 
+#|   - "Toman decisiones justas e imparciales en los casos que se ocupa"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$c2_1,99)<-"NS-NR"
+val_label(data_ola0$c2_1,88)<-"NS-NR"
+
 data_ola0 |>
   count(Variable=to_label(c2_1))|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="tratan a las personas con respeto en Chile"),
-data_ola0 |>
-  count(Variable=to_label(c2_2)) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="Toman decisiones justas e imparciales en los casos que se ocupa?")
-) |>
+         Item="tratan a las personas con respeto en Chile")|>
+  mutate(Variable=factor(Variable,levels=c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"
+  )))|>
 
-filter(Variable!="No sabe (No leer)") |>
-filter(Variable!="No responde (No leer)") |>
-  
-mutate(Item=str_wrap(Item, width = 60)) |>
-  
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
-  facet_wrap(~Item,ncol = 1) +
-  mdthemes::md_theme_classic(base_size = 12) +
+  mdthemes::md_theme_classic() +
   theme(legend.position="top",
         axis.title.x = element_blank(),
         axis.title.y = element_blank())+
-  scale_y_continuous(labels = function(x) paste0(x, "%"))+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
   geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
-  scale_fill_manual(values = palette_likert_5)+
+  scale_fill_manual(values = palette_oles_6)+
+  guides(fill=FALSE)
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+
+```{r}
+#| label: fig-c2_1-demo
+#| fig-cap: "(Cruce demográfico) Los carabineros toman decisiones justas e imparciales en los casos que se ocupa"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c2_1, sexo) |>
+  mutate(c2_1 = factor(c2_1,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c2_1", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c2_1, edad_recod) |>
+  mutate(c2_1 = factor(c2_1,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"
+                     ))) |>
+  plot_propbar_edad(fill_column = "c2_1", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c2_1, zona) |>
+  mutate(c2_1 = factor(c2_1,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c2_1", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c2_1, gse_recod) |>
+  mutate(c2_1 = factor(c2_1,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c2_1", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+
+```{r}
+#| label: fig-2_2-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?"
+#| fig-subcap: 
+#|   - "Tratan a las personas con respeto en Chile"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$c2_2,99)<-"NS-NR"
+val_label(data_ola0$c2_2,88)<-"NS-NR"
+
+
+data_ola0 |>
+  count(Variable=to_label(c2_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Toman decisiones justas e imparciales en los casos que se ocupa?") |>
+    mutate(Variable=factor(Variable,levels=c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"
+  )))|>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  scale_fill_manual(values = palette_oles_6)+
   guides(fill=FALSE)
 ```
 
-# Legitimidad de Policía de Investigaciones {.r-fit-text background-image="img/oles_pdi.jpg"}
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+
+```{r}
+#| label: fig-c2_2-demo
+#| fig-cap: "(Cruce demográfico) Los carabineros tratan a las personas con respeto en los casos que se ocupa"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c2_2, sexo) |>
+  mutate(c2_2 = factor(c2_2,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c2_2", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c2_2, edad_recod) |>
+  mutate(c2_2 = factor(c2_2,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"
+                     ))) |>
+  plot_propbar_edad(fill_column = "c2_2", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c2_2, zona) |>
+  mutate(c2_2 = factor(c2_2,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c2_2", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c2_2, gse_recod) |>
+  mutate(c2_2 = factor(c2_2,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c2_2", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+
+```{r}
+#| label: fig-4_1-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?"
+#| fig-subcap: 
+#|   - "Toman decisiones justas e imparciales en los casos que se ocupa"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$c4_1,99)<-"NS-NR"
+val_label(data_ola0$c4_1,88)<-"NS-NR"
+
+data_ola0 |>
+  count(Variable=to_label(c4_1))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2))|>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  scale_fill_manual(values = palette_oles_6)+
+  guides(fill=FALSE)+
+  labs(caption="Fuente: ESEP 2023, Ola 0.")
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+
+```{r}
+#| label: fig-c4_1-demo
+#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI toman decisiones justas e imparciales en los casos que se ocupa"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c4_1, sexo) |>
+  mutate(c4_1 = factor(c4_1,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c4_1", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c4_1, edad_recod) |>
+  mutate(c4_1 = factor(c4_1,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"
+                     ))) |>
+  plot_propbar_edad(fill_column = "c4_1", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c4_1, zona) |>
+  mutate(c4_1 = factor(c4_1,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c4_1", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c4_1, gse_recod) |>
+  mutate(c4_1 = factor(c4_1,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c4_1", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+
+```{r}
+#| label: fig-4_2-general
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?"
+#| fig-subcap: 
+#|   - "Tratan a las personas con respeto en Chile"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
+
+val_label(data_ola0$c4_2,99)<-"NS-NR"
+val_label(data_ola0$c4_2,88)<-"NS-NR"
+
+data_ola0 |>
+  count(Variable=to_label(c4_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
+         Item="Toman decisiones justas e imparciales en los casos que se ocupa?") |>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2)) +
+  scale_fill_manual(values = palette_oles_6)+
+  guides(fill=FALSE)+
+  labs(caption="Fuente: ESEP 2023, Ola 0.")
+```
+
+------------------------------------------------------------------------
+
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+
+```{r}
+#| label: fig-c4_2-demo
+#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI tratan a las personas con respeto en los casos que se ocupa"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c4_2, sexo) |>
+  mutate(c4_2 = factor(c4_2,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c4_2", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c4_2, edad_recod) |>
+  mutate(c4_2 = factor(c4_2,
+                     levels = c(
+    "Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"
+                     ))) |>
+  plot_propbar_edad(fill_column = "c4_2", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c4_2, zona) |>
+  mutate(c4_2 = factor(c4_2,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c4_2", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c4_2, gse_recod) |>
+  mutate(c4_2 = factor(c4_2,
+                     levels = c("Nunca",
+    "Pocas veces",
+    "Algunas veces",
+    "Casi siempre",
+    "Siempre",
+    "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c4_2", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+
+
+# Empoderamiento de las policías {.r-fit-text background-image="img/oles_carabineros.webp"}
+
+------------------------------------------------------------------------
+
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+
+```{r}
+#| label: fig-7_1-general
+#| fig-cap: "¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?"
+#| fig-subcap:
+#|   - "Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"
+#| layout-ncol: 1
+
+val_label(data_ola0$c7_1,99)<-"NS-NR"
+val_label(data_ola0$c7_1,88)<-"NS-NR"
+
+data_ola0 |>
+  count(Variable=to_label(c7_1)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2)) |>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_fill_manual(values = palette_oles_6)+
+  geom_text(aes(label=paste0(prop,"%"),hjust=-0.2)) +
+  guides(fill=FALSE)+
+  coord_flip()+
+  labs(caption="Fuente: ESEP 2023, Ola 0")
+
+```
+
+------------------------------------------------------------------------
+
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+
+```{r}
+#| label: fig-c7_1-demo
+#| fig-cap: "(Cruce demográfico) Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c7_1, sexo) |>
+  mutate(c7_1 = factor(c7_1,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c7_1", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c7_1, edad_recod) |>
+  mutate(c7_1 = factor(c7_1,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c7_1", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c7_1, zona) |>
+  mutate(c7_1 = factor(c7_1,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c7_1", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c7_1, gse_recod) |>
+  mutate(c7_1 = factor(c7_1,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c7_1", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+
+```{r}
+#| label: fig-7_2-general
+#| fig-cap: "¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?"
+#| fig-subcap:
+#|   - "Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario "
+#| layout-ncol: 1
+
+val_label(data_ola0$c7_2,99)<-"NS-NR"
+val_label(data_ola0$c7_2,88)<-"NS-NR"
+
+
+data_ola0 |>
+  count(Variable=to_label(c7_2)) |>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(2))|>
+  
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  mdthemes::md_theme_classic() +
+  theme(legend.position="top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_fill_manual(values = palette_oles_6)+
+  geom_text(aes(label=paste0(prop,"%"),hjust=-0.2)) +
+  guides(fill=FALSE)+
+  coord_flip()+
+  labs(caption="Fuente: ESEP 2023, Ola 0")
+```
+
+------------------------------------------------------------------------
+
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+
+```{r}
+#| label: fig-c7_2-demo
+#| fig-cap: "(Cruce demográfico) Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario"
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c7_2, sexo) |>
+  mutate(c7_2 = factor(c7_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c7_2", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c7_2, edad_recod) |>
+  mutate(c7_2 = factor(c7_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c7_2", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c7_2, zona) |>
+  mutate(c7_2 = factor(c7_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c7_2", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c7_2, gse_recod) |>
+  mutate(c7_2 = factor(c7_2,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c7_2", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+
+
+```
+
+------------------------------------------------------------------------
+
+### Empoderamiento de las policías
+
+
+<center>![](images/sem.png){width="100%"}</center>
