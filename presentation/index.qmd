@@ -15,7 +15,7 @@ editor: visual
 
 ```{r setup}
 #| include: false
-
+  
 pacman::p_load(tidyverse,
                ggplot2,
                knitr,
@@ -49,6 +49,9 @@ palette_likert_5 <- c(
   "#3b528b",
   "#440154"
 )
+
+palette_oles_5 <- palette_likert_5
+palette_oles_6 <- c(palette_oles_5, "darkslategrey")
 
 palette_likert_4 <-c(
   "#fde725",
@@ -211,73 +214,59 @@ OLES cuenta de financiamiento y alianzas con las siguientes instituciones
 :::
 
 ## Marco teórico
+
 ### Legitimidad Social: ¿Qué es y por qué importa?
 
-<center>
-
-![](img/confianza_carabineros.png).
-</center>
+<center>![](img/confianza_carabineros.png).</center>
 
 Fuente: Centro de Estudios Públicos (CEP)
 
 ## Marco teórico
+
 ### Legitimidad Social: ¿Qué es y por qué importa?
 
 ::: columns
 ::: column
-- Creencia en el derecho de las policías de ejercer su poder y dictar el comportamiento apropiado (Tyler & Jackson, 2013; Jackson, 2018)
-
+-   Creencia en el derecho de las policías de ejercer su poder y dictar el comportamiento apropiado (Tyler & Jackson, 2013; Jackson, 2018)
 :::
 
 ::: column
-- Percepción de coincidencia entre los valores de la ciudadanía y los valores de las policías
-- Creencia de que existe la obligación de obedecer a las policías
-
+-   Percepción de coincidencia entre los valores de la ciudadanía y los valores de las policías
+-   Creencia de que existe la obligación de obedecer a las policías
 :::
 :::
 
 ## Marco teórico
+
 ### Legitimidad Social: ¿Qué es y por qué importa?
 
-<center>
-
-![](img/legitimidad.png).
-</center>
+<center>![](img/legitimidad.png).</center>
 
 ## Marco teórico
+
 ### ¿Cómo lograr legitimidad social?
 
-<center>
-
-![](img/jp_legitimidad.png).
-</center>
+<center>![](img/jp_legitimidad.png).</center>
 
 ## Marco teórico
+
 ### ¿Qué es la Justicia Procedimental?
 
 ::: columns
 ::: column
-- Percepción de que las autoridades operan según procedimientos neutros y tratan a la ciudadanía de manera justa y respetuosa 
-(Tyler & Blader, 2000)
-
-
+-   Percepción de que las autoridades operan según procedimientos neutros y tratan a la ciudadanía de manera justa y respetuosa (Tyler & Blader, 2000)
 :::
 
 ::: column
-- Foco en las interacciones entre las policías y la ciudadanía
-
+-   Foco en las interacciones entre las policías y la ciudadanía
 :::
 :::
 
 ## Marco teórico
+
 ### Justicia procedimental
 
-<center>
-
-![](img/jp.png).
-</center>
-
-
+<center>![](img/jp.png).</center>
 
 ## Hitos Enero-Febrero
 
@@ -388,6 +377,7 @@ ggplot(aes(x=ola,y=prop,color=b2))+
   ) +
   scale_color_manual(values = palette_oles_3)
 ```
+
 ```{r}
 #| label: fig-b2-demo
 #| fig-cap: "¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro? (Cruce demográfico)"
@@ -562,8 +552,8 @@ data_ola0 |>
   labs(caption = "[Proporción de casos perdidos = 0.30%]")
 
 ```
-------------------------------------------------------------------------
 
+------------------------------------------------------------------------
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
 
@@ -601,5 +591,3 @@ mutate(Item=str_wrap(Item, width = 60)) |>
 ```
 
 # Legitimidad de Policía de Investigaciones {.r-fit-text background-image="img/oles_pdi.jpg"}
-
-
