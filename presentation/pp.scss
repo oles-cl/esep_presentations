@@ -53,24 +53,23 @@ $selectionColor: #fff;
   color: #440154;
 }
 
-#title-slide .author:after {
-  content: url('img/oles_portrait.png') ;
-  display: block;
-}
-
 #title-slide {
   top: 0 !important;
 }
 
-#title-slide > .author:first-of-type {
-  margin-top: 320px;
+#title-slide .author {
+  font-size: 80px!important;
 }
+#title-slide .author:after {
+  content: url('oles_portrait.png') ;
+  display: block;
 
-.box {
-  margin-top: 10px;
-  margin-right: 10px;
-  border: 5px solid #006DAE;
-  padding: 10px;
-  font-size: 26px;
-  background-color: #E6E6E6;
+  /***
+    display: block;
+    content: "";
+    height: 200px;
+    background: transparent url('oles_portrait.png') no-repeat;
+  
+
+    ***/
 }

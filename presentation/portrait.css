@@ -1,0 +1,18 @@
+h1.title {
+  position: relative; /* Ensures proper positioning of the pseudo-element */
+}
+
+h1.title::after {
+  content: ""; /* Required for the pseudo-element to appear */
+  display: block; /* Makes the pseudo-element a block-level element */
+  background-image: url(oles_portrait.png);
+  background-repeat: no-repeat;
+  background-position: bottom; /* Position the image at the bottom */
+  background-size: 250px;
+  width: 300px; /* Set the width of the image */
+  height: 300px; /* Set the height of the image */
+  position: absolute; /* Position the pseudo-element relative to its closest positioned ancestor */
+  bottom: -400px; /* Position the pseudo-element 40px above the bottom of its container */
+  left: 50%; /* Position the pseudo-element at the horizontal center */
+  transform: translateX(-50%); /* Center the pseudo-element horizontally */
+}

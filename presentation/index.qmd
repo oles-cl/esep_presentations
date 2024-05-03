@@ -10,6 +10,7 @@ format:
     theme: ["pp.scss"]
     footer: "[Visita nuestro sitio web www.oles.cl](https://oles2.netlify.app/)"
     slide-number: c/t
+css: portrait.css
 editor: visual
 ---
 
@@ -702,14 +703,7 @@ val_label(data_ola0$c3,88)<-"NS-NR"
 data_ola0 |>
   count(Variable=to_label(c3))|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(2),
-         Item="La PDI logra controlar el problema de la delincuencia en Chile",
-         Variable=factor(Variable,levels=c(
-                               "Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |>
+         Item="La PDI logra controlar el problema de la delincuencia en Chile") |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
