@@ -35,6 +35,8 @@ pacman::p_load(tidyverse,
                gt
                )
 
+options(digits=1)
+
 level_likert_1 <- c(
   "Muy en desacuerdo",
   "En desacuerdo",
@@ -45,9 +47,9 @@ level_likert_1 <- c(
 palette_likert_5 <- c(
   "#fde725",
   "#5ec962",
-  "#21918c",
   "#3b528b",
-  "#440154"
+  "#440154",
+  "grey"
 )
 
 palette_oles_5 <- palette_likert_5
@@ -55,10 +57,10 @@ palette_oles_5 <- palette_likert_5
 palette_oles_6 <- c(
   "#fde725",
   "#7ad151",
-  "#22a884",
   "#2a788e",
   "#414487",
-  "#440154"
+  "#440154",
+  "grey"
   )
 
 palette_likert_4 <-c(
@@ -70,15 +72,15 @@ palette_likert_4 <-c(
 
 palette_oles_4 <-c(
   "#fde725",
-  "#35b779",
-  "#31688e",
-  "#440154"
+  "#2a788e",
+  "#440154",
+  "grey"
 )
 
 palette_oles_3 <- c(
   "#fde725",
-  "#21918c",
-  "#440154"
+  "#440154",
+  "grey"
 )
 
 palette_oles_2 <- c(
@@ -164,7 +166,7 @@ proc_plot_demo <- function(x, variable, demografico) {
     count({{ variable }}) %>%
     mutate(prop = round(n / sum(n) * 100, 0),
            ola = "Ola 0 (Septiembre-Noviembre 2023)",
-           label=ifelse(prop>9,paste0(prop,"%"),NA))
+           label=ifelse(prop>3,paste0(prop,"%"),NA))
 }
 
 
@@ -210,13 +212,14 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
 ::: columns
 ::: column
 OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile con el objetivo de contribuir a la comprensión de los mecanismos de legitimidad policial y justificación de la violencia mediante el desarrollo de investigaciones bajo criterios de Ciencia Abierta y en diálogo con actores sociales.
+
 :::
 
 ::: column
-OLES cuenta de financiamiento y alianzas con las siguientes instituciones
 
 ::: {layout-ncol="2"}
-![](img/oles_coes.png) ![](img/oles_uahc.png) ![](img/oles_udp.png)
+##### Alianzas OLES
+![](img/logos.png)
 :::
 :::
 :::
@@ -278,15 +281,16 @@ Fuente: Centro de Estudios Públicos (CEP)
 
 ------------------------------------------------------------------------
 
-## Ficha técnica del Estudio
+## Ficha técnica del Estudio{.smaller}
 
 ```{r}
-readxl::read_xlsx(path = file.path('../data/tablas_manual.xlsx'), 
-                         sheet = 'ficha') |>
+readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
+                         sheet = 'w0') |>
   
   kbl(booktabs = TRUE) |>
     kable_styling(latex_options = c("repeat_header","hold_position"),
-                bootstrap_options = "bordered",full_width = T) |>
+                bootstrap_options = "bordered",full_width = T,
+                font_size=18) |>
   kable_classic_2()
 ```
 
@@ -297,11 +301,6 @@ readxl::read_xlsx(path = file.path('../data/tablas_manual.xlsx'),
 #### Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país...
 
 ```{r}
-#| label: fig-b1-long
-#| fig-cap: "Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país..."
-#| echo: false
-#| warning: false
-
 val_label(data_ola0$b1,99)<-"NS-NR"
 val_label(data_ola0$b1,88)<-"NS-NR"
 
@@ -333,7 +332,13 @@ data_ola0 |>
     caption = "Fuente: ESEP 2023, ola 0.",
     color="Respuesta"
   )+
-  scale_color_manual(values = palette_oles_4)
+  scale_color_manual(values = c(
+  "#440154",
+  "#2a788e",
+  "#fde725",
+  "grey"
+  )
+)
 ```
 
 ------------------------------------------------------------------------
@@ -341,11 +346,6 @@ data_ola0 |>
 #### Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país...
 
 ```{r}
-#| label: fig-b1-demo
-#| fig-cap: "Pensando en la delincuencia, usted diría que durante los últimos 12 meses la delincuencia en el país... (Cruce demográfico)"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -399,11 +399,6 @@ ncol = 2, nrow = 2, align = "hv",
 #### ¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?
 
 ```{r}
-#| label: fig-b2-long
-#| fig-cap: "¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?"
-#| echo: false
-#| warning: false
-
 val_label(data_ola0$b2,99)<-"NS-NR"
 val_label(data_ola0$b2,88)<-"NS-NR"
 
@@ -447,11 +442,6 @@ ggplot(aes(x=ola,y=prop,color=b2))+
 #### ¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro?
 
 ```{r}
-#| label: fig-b2-demo
-#| fig-cap: "¿Qué tan seguro/a se siente caminando solo/a por su barrio cuando ya está oscuro? (Cruce demográfico)"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -501,21 +491,15 @@ ncol = 2, nrow = 2, align = "hv",
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
-
 # Eficacia de las policías {.r-fit-text background-image="img/oles_carabineros.webp"}
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+
+###### Carabineros logra controlar el problema de la delincuencia en Chile
 
 ```{r}
-#| label: fig-c-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
-#| fig-subcap:
-#|   - "Carabineros logra controlar el problema de la delincuencia en Chile"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
 
 val_label(data_ola0$c1_1,99)<-"NS-NR"
 val_label(data_ola0$c1_1,88)<-"NS-NR"
@@ -545,13 +529,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+
+###### Carabineros logra controlar el problema de la delincuencia en Chile
 
 ```{r}
-#| label: fig-c1_1-demo
-#| fig-cap: "(Cruce demográfico) Carabineros logra controlar el problema de la delincuencia en Chile"
-#| echo: false
-#| warning: false
 
 ggarrange(
 
@@ -614,17 +596,11 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+
+###### Carabineros logra controlar el problema del narcotráfico en Chile
 
 ```{r}
-#| label: fig-d-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
-#| fig-subcap:
-#|   - "Carabineros logra controlar el problema del narcotráfico en Chile"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
-
 val_label(data_ola0$c1_2,99)<-"NS-NR"
 val_label(data_ola0$c1_2,88)<-"NS-NR"
 
@@ -653,14 +629,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+
+###### Carabineros logra controlar el problema del narcotráfico en Chile
 
 ```{r}
-#| label: fig-c1_2-demo
-#| fig-cap: "(Cruce demográfico) Carabineros logra controlar el problema del narcotráfico en Chile"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -718,14 +691,11 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)?{.smaller}
+
+###### La Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile"
 
 ```{r}
-#| label: fig-c3_1-general
-#| fig-cap: "La Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile"
-#| echo: false
-#| warning: false
-
 val_label(data_ola0$c3,99)<-"NS-NR"
 val_label(data_ola0$c3,88)<-"NS-NR"
 
@@ -760,11 +730,6 @@ data_ola0 |>
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)?
 
 ```{r}
-#| label: fig-c3-demo
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con que la Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile?"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -820,23 +785,14 @@ common.legend = TRUE
 
 ```
 
-
 # Legitimidad de Carabineros {.r-fit-text background-image="img/oles_carabineros.webp"}
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
 
+###### En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal
 ```{r}
-#| label: fig-e-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
-#| fig-subcap:
-#|   - "En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
-
-
 val_label(data_ola0$c1_3,99)<-"NS-NR"
 val_label(data_ola0$c1_3,88)<-"NS-NR"
 
@@ -865,14 +821,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+
+###### En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal
 
 ```{r}
-#| label: fig-c1_3-demo
-#| fig-cap: "(Cruce demográfico) En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -930,16 +883,11 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+
+###### Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas
 
 ```{r}
-#| label: fig-f-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
-#| fig-subcap:
-#|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
 
 data_ola0 <- data_ola0 %>%
   mutate(c1_4 = if_else(is.na(c1_4), 99, c1_4))
@@ -975,14 +923,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+
+###### Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas
 
 ```{r}
-#| label: fig-c1_4-demo
-#| fig-cap: "(Cruce demográfico) Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -1037,22 +982,15 @@ common.legend = TRUE
 
 ```
 
-
 # Justicia procedimental de las policías {.r-fit-text background-image="img/oles_carabineros.webp"}
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+
+###### Toman decisiones justas e imparciales en los casos que se ocupa
 
 ```{r}
-#| label: fig-2_1-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?"
-#| fig-subcap: 
-#|   - "Toman decisiones justas e imparciales en los casos que se ocupa"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
-
 val_label(data_ola0$c2_1,99)<-"NS-NR"
 val_label(data_ola0$c2_1,88)<-"NS-NR"
 
@@ -1084,14 +1022,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+
+###### Los carabineros toman decisiones justas e imparciales en los casos que se ocupa
 
 ```{r}
-#| label: fig-c2_1-demo
-#| fig-cap: "(Cruce demográfico) Los carabineros toman decisiones justas e imparciales en los casos que se ocupa"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -1152,17 +1087,11 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+
+###### Tratan a las personas con respeto en Chile
 
 ```{r}
-#| label: fig-2_2-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?"
-#| fig-subcap: 
-#|   - "Tratan a las personas con respeto en Chile"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
-
 val_label(data_ola0$c2_2,99)<-"NS-NR"
 val_label(data_ola0$c2_2,88)<-"NS-NR"
 
@@ -1194,14 +1123,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+
+###### Los carabineros tratan a las personas con respeto en los casos que se ocupa
 
 ```{r}
-#| label: fig-c2_2-demo
-#| fig-cap: "(Cruce demográfico) Los carabineros tratan a las personas con respeto en los casos que se ocupa"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -1260,17 +1186,11 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
+
+###### Toman decisiones justas e imparciales en los casos que se ocupa
 
 ```{r}
-#| label: fig-4_1-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?"
-#| fig-subcap: 
-#|   - "Toman decisiones justas e imparciales en los casos que se ocupa"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
-
 val_label(data_ola0$c4_1,99)<-"NS-NR"
 val_label(data_ola0$c4_1,88)<-"NS-NR"
 
@@ -1294,14 +1214,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
+
+###### Los funcionarios de la PDI toman decisiones justas e imparciales en los casos que se ocupa
 
 ```{r}
-#| label: fig-c4_1-demo
-#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI toman decisiones justas e imparciales en los casos que se ocupa"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -1362,16 +1279,10 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
 
+###### Tratan a las personas con respeto en Chile
 ```{r}
-#| label: fig-4_2-general
-#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?"
-#| fig-subcap: 
-#|   - "Tratan a las personas con respeto en Chile"
-#| layout-ncol: 1
-#| echo: false
-#| warning: false
 
 val_label(data_ola0$c4_2,99)<-"NS-NR"
 val_label(data_ola0$c4_2,88)<-"NS-NR"
@@ -1396,14 +1307,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
+
+###### Los funcionarios de la PDI tratan a las personas con respeto en los casos que se ocupa
 
 ```{r}
-#| label: fig-c4_2-demo
-#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI tratan a las personas con respeto en los casos que se ocupa"
-#| echo: false
-#| warning: false
-
 ggarrange(
 
 data_ola0 |> 
@@ -1462,21 +1370,15 @@ common.legend = TRUE
 
 ```
 
-
-
 # Empoderamiento de las policías {.r-fit-text background-image="img/oles_carabineros.webp"}
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+
+###### Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería
 
 ```{r}
-#| label: fig-7_1-general
-#| fig-cap: "¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?"
-#| fig-subcap:
-#|   - "Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"
-#| layout-ncol: 1
-
 val_label(data_ola0$c7_1,99)<-"NS-NR"
 val_label(data_ola0$c7_1,88)<-"NS-NR"
 
@@ -1501,12 +1403,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+
+###### Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería
 
 ```{r}
-#| label: fig-c7_1-demo
-#| fig-cap: "(Cruce demográfico) Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"
-
 ggarrange(
 
 data_ola0 |> 
@@ -1564,15 +1465,11 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+
+###### Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario
 
 ```{r}
-#| label: fig-7_2-general
-#| fig-cap: "¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?"
-#| fig-subcap:
-#|   - "Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario "
-#| layout-ncol: 1
-
 val_label(data_ola0$c7_2,99)<-"NS-NR"
 val_label(data_ola0$c7_2,88)<-"NS-NR"
 
@@ -1597,12 +1494,11 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+
+###### Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario
 
 ```{r}
-#| label: fig-c7_2-demo
-#| fig-cap: "(Cruce demográfico) Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario"
-
 ggarrange(
 
 data_ola0 |> 
@@ -1661,6 +1557,5 @@ common.legend = TRUE
 ------------------------------------------------------------------------
 
 ### Empoderamiento de las policías
-
 
 <center>![](images/sem.png){width="100%"}</center>
