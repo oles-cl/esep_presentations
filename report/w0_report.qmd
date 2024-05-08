@@ -461,7 +461,7 @@ data_ola0 |>
     )+
   labs(caption = "Fuente: ESEP 2023, ola 0.",
        color="Respuesta")+
-  scale_color_manual(values = palette_oles_5)
+  scale_color_manual(values = palette_oles_4)
 ```
 
 ```{r}
@@ -617,13 +617,10 @@ ncol = 2, nrow = 2, align = "hv",
 #| fig-subcap:
 #|   - "Carabineros logra controlar el problema de la delincuencia en Chile"
 #|   - "Carabineros logra controlar el problema del narcotráfico en Chile"
-#|   - "En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
-#|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
-#| layout-ncol: 2
+#| layout-ncol: 1
 #| echo: false
 #| warning: false
-#| fig-width: 10
-#| fig-height: 7
+#| fig-height: 4
 
 val_label(data_ola0$c1_1,99)<-"NS-NR"
 val_label(data_ola0$c1_1,88)<-"NS-NR"
@@ -641,18 +638,18 @@ data_ola0 |>
                           "Muy de Acuerdo",
                            "NS-NR")))|>
   
-  ggplot(aes(x=prop,y=Variable,fill=Variable))+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
   geom_text(aes(label=paste0(prop,"%")),
-            hjust=-0.1,
+            vjust=-0.1,
             size=8) +
-  md_theme_classic(base_size=25) +
+  theme_classic(base_size=20) +
   theme(axis.title.x = element_blank(),
         axis.title.y = element_blank())+
-  scale_x_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_y_discrete(labels = function(x) str_wrap(x, width = 10))+
-  scale_fill_manual(values = c("#35b779","#35b779","#35b779",
-                               "#35b779","#35b779","grey"))+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values = c("#440154","#440154","#440154",
+                               "#440154","#440154","grey"))+
   guides(fill=FALSE)
 
 val_label(data_ola0$c1_2,99)<-"NS-NR"
@@ -670,86 +667,18 @@ data_ola0 |>
                           "Muy de Acuerdo",
                           "NS-NR"))) |>
 
-  ggplot(aes(x=prop,y=Variable,fill=Variable))+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
   geom_text(aes(label=paste0(prop,"%")),
-            hjust=-0.1,
+            vjust=-0.1,
             size=8) +
-  md_theme_classic(base_size=25) +
+  theme_classic(base_size=20) +
   theme(axis.title.x = element_blank(),
         axis.title.y = element_blank())+
-  scale_x_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_y_discrete(labels = function(x) str_wrap(x, width = 10))+
-  scale_fill_manual(values=c("#440154","#440154","#440154",
-                             "#440154","#440154","grey"))+
-  guides(fill=FALSE)
-
-val_label(data_ola0$c1_3,99)<-"NS-NR"
-val_label(data_ola0$c1_3,88)<-"NS-NR"
-
-data_ola0 |>
-  count(Variable=to_label(c1_3))|>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         Item="En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal",
-                  Variable=factor(Variable,levels=c(
-                          "Muy en desacuerdo",
-                          "En desacuerdo",
-                          "Ni de acuerdo ni en desacuerdo",
-                          "De acuerdo",
-                          "Muy de Acuerdo",
-                           "NS-NR"))) |>
-
-  ggplot(aes(x=prop,y=Variable,fill=Variable))+
-  geom_bar(position="dodge", stat="identity",color="black") +
-  geom_text(aes(label=paste0(prop,"%")),
-            hjust=-0.1,
-            size=8) +
-  md_theme_classic(base_size=25) +
-  theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank())+
-  scale_x_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_y_discrete(labels = function(x) str_wrap(x, width = 10))+
-  scale_fill_manual(values = c("#fde725","#fde725","#fde725",
-                               "#fde725","#fde725","grey"))+
-  guides(fill=FALSE)
-
-
-data_ola0 <- data_ola0 %>%
-  mutate(c1_4 = if_else(is.na(c1_4), 99, c1_4))
-
-val_label(data_ola0$c1_4,99)<-"NS-NR"
-val_label(data_ola0$c1_4,88)<-"NS-NR"
-
-# Falta arreglar la introducción de NA
-data_ola0 |>
-  count(Variable=to_label(c1_4))|>
-  group_by(Variable)|>
-  summarise(n=sum(n))|>
-  ungroup()|>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         Item="Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas",
-                  Variable=factor(Variable,levels=c(
-                          "Muy en desacuerdo",
-                          "En desacuerdo",
-                          "Ni de acuerdo ni en desacuerdo",
-                          "De acuerdo",
-                          "Muy de Acuerdo",
-                           "NS-NR"))) |>
-
-  ggplot(aes(x=prop,y=Variable,fill=Variable))+
-  geom_bar(position="dodge", stat="identity",color="black") +
-  geom_text(aes(label=paste0(prop,"%")),
-            hjust=-0.1,
-            size=8) +
-  md_theme_classic(base_size=25) +
-  theme(
-        axis.title.x = element_blank(),
-        axis.title.y = element_blank())+
-  scale_x_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_y_discrete(labels = function(x) str_wrap(x, width = 5))+
-  scale_fill_manual(values = c("#31688e","#31688e","#31688e",
-                               "#31688e","#31688e","grey"))+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values=c("#fde725","#fde725","#fde725",
+                              "#fde725","#fde725","grey"))+
   guides(fill=FALSE)
 
 ```
@@ -893,129 +822,6 @@ ncol = 2, nrow = 2, align = "hv",
 common.legend = TRUE
 )|>
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
-
-
-```
-
-```{r}
-#| label: fig-c1_3-demo
-#| fig-cap: "(Cruce demográfico) En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
-#| echo: false
-#| warning: false
-
-ggarrange(
-
-data_ola0 |> 
-  proc_plot_demo(c1_3, sexo) |>
-  mutate(c1_3 = factor(c1_3,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |>
-  plot_propbar_sexo(fill_column = "c1_3", fill_palette = palette_oles_6),
-
-
-data_ola0 |> 
-  proc_plot_demo(c1_3, edad_recod) |>
-  mutate(c1_3 = factor(c1_3,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |>
-  plot_propbar_edad(fill_column = "c1_3", fill_palette = palette_oles_6),
-
-data_ola0 |>
-  proc_plot_demo(c1_3, zona) |>
-  mutate(c1_3 = factor(c1_3,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |> 
-  plot_propbar_zona(fill_column = "c1_3", fill_palette = palette_oles_6),
-
- data_ola0 |>
-  proc_plot_demo(c1_3, gse_recod) |>
-  mutate(c1_3 = factor(c1_3,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |>
-  plot_propbar_gse(fill_column = "c1_3", fill_palette = palette_oles_6),
-
-ncol = 2, nrow = 2, align = "hv", 
-common.legend = TRUE
-)|>
-  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
-
-
-```
-
-```{r}
-#| label: fig-c1_4-demo
-#| fig-cap: "(Cruce demográfico) Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
-#| echo: false
-#| warning: false
-
-ggarrange(
-
-data_ola0 |> 
-  proc_plot_demo(c1_4, sexo) |>
-  mutate(c1_4 = factor(c1_4,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |>
-  plot_propbar_sexo(fill_column = "c1_4", fill_palette = palette_oles_6),
-
-
-data_ola0 |> 
-  proc_plot_demo(c1_4, edad_recod) |>
-  mutate(c1_4 = factor(c1_4,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |>
-  plot_propbar_edad(fill_column = "c1_4", fill_palette = palette_oles_6),
-
-data_ola0 |>
-  proc_plot_demo(c1_4, zona) |>
-  mutate(c1_4 = factor(c1_4,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |> 
-  plot_propbar_zona(fill_column = "c1_4", fill_palette = palette_oles_6),
-
- data_ola0 |>
-  proc_plot_demo(c1_4, gse_recod) |>
-  mutate(c1_4 = factor(c1_4,
-                     levels = c("Muy en desacuerdo",
-                                "En desacuerdo",
-                                "Ni de acuerdo ni en desacuerdo",
-                                "De acuerdo",
-                                "Muy de Acuerdo",
-                                "NS-NR"))) |>
-  plot_propbar_gse(fill_column = "c1_4", fill_palette = palette_oles_6),
-
-ncol = 2, nrow = 2, align = "hv", 
-common.legend = TRUE
-)|>
-  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
-
 ```
 
 ```{r}
@@ -1041,17 +847,17 @@ data_ola0 |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
-  mdthemes::md_theme_classic(base_size=20) +
+  theme_classic(base_size=20) +
   theme(legend.position="top",
         axis.title.x = element_blank(),
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  geom_text(aes(label=paste0(prop,"%"),hjust=-0.1),size=6) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.1),size=8) +
   scale_fill_manual(values = c("#440154","#440154","#440154",
                                "#440154","#440154","grey"))+
   guides(fill=FALSE)+
-  labs(caption="Fuente: ESEP 2023, ola 0.")+
-  coord_flip()
+  labs(caption="Fuente: ESEP 2023, ola 0.")
 ```
 
 ```{r}
@@ -1111,7 +917,206 @@ ncol = 2, nrow = 2, align = "hv",
 common.legend = TRUE
 )|>
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+```
 
+# Legitimidad de las Policías
+```{r}
+#| label: fig-c-general2
+#| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
+#| fig-subcap:
+#|   - "En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
+#|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
+#| layout-ncol: 1
+#| echo: false
+#| warning: false
+#| fig-height: 3.5
+
+val_label(data_ola0$c1_3,99)<-"NS-NR"
+val_label(data_ola0$c1_3,88)<-"NS-NR"
+
+data_ola0 |>
+  count(Variable=to_label(c1_3))|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
+         Item="En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal",
+                  Variable=factor(Variable,levels=c(
+                          "Muy en desacuerdo",
+                          "En desacuerdo",
+                          "Ni de acuerdo ni en desacuerdo",
+                          "De acuerdo",
+                          "Muy de Acuerdo",
+                           "NS-NR"))) |>
+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            vjust=-0.1,
+            size=8) +
+  theme_classic(base_size=20) +
+  theme(
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values = c("#440154","#440154","#440154",
+                               "#440154","#440154","grey"))+
+  guides(fill=FALSE)
+
+
+data_ola0 <- data_ola0 %>%
+  mutate(c1_4 = if_else(is.na(c1_4), 99, c1_4))
+
+val_label(data_ola0$c1_4,99)<-"NS-NR"
+val_label(data_ola0$c1_4,88)<-"NS-NR"
+
+# Falta arreglar la introducción de NA
+data_ola0 |>
+  count(Variable=to_label(c1_4))|>
+  group_by(Variable)|>
+  summarise(n=sum(n))|>
+  ungroup()|>
+  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
+         Item="Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas",
+                  Variable=factor(Variable,levels=c(
+                          "Muy en desacuerdo",
+                          "En desacuerdo",
+                          "Ni de acuerdo ni en desacuerdo",
+                          "De acuerdo",
+                          "Muy de Acuerdo",
+                           "NS-NR"))) |>
+
+  ggplot(aes(x=Variable,y=prop,fill=Variable))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            vjust=-0.1,
+            size=8) +
+  theme_classic(base_size=20) +
+  theme(
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values = c("#fde725","#fde725","#fde725",
+                               "#fde725","#fde725","grey"))+
+  guides(fill=FALSE)
+```
+
+
+```{r}
+#| label: fig-c1_3-demo
+#| fig-cap: "(Cruce demográfico) En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_3, sexo) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_3, edad_recod) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c1_3, zona) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c1_3, gse_recod) |>
+  mutate(c1_3 = factor(c1_3,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c1_3", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
+```
+
+```{r}
+#| label: fig-c1_4-demo
+#| fig-cap: "(Cruce demográfico) Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
+#| echo: false
+#| warning: false
+
+ggarrange(
+
+data_ola0 |> 
+  proc_plot_demo(c1_4, sexo) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_sexo(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+
+data_ola0 |> 
+  proc_plot_demo(c1_4, edad_recod) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_edad(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+data_ola0 |>
+  proc_plot_demo(c1_4, zona) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |> 
+  plot_propbar_zona(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+ data_ola0 |>
+  proc_plot_demo(c1_4, gse_recod) |>
+  mutate(c1_4 = factor(c1_4,
+                     levels = c("Muy en desacuerdo",
+                                "En desacuerdo",
+                                "Ni de acuerdo ni en desacuerdo",
+                                "De acuerdo",
+                                "Muy de Acuerdo",
+                                "NS-NR"))) |>
+  plot_propbar_gse(fill_column = "c1_4", fill_palette = palette_oles_6),
+
+ncol = 2, nrow = 2, align = "hv", 
+common.legend = TRUE
+)|>
+  annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 
 ```
 
@@ -1247,8 +1252,6 @@ ncol = 2, nrow = 2, align = "hv",
 common.legend = TRUE
 )|>
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
-
-
 ```
 
 ```{r}
@@ -1365,6 +1368,7 @@ data_ola0 |>
   guides(fill=FALSE)+
   labs(caption="Fuente: ESEP 2023, Ola 0.")
 ```
+
 ```{r}
 #| label: fig-c4_1-demo
 #| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI toman decisiones justas e imparciales en los casos que se ocupa"
@@ -1425,8 +1429,6 @@ ncol = 2, nrow = 2, align = "hv",
 common.legend = TRUE
 )|>
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
-
-
 ```
 
 ```{r}
@@ -1489,8 +1491,6 @@ ncol = 2, nrow = 2, align = "hv",
 common.legend = TRUE
 )|>
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
-
-
 ```
 
 # Confianza en las Policías
@@ -1624,16 +1624,16 @@ data_ola0 |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
-  mdthemes::md_theme_classic(base_size=20) +
+  theme_classic(base_size=20) +
   theme(legend.position="top",
         axis.title.x = element_blank(),
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   scale_fill_manual(values = c("#440154","#440154","#440154",
                                "#440154","#440154","grey"))+
-  geom_text(aes(label=paste0(prop,"%"),hjust=-0.2),size=6) +
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2),size=7) +
   guides(fill=FALSE)+
-  coord_flip()+
   labs(caption="Fuente: ESEP 2023, Ola 0")
 
 data_ola0 |>
@@ -1650,16 +1650,16 @@ data_ola0 |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
-  mdthemes::md_theme_classic(base_size=20) +
+  theme_classic(base_size=20) +
   theme(legend.position="top",
         axis.title.x = element_blank(),
         axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   scale_fill_manual(values=c("#fde725","#fde725","#fde725",
                              "#fde725","#fde725","grey"))+
-  geom_text(aes(label=paste0(prop,"%"),hjust=-0.2),size=6) +
+  geom_text(aes(label=paste0(prop,"%"),vjust=-0.2),size=7) +
   guides(fill=FALSE)+
-  coord_flip()+
   labs(caption="Fuente: ESEP 2023, Ola 0")
 ```
 

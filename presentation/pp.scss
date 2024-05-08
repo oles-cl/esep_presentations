@@ -30,7 +30,7 @@ $headingFontWeight: normal;
 $heading1TextShadow: $headingTextShadow;
 
 $heading1Size: 2.00em;
-$heading2Size: 2.11em;
+$heading2Size: 1.80em;
 $heading3Size: 1.55em;
 $heading4Size: 1.00em;
 
@@ -54,22 +54,10 @@ $selectionColor: #fff;
 }
 
 #title-slide {
-  top: 0 !important;
+  top: 10vh !important;
 }
 
 #title-slide .author {
-  font-size: 80px!important;
+  font-size: 40px!important;
 }
-#title-slide .author:after {
-  content: url('oles_portrait.png') ;
-  display: block;
 
-  /***
-    display: block;
-    content: "";
-    height: 200px;
-    background: transparent url('oles_portrait.png') no-repeat;
-  
-
-    ***/
-}
