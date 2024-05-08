@@ -66,7 +66,8 @@ pacman::p_load(tidyverse,
                janitor,
                ggpubr,
                forcats,
-               gt
+               gt,
+               stringr
                )
 
 options(digits=1)
@@ -222,9 +223,6 @@ proc_plot_demo <- function(x, variable, demografico) {
            label=ifelse(prop>9,paste0(prop,"%"),NA))
 }
 
-
-
-
 data_ola0 <- readRDS("../data/esep_w0.rds") |>
   janitor::clean_names()|>
    rename(
@@ -255,7 +253,24 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
             gse%in%c(2,1)~"ABC1",
             gse==7~NA_character_
           ),
-          sexo=to_label(sexo)
+          sexo=to_label(sexo),
+          fecha=as.Date(fecha, format = "%Y/%m/%d"),
+          month=format(fecha, "%B"),
+          date_recod=case_when(
+            month%in%c("May","June")~"Mayo-Junio 2023",
+            month%in%c("July","August")~"Julio-Agosto 2023",
+            month%in%c("September","October")~"Sept-Oct 2023",
+            month%in%c("November","December")~"Nov-Dic 2023",
+            month%in%c("January","February","March")~"Enero-Febrero 2024"
+          ),
+          date_recod=factor(date_recod,levels=c(
+            "Mayo-Junio 2023",
+            "Julio-Agosto 2023",
+            "Sept-Oct 2023",
+            "Nov-Dic 2023",
+            "Enero-Febrero 2024"
+          )
+         )
         ) 
 ```
 
@@ -427,33 +442,26 @@ val_label(data_ola0$b1,99)<-"NS-NR"
 val_label(data_ola0$b1,88)<-"NS-NR"
 
 data_ola0 |>
-    mutate(
-    b1=to_label(b1)
-    )|>
+    mutate(b1=to_label(b1))|>
+  group_by(date_recod) |>
   count(b1) |>
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)"
-         )|>
+  mutate(prop=(n/sum(n)*100)|>round(1))|>
 
-  ggplot(aes(x=ola,y=prop,color=b1))+
+  ggplot(aes(x=date_recod,y=prop,color=b1))+
   geom_point()+
-  geom_line()+
+  geom_line(aes(group=b1))+
   geom_text_repel(aes(label = paste0(prop,"%")),size=7)+
-  mdthemes::md_theme_classic(base_size=20) +
+  theme_classic(base_size=20)+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
   theme(
-    legend.position = c(.95, .95),
-    legend.justification = c("right", "top"),
-    legend.box.just = "right",
-    legend.margin = margin(6, 6, 6, 6),
+    legend.position = "top",
     axis.title.x = element_blank(),
-    axis.title.y = element_blank()    
+    axis.title.y = element_blank(),
     )+
-  labs(
-    caption = "Fuente: ESEP 2023, ola 0.",
-    color="Respuesta"
-  )+
-  scale_color_manual(values = palette_oles_4)
+  labs(caption = "Fuente: ESEP 2023, ola 0.",
+       color="Respuesta")+
+  scale_color_manual(values = palette_oles_5)
 ```
 
 ```{r}
@@ -525,29 +533,24 @@ data_ola0 |>
                              "Inseguro/a" = "Inseguro/a + Muy inseguro/a",
                              "Seguro/a" = "Seguro/a + Muy seguro/a",
                              "Muy seguro/a" = "Seguro/a + Muy seguro/a")) |>
+  group_by(date_recod)|>
   count(b2) |> 
-  mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         ola="Ola 0 (Septiembre-Noviembre 2023)") |>
-  filter(b2!="No sabe (No leer)") |>
-  filter(b2!="No responde (No leer)") |>
+  mutate(prop=(n/sum(n)*100)|>round(1))|>
 
-ggplot(aes(x=ola,y=prop,color=b2))+
-  geom_point()+
-  geom_line()+
+  ggplot(aes(x=date_recod,y=prop,color=b2))+
+  geom_point(size=3)+
+  geom_line(aes(group=b2))+
   geom_text_repel(aes(label = paste0(prop,"%")),size=7)+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  mdthemes::md_theme_classic(base_size=20) +
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+  theme_classic(base_size=20)+
   theme(
     legend.position = "top",
     axis.title.x = element_blank(),
     axis.title.y = element_blank(),
-    legend.key.size = unit(0.5, "lines"),
-    legend.key.width = unit(0.5, "lines")
     )+
-  labs(
-    caption = "Fuente: ESEP 2023, ola 0.",
-    color="Respuesta"
-  ) +
+  labs(caption = "Fuente: ESEP 2023, ola 0.",
+       color="Respuesta")+
   scale_color_manual(values = palette_oles_3)
 ```
 
