@@ -43,7 +43,8 @@ level_likert_1 <- c(
   "En desacuerdo",
   "Ni de acuerdo ni en desacuerdo",
   "De acuerdo",         
-  "Muy de acuerdo")
+  "Muy de acuerdo",
+  "NS-NR")
 
 palette_likert_5 <- c(
   "#fde725",
@@ -178,10 +179,9 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
    rename(
          edad=edad_encuestado
          )|>
-   mutate(edad_recod=case_when(edad <= 25 ~ "25 años o menos",
-                              edad > 25 & edad <= 40 ~ "Entre 26 y 40 años",
-                              edad > 40 & edad <= 60 ~ "Entre 41 y 60 años",
-                              edad > 60 ~ "Más de 60 años"),
+   mutate(edad_recod=case_when(edad <= 34 ~ "Entre 18 y 34 años",
+                              edad > 35 & edad <= 54 ~ "Entre 35 y 54 años",
+                              edad > 55 ~ "55 años o Más"),
           region=paste0(toupper(substr(region, 1, 1)),tolower(substr(region, 2, nchar(region)))),
           zona=case_when(
             region%in%c("Arica y parinacota","Tarapacá","Antofagasta")~"Norte Grande",
