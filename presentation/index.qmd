@@ -329,25 +329,22 @@ val_label(data_ola0$b1,88)<-"NS-NR"
 
 data_ola0 |>
     mutate(b1=to_label(b1))|>
-  group_by(date_recod) |>
   count(b1) |>
   mutate(prop=(n/sum(n)*100)|>round(1))|>
 
-  ggplot(aes(x=date_recod,y=prop,color=b1))+
-  geom_point()+
-  geom_line(aes(group=b1))+
-  geom_text_repel(aes(label = paste0(prop,"%")),size=7)+
-  theme_classic(base_size=20)+
+  ggplot(aes(x=b1,y=prop,fill=b1))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            vjust=-0.1,
+            size=8) +
+  theme_classic(base_size=20) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  theme(
-    legend.position = "top",
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    )+
-  labs(caption = "Fuente: ESEP 2023, ola 0.",
-       color="Respuesta")+
-  scale_color_manual(values = palette_oles_4)
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values = c("#440154","#440154","#440154",
+                               "grey"))+
+  guides(fill=FALSE)
 ```
 
 ------------------------------------------------------------------------
@@ -415,26 +412,27 @@ data_ola0 |>
          b2=dplyr::recode(b2,"Muy inseguro/a" = "Inseguro/a + Muy inseguro/a",
                              "Inseguro/a" = "Inseguro/a + Muy inseguro/a",
                              "Seguro/a" = "Seguro/a + Muy seguro/a",
-                             "Muy seguro/a" = "Seguro/a + Muy seguro/a")) |>
-  group_by(date_recod)|>
+                             "Muy seguro/a" = "Seguro/a + Muy seguro/a"),
+         b2=factor(b2, levels=c(
+           "Seguro/a + Muy seguro/a",
+           "Inseguro/a + Muy inseguro/a",
+           "NS-NR"
+         ))) |>
   count(b2) |> 
   mutate(prop=(n/sum(n)*100)|>round(1))|>
 
-  ggplot(aes(x=date_recod,y=prop,color=b2))+
-  geom_point(size=3)+
-  geom_line(aes(group=b2))+
-  geom_text_repel(aes(label = paste0(prop,"%")),size=7)+
+  ggplot(aes(x=b2,y=prop,fill=b2))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            vjust=-0.1,
+            size=8) +
+  theme_classic(base_size=20) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  theme_classic(base_size=20)+
-  theme(
-    legend.position = "top",
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    )+
-  labs(caption = "Fuente: ESEP 2023, ola 0.",
-       color="Respuesta")+
-  scale_color_manual(values = palette_oles_3)
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values = c("#440154","#440154","grey"))+
+  guides(fill=FALSE)
 ```
 
 ------------------------------------------------------------------------

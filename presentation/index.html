@@ -8,7 +8,7 @@
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.553">
+  <meta name="generator" content="quarto-1.3.361">
 
   <meta name="author" content="Observatorio de Violencia y Legitimidad Social">
   <meta name="dcterms.date" content="2024-03-05">
@@ -158,8 +158,7 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    padding-bottom: 0.5rem;
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -322,10 +321,9 @@
       margin-right: 0; 
     }
   </style>
+  
   <script src="index_files/libs/kePrint-0.0.1/kePrint.js"></script>
-
   <link href="index_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-
 </head>
 <body class="quarto-light">
   <div class="reveal">
@@ -351,8 +349,8 @@ Observatorio de Violencia y Legitimidad Social
 <div class="column">
 <p>OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile con el objetivo de contribuir a la comprensión de los mecanismos de legitimidad policial y justificación de la violencia mediante el desarrollo de investigaciones bajo criterios de Ciencia Abierta y en diálogo con actores sociales.</p>
 </div><div class="column">
-<div class="quarto-layout-panel" data-layout-ncol="2">
-<div class="quarto-layout-row">
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
 <div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <p><strong>Alianzas OLES</strong></p>
 <p><img data-src="img/logos.png"></p>
@@ -413,7 +411,6 @@ Observatorio de Violencia y Legitimidad Social
 <h2>Ficha técnica del Estudio</h2>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <table class="table table-bordered lightable-classic-2" data-quarto-postprocess="true" style="font-size: 18px; margin-left: auto; margin-right: auto; font-family: &quot;Arial Narrow&quot;, &quot;Source Sans Pro&quot;, sans-serif; margin-left: auto; margin-right: auto;">
 <thead>
 <tr class="header">
@@ -490,7 +487,6 @@ Observatorio de Violencia y Legitimidad Social
 </table>
 
 
-</div>
 </div>
 </div>
 </section>
@@ -690,18 +686,12 @@ Observatorio de Violencia y Legitimidad Social
 <h6 id="dar-mayores-facilidades-para-que-los-carabineros-puedan-usar-su-arma-de-servicio-cuando-lo-estimen-necesario-1">Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario</h6>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<figure>
 <p><img data-src="index_files/figure-revealjs/unnamed-chunk-30-1.png" width="960"></p>
-</figure>
 </div>
 </div>
-</div>
-<div class="quarto-auto-generated-content">
 <p><img src="img/oles_logo.png" class="slide-logo"></p>
 <div class="footer footer-default">
 <p><a href="https://oles2.netlify.app/">Visita nuestro sitio web www.oles.cl</a></p>
-</div>
 </div>
 </section></section>
     </div>
@@ -732,6 +722,7 @@ Observatorio de Violencia y Legitimidad Social
       Reveal.initialize({
 'controlsAuto': true,
 'previewLinksAuto': false,
+'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -918,80 +909,42 @@ Observatorio de Violencia y Legitimidad Social
       });
     </script>
     
-
     <script>
-
       // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-
       // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-
       // slide changes (different for each slide format).
-
       (function () {
-
         // dispatch for htmlwidgets
-
         function fireSlideEnter() {
-
           const event = window.document.createEvent("Event");
-
           event.initEvent("slideenter", true, true);
-
           window.document.dispatchEvent(event);
-
         }
-
-    
 
         function fireSlideChanged(previousSlide, currentSlide) {
-
           fireSlideEnter();
 
-    
-
           // dispatch for shiny
-
           if (window.jQuery) {
-
             if (previousSlide) {
-
               window.jQuery(previousSlide).trigger("hidden");
-
             }
-
             if (currentSlide) {
-
               window.jQuery(currentSlide).trigger("shown");
-
             }
-
           }
-
         }
-
-    
 
         // hookup for slidy
-
         if (window.w3c_slidy) {
-
           window.w3c_slidy.add_observer(function (slide_num) {
-
             // slide_num starts at position 1
-
             fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-
           });
-
         }
 
-    
-
       })();
-
     </script>
-
-    
 
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -1069,27 +1022,10 @@ Observatorio de Violencia y Legitimidad Social
         // clear code selection
         e.clearSelection();
       });
-        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-        var mailtoRegex = new RegExp(/^mailto:/);
-          var filterRegex = new RegExp('/' + window.location.host + '/');
-        var isInternal = (href) => {
-            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
-        }
-        // Inspect non-navigation links and adorn them if external
-     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
-        for (var i=0; i<links.length; i++) {
-          const link = links[i];
-          if (!isInternal(link.href)) {
-            // undo the damage that might have been done by quarto-nav.js in the case of
-            // links that we want to consider external
-            if (link.dataset.originalHref !== undefined) {
-              link.href = link.dataset.originalHref;
-            }
-          }
-        }
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      function tippyHover(el, contentFn) {
         const config = {
           allowHTML: true,
+          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -1099,17 +1035,8 @@ Observatorio de Violencia y Legitimidad Social
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start',
+          placement: 'bottom-start'
         };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 
@@ -1123,11 +1050,7 @@ Observatorio de Violencia y Legitimidad Social
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);
-          if (note) {
-            return note.innerHTML;
-          } else {
-            return "";
-          }
+          return note.innerHTML;
         });
       }
       const findCites = (el) => {
