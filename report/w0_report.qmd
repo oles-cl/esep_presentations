@@ -2,13 +2,13 @@
 title: Informe Estudio de Percepciones de Seguridad y Policías en Chile 
 subtitle: Informe Ola 0
 author:
-  - name: Mónica M. Gerber
+  - name: Monica M. Gerber
     affiliations:
       - name: Universidad Diego Portales
         department: Facultad de Psicología
   - name: Cristóbal Moya
     affiliations:
-      - name: Universität Bielefeld,
+      - name: Universität Bielefeld
         department: Departmento de Sociología; DIW Berlín
   - name: Nicolás Tobar
     affiliations:
@@ -230,13 +230,13 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
          )|>
    mutate(edad_recod=case_when(edad <= 34 ~ "18 y 34 años",
                               edad > 34 & edad <= 54 ~ "35 y 54 años",
-                              edad > 54 ~ "55 años o Más"),
+                              edad > 54 ~ "55 años o más"),
           region=paste0(toupper(substr(region, 1, 1)),tolower(substr(region, 2, nchar(region)))),
           zona=case_when(
             region%in%c("Arica y parinacota","Tarapacá","Antofagasta")~"Norte Grande",
             region%in%c("Coquimbo","Atacama")~"Norte Chico",
             region=="Metropolitana"~"Región Metropolitina",
-            region%in%c("Valparaíso","Libertador bernardo o’higgins",
+            region%in%c("Valparaíso","Libertador Bernardo O’higgins",
                         "Maule","Ñuble")~"Zona Central",
             region%in%c("Biobío","Araucanía","Los lagos","Los ríos")~"Zona Sur",
             region%in%c("Aysén","Magallanes")~"Zona Austral"
@@ -427,9 +427,6 @@ data_ola0 %>%
 
 ```
 
-
-El trabajo en terreno se realizó dentro de una serie de tensiones, acontecimientos y eventos mediáticos relacionados con la seguridad pública y las policías en Chile. Para entregar al lector una panorámica de los principales eventos e hitos ocurridos durante la medición del estudio, el equipo de OLES entrega una contextualización del escenario noticioso y administrativo sobre las policías en Chile.
-
 # Percepciones sobre seguridad 
 
 ```{r}
@@ -443,25 +440,22 @@ val_label(data_ola0$b1,88)<-"NS-NR"
 
 data_ola0 |>
     mutate(b1=to_label(b1))|>
-  group_by(date_recod) |>
   count(b1) |>
   mutate(prop=(n/sum(n)*100)|>round(1))|>
 
-  ggplot(aes(x=date_recod,y=prop,color=b1))+
-  geom_point()+
-  geom_line(aes(group=b1))+
-  geom_text_repel(aes(label = paste0(prop,"%")),size=7)+
-  theme_classic(base_size=20)+
+  ggplot(aes(x=b1,y=prop,fill=b1))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            vjust=-0.1,
+            size=8) +
+  theme_classic(base_size=20) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  theme(
-    legend.position = "top",
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    )+
-  labs(caption = "Fuente: ESEP 2023, ola 0.",
-       color="Respuesta")+
-  scale_color_manual(values = palette_oles_4)
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values = c("#440154","#440154","#440154",
+                               "grey"))+
+  guides(fill=FALSE)
 ```
 
 ```{r}
@@ -532,26 +526,27 @@ data_ola0 |>
          b2=dplyr::recode(b2,"Muy inseguro/a" = "Inseguro/a + Muy inseguro/a",
                              "Inseguro/a" = "Inseguro/a + Muy inseguro/a",
                              "Seguro/a" = "Seguro/a + Muy seguro/a",
-                             "Muy seguro/a" = "Seguro/a + Muy seguro/a")) |>
-  group_by(date_recod)|>
+                             "Muy seguro/a" = "Seguro/a + Muy seguro/a"),
+         b2=factor(b2, levels=c(
+           "Seguro/a + Muy seguro/a",
+           "Inseguro/a + Muy inseguro/a",
+           "NS-NR"
+         ))) |>
   count(b2) |> 
   mutate(prop=(n/sum(n)*100)|>round(1))|>
 
-  ggplot(aes(x=date_recod,y=prop,color=b2))+
-  geom_point(size=3)+
-  geom_line(aes(group=b2))+
-  geom_text_repel(aes(label = paste0(prop,"%")),size=7)+
+  ggplot(aes(x=b2,y=prop,fill=b2))+
+  geom_bar(position="dodge", stat="identity",color="black") +
+  geom_text(aes(label=paste0(prop,"%")),
+            vjust=-0.1,
+            size=8) +
+  theme_classic(base_size=20) +
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
   scale_y_continuous(labels = function(x) paste0(x, "%"),limits = c(0,100))+
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
-  theme_classic(base_size=20)+
-  theme(
-    legend.position = "top",
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank(),
-    )+
-  labs(caption = "Fuente: ESEP 2023, ola 0.",
-       color="Respuesta")+
-  scale_color_manual(values = palette_oles_3)
+  scale_x_discrete(labels = function(x) str_wrap(x, width = 13))+
+  scale_fill_manual(values = c("#440154","#440154","grey"))+
+  guides(fill=FALSE)
 ```
 
 ```{r}
@@ -924,7 +919,7 @@ common.legend = TRUE
 #| label: fig-c-general2
 #| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
 #| fig-subcap:
-#|   - "En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
+#|   - "En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
 #|   - "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
 #| layout-ncol: 1
 #| echo: false
@@ -1003,7 +998,7 @@ data_ola0 |>
 
 ```{r}
 #| label: fig-c1_3-demo
-#| fig-cap: "(Cruce demográfico) En general, Los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
+#| fig-cap: "(Cruce demográfico) En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
 #| echo: false
 #| warning: false
 
