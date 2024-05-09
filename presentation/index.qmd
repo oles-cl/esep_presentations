@@ -14,7 +14,6 @@ css: portrait.css
 editor: visual
 ---
 
-
 ```{r setup}
 pacman::p_load(tidyverse,
                ggplot2,
@@ -197,13 +196,13 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
          )|>
    mutate(edad_recod=case_when(edad <= 34 ~ "18 y 34 años",
                               edad > 34 & edad <= 54 ~ "35 y 54 años",
-                              edad > 54 ~ "55 años o Más"),
+                              edad > 54 ~ "55 años o más"),
           region=paste0(toupper(substr(region, 1, 1)),tolower(substr(region, 2, nchar(region)))),
           zona=case_when(
             region%in%c("Arica y parinacota","Tarapacá","Antofagasta")~"Norte Grande",
             region%in%c("Coquimbo","Atacama")~"Norte Chico",
             region=="Metropolitana"~"Región Metropolitina",
-            region%in%c("Valparaíso","Libertador bernardo o’higgins",
+            region%in%c("Valparaíso","Libertador Bernardo O’Higgins",
                         "Maule","Ñuble")~"Zona Central",
             region%in%c("Biobío","Araucanía","Los lagos","Los ríos")~"Zona Sur",
             region%in%c("Aysén","Magallanes")~"Zona Austral"
@@ -246,27 +245,17 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
 ::: columns
 ::: column
 OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile con el objetivo de contribuir a la comprensión de los mecanismos de legitimidad policial y justificación de la violencia mediante el desarrollo de investigaciones bajo criterios de Ciencia Abierta y en diálogo con actores sociales.
-
 :::
 
 ::: column
-
 ::: {layout-ncol="2"}
 ##### Alianzas OLES
+
 ![](img/logos.png)
 :::
 :::
 :::
 
-## Legitimidad Social
-
-<center>![](img/confianza_carabineros.png){width="60%"}</center>
-
-<p style="font-size: small;">
-
-Fuente: Centro de Estudios Públicos (CEP)
-
-</p>
 
 ------------------------------------------------------------------------
 
@@ -315,7 +304,7 @@ Fuente: Centro de Estudios Públicos (CEP)
 
 ------------------------------------------------------------------------
 
-## Ficha técnica del Estudio{.smaller}
+## Ficha técnica del Estudio {.smaller}
 
 ```{r}
 readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
@@ -506,7 +495,7 @@ ncol = 2, nrow = 2, align = "hv",
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### Carabineros logra controlar el problema de la delincuencia en Chile
 
@@ -545,7 +534,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### Carabineros logra controlar el problema de la delincuencia en Chile
 
@@ -609,7 +598,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### Carabineros logra controlar el problema del narcotráfico en Chile
 
@@ -646,7 +635,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### Carabineros logra controlar el problema del narcotráfico en Chile
 
@@ -708,7 +697,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)? {.smaller}
 
 ###### La Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile"
 
@@ -805,9 +794,10 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal
+
 ```{r}
 val_label(data_ola0$c1_3,99)<-"NS-NR"
 val_label(data_ola0$c1_3,88)<-"NS-NR"
@@ -842,7 +832,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal
 
@@ -902,7 +892,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas
 
@@ -948,7 +938,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
 ###### Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas
 
@@ -1010,7 +1000,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
 ###### Toman decisiones justas e imparciales en los casos que se ocupa
 
@@ -1048,7 +1038,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
 ###### Los carabineros toman decisiones justas e imparciales en los casos que se ocupa
 
@@ -1111,7 +1101,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
 ###### Tratan a las personas con respeto en Chile
 
@@ -1149,7 +1139,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
 ###### Los carabineros tratan a las personas con respeto en los casos que se ocupa
 
@@ -1212,7 +1202,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
 ###### Toman decisiones justas e imparciales en los casos que se ocupa
 
@@ -1241,7 +1231,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
 ###### Los funcionarios de la PDI toman decisiones justas e imparciales en los casos que se ocupa
 
@@ -1304,9 +1294,10 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
 ###### Tratan a las personas con respeto en Chile
+
 ```{r}
 
 val_label(data_ola0$c4_2,99)<-"NS-NR"
@@ -1333,7 +1324,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?{.smaller}
+#### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
 ###### Los funcionarios de la PDI tratan a las personas con respeto en los casos que se ocupa
 
@@ -1399,6 +1390,7 @@ common.legend = TRUE
 ------------------------------------------------------------------------
 
 #### ¿Podría Ud. decirme cuánta confianza tiene cada una de estas instituciones?
+
 ```{r}
 val_label(data_ola0$c5_1,99)<-"NS-NR"
 val_label(data_ola0$c5_1,88)<-"NS-NR"
@@ -1437,6 +1429,7 @@ data_ola0 |>
 ------------------------------------------------------------------------
 
 #### ¿Podría Ud. decirme cuánta confianza tiene en Carabineros de Chile?
+
 ```{r}
 ggarrange(
 
@@ -1466,6 +1459,7 @@ common.legend = TRUE
 ------------------------------------------------------------------------
 
 #### ¿Podría Ud. decirme cuánta confianza tiene en la Policiía de Investigaciones (PDI)?
+
 ```{r}
 ggarrange(
 
@@ -1496,7 +1490,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
 ###### Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería
 
@@ -1533,7 +1527,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
 ###### Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería
 
@@ -1593,7 +1587,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
 ###### Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario
 
@@ -1630,7 +1624,7 @@ data_ola0 |>
 
 ------------------------------------------------------------------------
 
-#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas?{.smaller}
+#### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
 ###### Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario
 
@@ -1688,8 +1682,4 @@ common.legend = TRUE
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
-------------------------------------------------------------------------
 
-### Empoderamiento de las policías
-
-<center>![](images/sem.png){width="100%"}</center>
