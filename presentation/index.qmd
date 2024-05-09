@@ -1,6 +1,6 @@
 ---
 title: "Estudio de Percepciones de Seguridad y Policias en Chile 2023-2025"
-subtitle: "Reporte de resultados Ola 0"
+subtitle: "Reporte de Resultados Ola 0 - Mayo 2024"
 author: "Observatorio de Violencia y Legitimidad Social"
 date: 03-05-2024
 format: 
@@ -9,7 +9,6 @@ format:
     multiplex: true
     theme: ["pp.scss"]
     footer: "[Visita nuestro sitio web www.oles.cl](https://oles2.netlify.app/)"
-    slide-number: c/t
 css: portrait.css
 editor: visual
 ---
@@ -240,7 +239,7 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
         ) 
 ```
 
-## Qué es OLES?
+## ¿Qué es OLES?
 
 ::: columns
 ::: column
@@ -256,66 +255,6 @@ OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile
 :::
 :::
 
-
-------------------------------------------------------------------------
-
-### Legitimidad Social
-
-#### ¿Qué es y por qué importa?
-
-::: columns
-::: column
--   Creencia en el derecho de las policías de ejercer su poder y dictar el comportamiento apropiado (Tyler & Jackson, 2013; Jackson, 2018)
-:::
-
-::: column
--   Percepción de coincidencia entre los valores de la ciudadanía y los valores de las policías
--   Creencia de que existe la obligación de obedecer a las policías
-:::
-:::
-
-------------------------------------------------------------------------
-
-### Legitimidad Social
-
-#### ¿Cómo lograr legitimidad social?
-
-<center>![](img/jp_legitimidad.png){width="70%"}</center>
-
-------------------------------------------------------------------------
-
-### ¿Qué es la Justicia Procedimental?
-
-::: columns
-::: column
--   Percepción de que las autoridades operan según procedimientos neutros y tratan a la ciudadanía de manera justa y respetuosa (Tyler & Blader, 2000)
-:::
-
-::: column
--   Foco en las interacciones entre las policías y la ciudadanía
-:::
-:::
-
-------------------------------------------------------------------------
-
-### ¿Qué es la Justicia Procedimental?
-
-<center>![](img/jp.png){width="50%"}</center>
-
-------------------------------------------------------------------------
-
-## Ficha técnica del Estudio {.smaller}
-
-```{r}
-readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
-                         sheet = 'w0') |>
-  
-  kbl(booktabs = TRUE) |>
-    kable_styling(latex_options = c("repeat_header","hold_position"),
-                bootstrap_options = "bordered",full_width = T,
-                font_size=18) |>
-  kable_classic_2()
-```
 
 # Percepción de seguridad {.r-fit-text background-image="img/oles_delincuencia.jpg"}
 
@@ -1680,4 +1619,15 @@ common.legend = TRUE
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
+## Ficha técnica del Estudio {.smaller}
 
+```{r}
+readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
+                         sheet = 'w0') |>
+  
+  kbl(booktabs = TRUE) |>
+    kable_styling(latex_options = c("repeat_header","hold_position"),
+                bootstrap_options = "bordered",full_width = T,
+                font_size=18) |>
+  kable_classic_2()
+```
