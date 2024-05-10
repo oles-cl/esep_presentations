@@ -1,5 +1,5 @@
 ---
-title: "Estudio de Percepciones de Seguridad y Policias en Chile 2023-2025"
+title: "Estudio de Percepciones de Seguridad y Policías en Chile 2023-2025"
 subtitle: "Reporte de Resultados Ola 0 - Mayo 2024"
 author: "Observatorio de Violencia y Legitimidad Social"
 date: 03-05-2024
@@ -255,6 +255,28 @@ OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile
 :::
 :::
 
+## ¿Qué es ESEP?
+
+El Estudio de Percepciones de Seguridad y Policías de Chile (ESEP) tiene como objetivo conocer las percepciones de la ciudadanía sobre la delincuencia en el país, así como sobre la manera en que las personas se vinculan con las policías.
+
+Los y las participantes en esta encuesta corresponden a hombres y mujeres de entre 18 y 65 años de edad, residentes de zonas urbanas del país. El muestreo fue probabilístico en todas sus etapas. 
+
+##### Financiamiento
+Este estudio se encuentra financiado por la Universidad Diego Portales y la Agencia Nacional de Investigación y Desarrollo (ANID) a través de los fondos Fondecyt Regular N. 1221805 y ANID Exploración N. 13220187
+
+
+## Ficha técnica del Estudio {.smaller}
+
+```{r}
+readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
+                         sheet = 'w0') |>
+  
+  kbl(booktabs = TRUE) |>
+    kable_styling(latex_options = c("repeat_header","hold_position"),
+                bootstrap_options = "bordered",full_width = T,
+                font_size=18) |>
+  kable_classic_2()
+```
 
 # Percepción de seguridad {.r-fit-text background-image="img/oles_delincuencia.jpg"}
 
@@ -434,7 +456,7 @@ ncol = 2, nrow = 2, align = "hv",
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### Carabineros logra controlar el problema de la delincuencia en Chile
+###### "Carabineros logra controlar el problema de la delincuencia en Chile"
 
 ```{r}
 
@@ -473,7 +495,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### Carabineros logra controlar el problema de la delincuencia en Chile
+###### "Carabineros logra controlar el problema de la delincuencia en Chile"
 
 ```{r}
 ggarrange(
@@ -537,7 +559,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### Carabineros logra controlar el problema del narcotráfico en Chile
+###### "Carabineros logra controlar el problema del narcotráfico en Chile"
 
 ```{r}
 val_label(data_ola0$c1_2,99)<-"NS-NR"
@@ -574,7 +596,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### Carabineros logra controlar el problema del narcotráfico en Chile
+###### "Carabineros logra controlar el problema del narcotráfico en Chile"
 
 ```{r}
 ggarrange(
@@ -636,7 +658,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)? {.smaller}
 
-###### La Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile"
+###### "La Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile"
 
 ```{r}
 val_label(data_ola0$c3,99)<-"NS-NR"
@@ -672,6 +694,8 @@ data_ola0 |>
 ------------------------------------------------------------------------
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿En qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre la Policía de Investigaciones de Chile (PDI)?
+
+###### "La Policía de Investigaciones de Chile (PDI) logra controlar el problema de la delincuencia en Chile"
 
 ```{r}
 ggarrange(
@@ -727,13 +751,13 @@ common.legend = TRUE
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
-# Legitimidad de policías {.r-fit-text background-image="img/oles_carabineros.webp"}
+# Legitimidad de las policías {.r-fit-text background-image="img/oles_carabineros.webp"}
 
 ------------------------------------------------------------------------
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal
+###### "En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
 
 ```{r}
 val_label(data_ola0$c1_3,99)<-"NS-NR"
@@ -771,7 +795,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal
+###### "En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal"
 
 ```{r}
 ggarrange(
@@ -831,7 +855,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas
+###### "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
 
 ```{r}
 data_ola0 <- data_ola0 %>%
@@ -877,7 +901,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile? {.smaller}
 
-###### Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas
+###### "Hay que respetar las decisiones que toman los carabineros, aunque no se esté de acuerdo con ellas"
 
 ```{r}
 ggarrange(
@@ -939,7 +963,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
-###### Toman decisiones justas e imparciales en los casos que se ocupa
+###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
 
 ```{r}
 val_label(data_ola0$c2_1,99)<-"NS-NR"
@@ -977,7 +1001,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
-###### Los carabineros toman decisiones justas e imparciales en los casos que se ocupa
+###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
 
 ```{r}
 ggarrange(
@@ -1040,7 +1064,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
-###### Tratan a las personas con respeto en Chile
+###### "Tratan a las personas con respeto en Chile"
 
 ```{r}
 val_label(data_ola0$c2_2,99)<-"NS-NR"
@@ -1078,7 +1102,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
-###### Los carabineros tratan a las personas con respeto en los casos que se ocupa
+###### "Tratan a las personas con respeto en Chile"
 
 ```{r}
 ggarrange(
@@ -1141,7 +1165,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
-###### Toman decisiones justas e imparciales en los casos que se ocupa
+###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
 
 ```{r}
 val_label(data_ola0$c4_1,99)<-"NS-NR"
@@ -1170,7 +1194,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
-###### Los funcionarios de la PDI toman decisiones justas e imparciales en los casos que se ocupa
+###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
 
 ```{r}
 ggarrange(
@@ -1233,7 +1257,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
-###### Tratan a las personas con respeto en Chile
+###### "Tratan a las personas con respeto en Chile"
 
 ```{r}
 
@@ -1263,7 +1287,8 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
-###### Los funcionarios de la PDI tratan a las personas con respeto en los casos que se ocupa
+###### "Tratan a las personas con respeto en Chile"
+
 
 ```{r}
 ggarrange(
@@ -1429,7 +1454,7 @@ common.legend = TRUE
 
 #### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
-###### Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería
+###### "Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"
 
 ```{r}
 val_label(data_ola0$c7_1,99)<-"NS-NR"
@@ -1466,7 +1491,7 @@ data_ola0 |>
 
 #### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
-###### Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería
+###### "Endurecer las penas contra quienes atenten contra la integridad física de Carabineros, PDI y Gendarmería"
 
 ```{r}
 ggarrange(
@@ -1526,7 +1551,7 @@ common.legend = TRUE
 
 #### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
-###### Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario
+###### "Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario"
 
 ```{r}
 val_label(data_ola0$c7_2,99)<-"NS-NR"
@@ -1563,7 +1588,7 @@ data_ola0 |>
 
 #### ¿Qué tan de acuerdo o en desacuerdo se encuentra usted con las siguientes medidas? {.smaller}
 
-###### Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario
+###### "Dar mayores facilidades para que los carabineros puedan usar su arma de servicio cuando lo estimen necesario"
 
 ```{r}
 ggarrange(
@@ -1619,15 +1644,3 @@ common.legend = TRUE
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
-## Ficha técnica del Estudio {.smaller}
-
-```{r}
-readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
-                         sheet = 'w0') |>
-  
-  kbl(booktabs = TRUE) |>
-    kable_styling(latex_options = c("repeat_header","hold_position"),
-                bootstrap_options = "bordered",full_width = T,
-                font_size=18) |>
-  kable_classic_2()
-```
