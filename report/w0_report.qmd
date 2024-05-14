@@ -297,7 +297,7 @@ Para más información, es posible revisar la [página web de OLES: www.oles.cl]
 
 ![Seminario internacional sobre Inseguridad en América Latina organizado por OLES. Agosto 2023](../img/image_intro.jpg)
 
-# ¿Qué es el Estudio de Percepciones de Seguridad y Policías en Chile?
+# ¿Qué es el Estudio de Percepciones de Seguridad y Policías en Chile (ESEP)?
 
 El Estudio de Percepciones de Seguridad y Policías de Chile (ESEP) diseñado por el Observatorio de Violencia y Legitimidad Social tiene como objetivo conocer las percepciones de la ciudadanía sobre la delincuencia en el país, así como sobre la manera en que las personas se vinculan con las policías. 
 
@@ -917,7 +917,7 @@ common.legend = TRUE
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
-# Legitimidad de las Policías
+# Legitimidad de las policías
 ```{r}
 #| label: fig-c-general2
 #| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿en qué medida se encuentra Ud. de acuerdo o en desacuerdo con las siguientes afirmaciones sobre Carabineros de Chile?"
@@ -1117,13 +1117,13 @@ common.legend = TRUE
 
 ```
 
-# Justicia Procedimental de las Policías
+# Justicia procedimental de las policías
 
 ```{r}
 #| label: fig-c2-general
 #| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...?"
 #| fig-subcap: 
-#|   - "Toman decisiones justas e imparciales en los casos que se ocupa"
+#|   - "Toman decisiones justas e imparciales en los casos de los que se ocupan"
 #|   - "Tratan a las personas con respeto en Chile"
 #| layout-ncol: 1
 #| echo: false
@@ -1165,7 +1165,7 @@ data_ola0 |>
 data_ola0 |>
   count(Variable=to_label(c2_2), wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         Item="Toman decisiones justas e imparciales en los casos que se ocupa?") |>
+         Item="Toman decisiones justas e imparciales en los casos de los que se ocupan?") |>
     mutate(Variable=factor(Variable,levels=c(
     "Nunca",
     "Pocas veces",
@@ -1191,7 +1191,7 @@ data_ola0 |>
 
 ```{r}
 #| label: fig-c2_1-demo
-#| fig-cap: "(Cruce demográfico) Los carabineros toman decisiones justas e imparciales en los casos que se ocupa"
+#| fig-cap: "(Cruce demográfico) Los carabineros toman decisiones justas e imparciales en los casos de los que se ocupan"
 #| echo: false
 #| warning: false
 
@@ -1253,7 +1253,7 @@ common.legend = TRUE
 
 ```{r}
 #| label: fig-c2_2-demo
-#| fig-cap: "(Cruce demográfico) Los carabineros tratan a las personas con respeto en los casos que se ocupa"
+#| fig-cap: "(Cruce demográfico) Los carabineros tratan a las personas con respeto"
 #| echo: false
 #| warning: false
 
@@ -1318,7 +1318,7 @@ common.legend = TRUE
 #| label: fig-c4-general
 #| fig-cap: "Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...?"
 #| fig-subcap: 
-#|   - "Toman decisiones justas e imparciales en los casos que se ocupa"
+#|   - "Toman decisiones justas e imparciales en los casos de los que se ocupan"
 #|   - "Tratan a las personas con respeto en Chile"
 #| layout-ncol: 1
 #| echo: false
@@ -1350,7 +1350,7 @@ data_ola0 |>
 data_ola0 |>
   count(Variable=to_label(c4_2), wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         Item="Toman decisiones justas e imparciales en los casos que se ocupa?") |>
+         Item="Toman decisiones justas e imparciales en los casos de los que se ocupan?") |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
@@ -1368,7 +1368,7 @@ data_ola0 |>
 
 ```{r}
 #| label: fig-c4_1-demo
-#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI toman decisiones justas e imparciales en los casos que se ocupa"
+#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI toman decisiones justas e imparciales en los casos de los que se ocupan"
 #| echo: false
 #| warning: false
 
@@ -1430,7 +1430,7 @@ common.legend = TRUE
 
 ```{r}
 #| label: fig-c4_2-demo
-#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI tratan a las personas con respeto en los casos que se ocupa"
+#| fig-cap: "(Cruce demográfico) Los funcionarios de la PDI tratan a las personas con respeto en los casos de los que se ocupan"
 #| echo: false
 #| warning: false
 
@@ -1490,7 +1490,7 @@ common.legend = TRUE
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
 
-# Confianza en las Policías
+# Confianza en las policías
 
 ```{r}
 #| label: fig-c5-general
@@ -1778,7 +1778,7 @@ common.legend = TRUE
 
 ```
 
-# Ficha Técnica
+# Ficha técnica
 
 ```{r}
 readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
