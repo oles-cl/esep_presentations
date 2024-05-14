@@ -266,7 +266,7 @@ Los y las participantes en esta encuesta corresponden a hombres y mujeres de ent
 Este estudio se encuentra financiado por la Universidad Diego Portales y la Agencia Nacional de Investigación y Desarrollo (ANID) a través de los fondos Fondecyt Regular N. 1221805 y ANID Exploración N. 13220187
 
 
-## Ficha técnica del Estudio {.smaller}
+## Ficha técnica del estudio {.smaller}
 
 ```{r}
 readxl::read_xlsx(path = file.path('../data/ficha_tecnica_w0.xlsx'), 
@@ -964,11 +964,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
-<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
-=======
-###### Toman decisiones justas e imparciales en los casos de los que se ocupan
->>>>>>> Stashed changes
 
 ```{r}
 val_label(data_ola0$c2_1,99)<-"NS-NR"
@@ -1006,11 +1002,7 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
-<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
-=======
-###### Los carabineros toman decisiones justas e imparciales en los casos de los que se ocupan
->>>>>>> Stashed changes
 
 ```{r}
 ggarrange(
@@ -1174,11 +1166,7 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
-<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
-=======
-###### toman decisiones justas e imparciales en los casos de los que se ocupan
->>>>>>> Stashed changes
 
 ```{r}
 val_label(data_ola0$c4_1,99)<-"NS-NR"
@@ -1207,11 +1195,8 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
-<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
-=======
-###### Los funcionarios de la PDI toman decisiones justas e imparciales en los casos de los que se ocupan
->>>>>>> Stashed changes
+
 
 ```{r}
 ggarrange(
@@ -1437,7 +1422,7 @@ common.legend = TRUE
 
 ------------------------------------------------------------------------
 
-#### ¿Podría Ud. decirme cuánta confianza tiene en la Policiía de Investigaciones (PDI)?
+#### ¿Podría Ud. decirme cuánta confianza tiene en la Policía de Investigaciones (PDI)?
 
 ```{r}
 ggarrange(
