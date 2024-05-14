@@ -35,7 +35,8 @@ pacman::p_load(tidyverse,
                viridis
                )
 
-options(digits=1)
+options(digits=1,
+        scipen=0)
 
 level_likert_1 <- c(
   "Muy en desacuerdo",
@@ -182,7 +183,7 @@ proc_plot_demo <- function(x, variable, demografico) {
     mutate({{ variable }} := to_label({{ variable }})) %>%
     drop_na({{ demografico }}) %>%
     group_by({{ demografico }}) %>%
-    count({{ variable }}) %>%
+    count({{ variable }}, wt=ponderador) %>%
     mutate(prop = round(n / sum(n) * 100, 0),
            ola = "Ola 0 (Septiembre-Noviembre 2023)",
            label=ifelse(prop>4,paste0(prop,"%"),NA))
@@ -290,7 +291,7 @@ val_label(data_ola0$b1,88)<-"NS-NR"
 
 data_ola0 |>
     mutate(b1=to_label(b1))|>
-  count(b1) |>
+  count(b1, wt=ponderador) |>
   mutate(prop=(n/sum(n)*100)|>round(1))|>
 
   ggplot(aes(x=b1,y=prop,fill=b1))+
@@ -379,7 +380,7 @@ data_ola0 |>
            "Inseguro/a + Muy inseguro/a",
            "NS-NR"
          ))) |>
-  count(b2) |> 
+  count(b2, wt=ponderador) |> 
   mutate(prop=(n/sum(n)*100)|>round(1))|>
 
   ggplot(aes(x=b2,y=prop,fill=b2))+
@@ -465,7 +466,7 @@ val_label(data_ola0$c1_1,88)<-"NS-NR"
 
 data_ola0 |>
   mutate(c1_1=to_label(c1_1))|>
-  count(Variable=c1_1)|>
+  count(Variable=c1_1,wt=ponderador)|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="Carabineros logra controlar el problema de la delincuencia en Chile",
          Variable=factor(Variable,levels=c(
@@ -566,7 +567,7 @@ val_label(data_ola0$c1_2,99)<-"NS-NR"
 val_label(data_ola0$c1_2,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c1_2))|>
+  count(Variable=to_label(c1_2),wt=ponderador)|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="Carabineros logra controlar el problema del narcotráfico en Chile",
                   Variable=factor(Variable,levels=c(
@@ -665,7 +666,7 @@ val_label(data_ola0$c3,99)<-"NS-NR"
 val_label(data_ola0$c3,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c3))|>
+  count(Variable=to_label(c3),wt=ponderador)|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="La PDI logra controlar el problema de la delincuencia en Chile",
          Variable=factor(Variable,levels=c(
@@ -764,7 +765,7 @@ val_label(data_ola0$c1_3,99)<-"NS-NR"
 val_label(data_ola0$c1_3,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c1_3))|>
+  count(Variable=to_label(c1_3),wt=ponderador)|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="En general, los carabineros tienen la misma idea que yo sobre lo que está bien y lo que está mal",
                   Variable=factor(Variable,levels=c(
@@ -866,7 +867,7 @@ val_label(data_ola0$c1_4,88)<-"NS-NR"
 
 # Falta arreglar la introducción de NA
 data_ola0 |>
-  count(Variable=to_label(c1_4))|>
+  count(Variable=to_label(c1_4),wt=ponderador)|>
   group_by(Variable)|>
   summarise(n=sum(n))|>
   ungroup()|>
@@ -963,14 +964,18 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
+<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
+=======
+###### Toman decisiones justas e imparciales en los casos de los que se ocupan
+>>>>>>> Stashed changes
 
 ```{r}
 val_label(data_ola0$c2_1,99)<-"NS-NR"
 val_label(data_ola0$c2_1,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c2_1))|>
+  count(Variable=to_label(c2_1),wt=ponderador)|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
          Item="tratan a las personas con respeto en Chile")|>
   mutate(Variable=factor(Variable,levels=c(
@@ -1001,7 +1006,11 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los carabineros...? {.smaller}
 
+<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
+=======
+###### Los carabineros toman decisiones justas e imparciales en los casos de los que se ocupan
+>>>>>>> Stashed changes
 
 ```{r}
 ggarrange(
@@ -1072,9 +1081,9 @@ val_label(data_ola0$c2_2,88)<-"NS-NR"
 
 
 data_ola0 |>
-  count(Variable=to_label(c2_2)) |>
+  count(Variable=to_label(c2_2),wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         Item="Toman decisiones justas e imparciales en los casos que se ocupa?") |>
+         Item="toman decisiones justas e imparciales en los casos de los que se ocupan?") |>
     mutate(Variable=factor(Variable,levels=c(
     "Nunca",
     "Pocas veces",
@@ -1165,14 +1174,18 @@ common.legend = TRUE
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
+<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
+=======
+###### toman decisiones justas e imparciales en los casos de los que se ocupan
+>>>>>>> Stashed changes
 
 ```{r}
 val_label(data_ola0$c4_1,99)<-"NS-NR"
 val_label(data_ola0$c4_1,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c4_1))|>
+  count(Variable=to_label(c4_1),wt=ponderador)|>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1))|>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
@@ -1194,7 +1207,11 @@ data_ola0 |>
 
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
+<<<<<<< Updated upstream
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
+=======
+###### Los funcionarios de la PDI toman decisiones justas e imparciales en los casos de los que se ocupan
+>>>>>>> Stashed changes
 
 ```{r}
 ggarrange(
@@ -1265,9 +1282,9 @@ val_label(data_ola0$c4_2,99)<-"NS-NR"
 val_label(data_ola0$c4_2,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c4_2)) |>
+  count(Variable=to_label(c4_2),wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100)|>round(1),
-         Item="Toman decisiones justas e imparciales en los casos que se ocupa?") |>
+         Item="toman decisiones justas e imparciales en los casos de los que se ocupan?") |>
   
   ggplot(aes(x=Variable,y=prop,fill=Variable))+
   geom_bar(position="dodge", stat="identity",color="black") +
@@ -1361,12 +1378,12 @@ val_label(data_ola0$c5_2,88)<-"NS-NR"
 
 rbind(
 data_ola0 |>
-  count(Variable=to_label(c5_1)) |>
+  count(Variable=to_label(c5_1),wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100),
          Item="Carabineros de Chile",
          prop=round(prop,1)),
 data_ola0 |>
-  count(Variable=to_label(c5_2)) |>
+  count(Variable=to_label(c5_2),wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100),
          Item="Policía de Investigaciones",
          prop=round(prop,1))
@@ -1461,7 +1478,7 @@ val_label(data_ola0$c7_1,99)<-"NS-NR"
 val_label(data_ola0$c7_1,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c7_1)) |>
+  count(Variable=to_label(c7_1),wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100),
                   Variable=factor(Variable,levels=c(
                           "Muy en desacuerdo",
@@ -1558,7 +1575,7 @@ val_label(data_ola0$c7_2,99)<-"NS-NR"
 val_label(data_ola0$c7_2,88)<-"NS-NR"
 
 data_ola0 |>
-  count(Variable=to_label(c7_2)) |>
+  count(Variable=to_label(c7_2),wt=ponderador) |>
   mutate(prop=(n/nrow(data_ola0)*100),
                   Variable=factor(Variable,levels=c(
                           "Muy en desacuerdo",
