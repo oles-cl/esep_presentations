@@ -220,7 +220,7 @@ proc_plot_demo <- function(x, variable, demografico) {
     count({{ variable }}, wt=ponderador) %>%
     mutate(prop = round(n / sum(n) * 100, 0),
            ola = "Ola 0 (Septiembre-Noviembre 2023)",
-           label=ifelse(prop>9,paste0(prop,"%"),NA))
+           label=ifelse(prop>8,paste0(prop,"%"),NA))
 }
 
 data_ola0 <- readRDS("../data/esep_w0.rds") |>
