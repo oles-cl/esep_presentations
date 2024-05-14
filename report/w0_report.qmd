@@ -1564,7 +1564,7 @@ common.legend = TRUE
 ```
 ```{r}
 #| label: fig-c5_2-general
-#| fig-cap: "¿Podría Ud. decirme cuánta confianza tiene en la Policiía de Investigaciones (PDI)? (Cruce demográfico)"
+#| fig-cap: "¿Podría Ud. decirme cuánta confianza tiene en la Policía de Investigaciones (PDI)? (Cruce demográfico)"
 
 ggarrange(
 
