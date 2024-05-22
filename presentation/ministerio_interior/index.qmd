@@ -287,9 +287,10 @@ Este estudio se encuentra financiado por la Universidad Diego Portales y la Agen
 :::
 :::
 
-::: {.callout-note}
-- No es posible ejercer el poder simplemente a través de la fuerza, sociedades complejas requieren de sumisión voluntaria
-- Legitimidad reemplaza la moralidad individual
+::: callout-note
+-   No es posible ejercer el poder simplemente a través de la fuerza, sociedades complejas requieren de sumisión voluntaria
+-   Legitimidad reemplaza la moralidad individual
+- Reserva de confianza
 :::
 
 ------------------------------------------------------------------------
