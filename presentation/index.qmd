@@ -260,11 +260,11 @@ OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile
 
 El Estudio de Percepciones de Seguridad y Policías de Chile (ESEP) tiene como objetivo conocer las percepciones de la ciudadanía sobre la delincuencia en el país, así como sobre la manera en que las personas se vinculan con las policías.
 
-Los y las participantes en esta encuesta corresponden a hombres y mujeres de entre 18 y 65 años de edad, residentes de zonas urbanas del país. El muestreo fue probabilístico en todas sus etapas. 
+Los y las participantes en esta encuesta corresponden a hombres y mujeres de entre 18 y 65 años de edad, residentes de zonas urbanas del país. El muestreo fue probabilístico en todas sus etapas.
 
 ##### Financiamiento
-Este estudio se encuentra financiado por la Universidad Diego Portales y la Agencia Nacional de Investigación y Desarrollo (ANID) a través de los fondos Fondecyt Regular N. 1221805 y ANID Exploración N. 13220187
 
+Este estudio se encuentra financiado por la Universidad Diego Portales y la Agencia Nacional de Investigación y Desarrollo (ANID) a través de los fondos Fondecyt Regular N. 1221805 y ANID Exploración N. 13220187
 
 ## Ficha técnica del estudio {.smaller}
 
@@ -1197,7 +1197,6 @@ data_ola0 |>
 
 ###### "Toman decisiones justas e imparciales en los casos de los que se ocupan"
 
-
 ```{r}
 ggarrange(
 
@@ -1290,7 +1289,6 @@ data_ola0 |>
 #### Teniendo en cuenta su propia experiencia o lo que ha oído, ¿con qué frecuencia cree Ud. que los funcionarios de la PDI...? {.smaller}
 
 ###### "Tratan a las personas con respeto en Chile"
-
 
 ```{r}
 ggarrange(
@@ -1645,4 +1643,3 @@ common.legend = TRUE
 )|>
   annotate_figure(bottom=text_grob("Fuente: ESEP 2023, ola 0.",hjust = 1,x=1,size = 10))
 ```
-
