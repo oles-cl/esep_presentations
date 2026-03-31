@@ -1,0 +1,584 @@
+---
+title: "Empowering the police: public support for police use of firearms in Chile"
+subtitle: "ISPP 2025"
+author: 
+  - name: Monica M. Gerber
+    affiliation: Universidad Diego Portales, OLES, COES
+  - name: Luciano Sáez Fuentealba
+    affiliation: Universidad Diego Portales, OLES
+  - name: María Teresa Valeria
+    affiliation: Universidad Diego Portales
+  - name: Martín Venegas
+    affiliation: Instituto Nacional de Estadísticas
+format:
+  revealjs:
+    theme: simple
+    self-contained: true
+    logo: img/oles_logo_chico.png
+    slide-number: true
+    center-title-slide: true
+    css: css/styles.css
+---
+
+
+```{r Preparation}
+pacman::p_load(
+  labelled,
+  tidyverse,
+  ggplot2,
+  ggrepel,
+  ggpubr,
+  viridis,
+  stringr,
+  sjlabelled,
+  knitr,
+  scales,
+  kableExtra,
+  tibble
+  )
+
+esep <- readRDS(file = here::here("data/intermediate_data/esep/esep.rds"))
+cep <- readRDS(file = here::here("data/input_data/cep/base_91.rds"))
+esep_np <- readRDS(file = here::here("data/intermediate_data/esep_np/esep_np.rds"))
+
+```
+
+```{r Data processing}
+esep <- esep %>%
+  mutate(
+    across(starts_with("c7"), ~ case_when(
+      .x == 88 ~ NA_real_,
+      .x == 99 ~ NA_real_,
+      TRUE ~ .x
+    )))
+
+
+
+
+esep <- esep |> 
+  mutate(
+    c7_2_rec = case_when(
+      c7_2 %in% c(1, 2) ~ "Agree",
+      c7_2 == 3 ~ "Neither agree nor disagree",
+      c7_2 %in% c(4, 5) ~ "Disagree",
+      TRUE ~ NA_character_
+      ),
+    c7_2_rec = factor(c7_2_rec,
+                               levels = c ("Disagree", 
+                                           "Neither agree nor disagree", 
+                                           "Agree")))
+
+var_label(esep) <- list(
+  c7_2_rec = "To what degree do you agree or disagree with the following measures? Measures should be taken to facilitate police officers' use of their service weapons when they deem it necessary"
+)
+
+cep <- cep |>
+    mutate(
+      democracia_38_rec = case_when(
+      democracia_38 %in% c(0:3) ~ "Low (0 - 3)",
+      democracia_38 %in% c(4:6) ~ "Medium (4 - 6)",
+      democracia_38 %in% c(7:10) ~ "High (7 - 10)",
+      TRUE ~ NA_character_
+      ),
+    democracia_38_rec = factor(democracia_38_rec,
+                               levels = c ("Low (0 - 3)", 
+                                           "Medium (4 - 6)", 
+                                           "High (7 - 10)")),
+    seguridad_40 = case_when(
+      seguridad_40 %in% c(1:2) ~ "Adequate",
+      seguridad_40 %in% c(3:5) ~ "Inadequate",
+      TRUE ~ NA_character_
+    ))
+
+
+
+esep_np <- remove_all_labels(esep_np)
+esep_np$age <- as.numeric(esep_np$age) 
+
+
+var_label(esep_np) <- list(
+  d1_1 = "Provide greater authorization for police officers to use their service weapons when they deem it necessary",
+  d1_2 = "Police officers should be allowed to use electroshock weapons to control crime",
+  d1_4 = "Police officers should have the power to do whatever they think is necessary to control crime",
+  d1_5 = "It is currently more important to increase the police's budget, staff and equipment than use resources for social programms")
+
+val_labels(esep_np[, c("d1_1", "d1_2", "d1_4", "d1_5")]) <- 
+  c("Agree" = 5, "Agree" = 4, 
+    "Neither agree nor disagree" = 3,
+    "Disagree" = 1, "Disagree" = 2)
+
+
+
+```
+
+## Securitization and police empowerment
+
+```{r, out.width = "100%",echo=F, cache=T}
+knitr::include_graphics("img/sec_emp.png")
+```
+
+## Police empowerment
+### Legal police power and support for police empowerment
+
+<center>
+```{r, out.width = "92%",echo=F, cache=T}
+knitr::include_graphics("img/def0.png")
+```
+</center>
+
+## Police empowerment
+### Proposed definition
+
+<center>
+```{r, out.width = "80%",echo=F, cache=T}
+knitr::include_graphics("img/def.png")
+```
+</center>
+
+## Democratic policing
+
+- Point where **law enforcement** intersects with **democratic principles**: accountability, transparency, the rule of law, and the protection of human rights (Bonner, 2020)
+- Essential for building trust between citizens and law enforcement, promoting social justice, and ensuring effective crime control.
+
+
+## Police power in Chile
+
+::::: columns
+::: {.column width="60%"}
+-   **Carabineros de Chile**:
+    - Militarized institution
+    - Fluctuating citizen trust
+    - Challenges to democratic policing in a country with an authoritarian past (Bonner, 2019): autonomy, low accountability and own justice
+    - Today: **great support for the empowerment** of police among authorities, citizens and through new laws
+    
+:::
+
+::: {.column width="40%"}
+```{r, out.width = "100%",echo=F, cache=T}
+knitr::include_graphics("img/arma.jpeg")
+```
+:::
+:::::
+
+
+
+## Why do people want to empower the police?
+
+<center>
+```{r, out.width = "70%",echo=F, cache=T}
+knitr::include_graphics("img/factors.png")
+```
+</center>
+
+Fox et al., 2021; Metcalfe & Hodge, 2018; Moule et al., 2024
+
+
+## Study 1. CEP Survey 91 (2024)
+### Methodology
+
+```{r ficha tecnica cep}
+readxl::read_xlsx("../../documents/cep/ficha_tecnica_cep_91.xlsx")|>
+  kable() |>
+  kable_styling(font_size = 18, full_width = FALSE)
+```
+
+## Study 1
+### Methodology
+
+::: {.small-text}
+- **Police empowerment**:
+- “In the year 2023, the parliament approved the Naín-Retamal law that strengthens and protects the role of the police and the armed forces. One of the measures is to give guarantees to the police regarding the use of firearms”
+    - It is adequate because it allows for legitimate police self-defense
+    -It is adequate because it allows a more effective action of the police in the protection of citizens
+    - It is inadequate because it may mean abuse of force by the police
+    - It is inadequate because it affects human rights
+    - It is inadequate because the use of weapons is never good
+- Recoded into 1 = Adequate and 0 = Inadequate
+
+:::
+
+## Study 1
+### Methodology
+
+- **Instrumental factors**: government should dedicate greatest effort to
+solve crime, fear of victimization, drugdealers in the neighborhood
+- **Normative factors**: trust in the police, perceived corruption in the
+police institution, obedience
+- **Ideological factors**: political identification, preference for
+authoritarianism, freedoms should be guaranteed even if it prevents crime
+control vs freedoms should be suppressed to control crime
+Control variables: sex, age, education
+- **Analysis**: Multiple Binary Logistic Regression
+
+## Study 1
+### Results
+
+```{r seguridad_40 CEP}
+cep |>
+  count(Respuesta = seguridad_40)|>
+  mutate(prop = round(n/sum(n),3),
+        Respuesta = factor(Respuesta, levels = rev(unique(Respuesta)))  # Reverse levels
+)|>
+  na.omit()|>
+  
+  ggplot(aes(x = Respuesta, y = prop, fill = Respuesta)) +
+  geom_bar(stat = "identity", color = "black", width = 0.6) +
+  geom_label(aes(label = paste0(prop*100, "%")), fill = "white") +
+  labs(
+    title = "Figure 1. Support for the Naín-Retamal Law",
+    subtitle = str_wrap("In the year 2023, the parliament approved the Naín-Retamal law that strengthens and protects the role of the police and the armed forces. One of the measures is to give guarantees to the police regarding the use of firearms",100))+
+  scale_y_continuous(labels = scales::percent)+
+  scale_fill_viridis(discrete = T, option = "D", begin = 1, end = 0) +
+  theme_minimal()+
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "top")
+```
+
+
+## Study 1
+### Results
+
+```{r, echo = F}
+
+
+tabla2 <- data.frame(
+  Variable = c(
+    "Instrumental Factors",
+    "Crime prioritization: Yes (ref: No)",
+    "Fear of victimization",
+    "Drug dealers in the neighborhood: Yes (ref: DK/NA)",
+    "Drug dealers in the neighborhood: No (ref: DK/NA)",
+    "Normative Factors",  # Subtitle
+    "Trust in the police: Confidence (ref: No confidence)",
+    "Perception of police corruption",
+    "Obey the law: Always (ref: Not always)",
+    "Ideological Factors",  # Subtitle
+    "Political ID: Center (ref: Left)",
+    "Political ID: Right (ref: Left)",
+    "Political ID: DK/NA (ref: Left)",
+    "Preference for authoritarianism: Yes (ref: No)",
+    "Suppress liberties to control crime: High (ref: Low)"
+  ),
+  OR = c(
+    "", 1.322, 1.111, 0.988, 0.851,
+    "", 1.654, 0.760, 1.253,
+    "", 2.613, 3.346, 3.207, 1.835, 1.062
+  ),
+  EE = c(
+    "", 0.181, 0.032, 0.204, 0.193,
+    "", 0.222, 0.077, 0.160,
+    "", 0.197, 0.284, 0.238, 0.238, 0.027
+  ),
+  z = c(
+    "", 1.539, 3.283, -0.060, -0.837,
+    "", 2.269, -3.584, 1.410,
+    "", 4.863, 4.259, 4.888, 2.553, 2.207
+  ),
+  p = c(
+    "", 0.124, 0.001, 0.952, 0.403,
+    "", 0.023, 0.000, 0.159,
+    "", 0.000, 0.000, 0.000, 0.011, 0.027
+  )
+)
+
+kable(
+  tabla2,
+  col.names = c("Variable", "OR", "SE", "z", "p"),
+  caption = "Table 1. Logistic Regression (Study 1, n = 1,011)"
+) %>%
+  kable_styling(full_width = FALSE, font_size = 15) %>%
+  row_spec(c(1, 6, 10), bold = TRUE, background = "#f7f7f7")
+
+```
+
+## Study 2. ESEP Survey (2023-2024)
+### Methodology
+
+```{r Ficha tecnica CEP}
+readxl::read_xlsx("../../documents/esep/ficha_tecnica_w0.xlsx")|>
+  kable() |>
+  kable_styling(font_size = 18, full_width = FALSE)
+```
+
+## Study 2
+### Methodology
+
+- **Police empowerment**:
+-   "To what extent do you agree or disagree with the following statement? Measures should be taken to facilitate police officers' use of their service weapons when they deem it necessary"
+    -   Strongly disagree
+    -   Disagree
+    -   Neither agree nor disagree
+    -   Agree
+    -   Strongly agree
+
+## Study 2
+### Methodology
+
+-   **Instrumental Factors**: fear of victimization, police effectiveness
+-   **Normative Factors**: moral alignment with the police, interactional and procedural justice
+-   **Ideological Factors**: political identification
+-   **Analysis**: Multiple linear regression
+
+## Study 2
+### Results
+
+```{r esep}
+esep |>
+  count(Respuesta = c7_2_rec)|>
+  mutate(prop = round(n/sum(n),3),
+        Respuesta = factor(Respuesta, levels = rev(unique(Respuesta)))  # Reverse levels
+)|>
+  na.omit()|>
+  
+  ggplot(aes(x = Respuesta, y = prop, fill = Respuesta)) +
+  geom_bar(stat = "identity", color = "black", width = 0.6) +
+  geom_label(aes(label = paste0(prop*100, "%")), fill = "white") +
+  labs(
+    title = "Figure 2. Support for police use of fire arms",
+    subtitle = str_wrap("To what degree do you agree or disagree with the following measures? Measures should be taken to facilitate police officers' use of their service weapons when they deem it necessary",100))+
+  scale_y_continuous(labels = scales::percent)+
+  scale_fill_viridis(discrete = T, option = "D", begin = 1, end = 0) +
+  theme_minimal()+
+  theme(axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        legend.position = "top")
+```
+
+
+## Study 2 
+### Results
+
+```{r, echo = F}
+
+
+# Table 4: Remaining variables with subtitles
+table4 <- data.frame(
+  Variable = c(
+    "Instrumental Factors",  # Subtitle
+    "Fear of Crime: High (ref = low)",
+    "Police efficacy",
+    "Normative Factors",  # Subtitle
+    "Moral alignment",
+    "Interaccional justice",
+    "Procedural justice",
+    "Ideological Factors",  # Subtitle
+    "Political Id. Center (ref = left)",
+    "Political Id. Right (ref = left)",
+    "Political Id. None (ref = left)",
+    "Political Id. DK/NA (ref = left)"
+  ),
+  `Beta` = c(
+    "", 0.312, 0.007,  # Instrumental
+    "", 0.184, 0.165, 0.072,  # Normative
+    "", 0.479, 0.809, 0.514, 0.457  # Ideological
+  ),
+  `EE` = c(
+    "", 0.038, 0.017, 
+    "", 0.016, 0.017, 0.018, 
+    "", 0.052, 0.060, 0.050, 0.096
+  ),
+  `t` = c(
+    "", 8.27, 0.44, 
+    "", 11.65, 9.62, 3.92, 
+    "", 9.29, 13.41, 10.32, 4.76
+  ),
+  `p` = c(
+    "", "< 2e-16", "0.6583", 
+    "", "< 2e-16", "< 2e-16", "9.06e-05", 
+    "", "< 2e-16", "< 2e-16", "< 2e-16", "1.99e-06"
+  )
+)
+
+
+# Generate Table 2
+kable(
+  table4,
+  col.names = c("Variable", "Beta", "SE", "t", "p"),
+  caption = "Table 2. Multiple Linear Regression (Study 2, n = 3,879)"
+) %>%
+  kable_styling(
+    full_width = FALSE,
+    font_size = 15
+  ) %>%
+  row_spec(c(1, 4, 8), bold = TRUE, background = "#f7f7f7")  # Highlight subtitles
+
+```
+
+## Study 3. EPSEP Wave 2 (2025)
+### Methodology
+
+```{r ficha tecnica esep_np}
+readxl::read_xlsx("../../documents/esep_np/ficha_tecnica_esep_np.xlsx")|>
+  kable() |>
+  kable_styling(font_size = 20, full_width = FALSE)
+```
+
+
+## Study 3
+### Methodology
+
+::: {.small-text}
+- **Police empowerment**:
+- To what degree do you agree or disagree with the following statements? (1 = Disagree strongly to 5 = Agree strongly)
+    - Measures should be taken to facilitate police officers' use of their service weapons when they deem it necessary
+    - Police officers should be authorized to use electroshock weapons to combat crime
+    - Police officers should have the power to do whatever they consider necessary to fight crime
+    - At present, it is more important to increase the police budget to expand personnel and equipment than to allocate resources to social programs
+
+::: 
+
+## Study 3
+### Methodology
+
+- **Instrumental Factors**: Police efficacy, fear of the police, fear of crime, victimization, observe police violence 
+- **Normative Factors**: Perceived police legitimacy, perceived procedural justice, identification with the police, perception of police corruption
+- **Ideological Factors**: Right-wing authoritarianism, Social dominance orientation 
+- **Analysis**: Multiple Linear Regression
+
+
+## Study 3
+### Results
+
+```{r Plot x}
+rbind(
+  esep_np |>
+    to_label() |>
+    count(Respuesta = d1_1) |>
+    mutate(
+      prop = round(n / sum(n) * 100, 1),
+      Question = "Measures should be taken to facilitate police officers' use of their service weapons when they deem it necessary"
+    ),
+  esep_np |>
+    to_label() |>
+    count(Respuesta = d1_2) |>
+    mutate(
+      prop = round(n / sum(n) * 100, 1),
+      Question = "Police officers should be authorized to use electroshock weapons to combat crime"
+    ),
+  esep_np |>
+    to_label() |>
+    count(Respuesta = d1_4) |>
+    mutate(
+      prop = round(n / sum(n) * 100, 1),
+      Question = "Police officers should have the power to do whatever they consider necessary to fight crime"
+    ),
+  esep_np |>
+    to_label() |>
+    count(Respuesta = d1_5) |>
+    mutate(
+      prop = round(n / sum(n) * 100, 1),
+      Question = "At present, it is more important to increase the police budget to expand personnel and equipment than to allocate resources to social programs"
+    )
+) |>
+  na.omit() |>
+  mutate(Respuesta = factor(Respuesta)) |>  # ✅ Asegura que Response es factor
+  ggplot(aes(x = n, y = Question, fill = Respuesta)) +
+  geom_bar(position = "fill", stat = "identity", color = "black", width = 0.5) +
+  geom_label(
+    aes(label = paste0(prop, "%"), group = Respuesta),
+    position = position_fill(vjust = 0.5),
+    size = 4,
+    color = "black",
+    fill = "white"
+  ) +
+  scale_y_discrete(labels = function(labels) str_wrap(labels, width = 30)) +
+  scale_x_continuous(labels = percent_format()) +
+  scale_fill_viridis(
+    discrete = TRUE,
+    option = "D",
+    begin = 1,
+    end = 0,
+    guide = guide_legend(reverse = TRUE, label.position = "top"),
+    labels = function(x) str_wrap(x, width = 20)
+  ) +
+  labs(
+    title = "Figure 3. Support for police empowerment",
+    subtitle = "To what degree do you agree or disagree with the following measures?"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank(),
+    axis.text.y = element_text(size = 11),
+    legend.position = "top"
+  )
+```
+
+## Study 3
+### Results
+
+
+```{r, echo = F}
+
+table6 <- tibble(
+  Variable = c(
+    "Instrumental Factors",
+    "Police efficacy",
+    "Fear of the police",
+    "Fear of crime: High (ref: Low)",
+    "Victimization",
+    "Observed police violence against protesters: Yes (ref: No)",
+    "Observed police violence against criminals: Yes (ref: No)",
+    "Normative Factors",
+    "Perceptions of police legitimacy",
+    "Perceptions of procedural justice",
+    "Perceptions of police corruption",
+    "Identification with the police",
+    "Perception of police impunity",
+    "Ideological Factors",
+    "Right-wing authoritarianism",
+    "Social dominance orientation"
+  ),
+  Beta = c(
+    "", "-0.037", "-0.041", "0.033", "-0.010", "-0.008", "-0.086",
+    "", "0.179", "0.239", "0.007", "0.042", "-0.010",
+    "", "0.470", "-0.059"
+  ),
+  EE = c(
+    "", "0.009", "0.008", "0.019", "0.019", "0.026", "0.026",
+    "", "0.017", "0.019", "0.010", "0.010", "0.008",
+    "", "0.010", "0.028"
+  ),
+  t = c(
+    "", "-4.288", "-5.115", "1.722", "-0.543", "-0.290", "-3.245",
+    "", "10.395", "12.458", "0.779", "4.144", "-1.329",
+    "", "46.297", "-2.081"
+  ),
+  p = c(
+    "", "0.000", "<0.001", "0.085", "0.587", "0.772", "0.001",
+    "", "<0.001", "<0.001", "0.436", "0.000", "0.184",
+    "", "<0.001", "0.037"
+  )
+)
+
+kable(
+  table6,
+  col.names = c("Variable", "Beta", "SE", "t", "p"),
+  caption = "Table 3. Multiple linear regression (Study 3, n = 3,213)"
+) %>%
+  kable_styling(full_width = FALSE, font_size = 15) %>%
+  row_spec(0, bold = TRUE) %>%
+  row_spec(c(1, 8, 14), bold = TRUE, background = "#f7f7f7")
+
+```
+
+## Discussion
+
+1. There is **high public support for police empowerment** in Chile, including highly coercive measures
+
+2. Support for police empowerment is driven by **instrumental, normative, and ideological factors**
+
+3. We need a **multidimensional conceptual and operational definition of police empowerment**: legal, institutional/administrative and perceptual dimensions
+
+4. Risk of empowerment without **accountability**
+
+## Thank you!
+
+- Funding: 
+    - Fondecyt Regular 1221805
+    - ANID Exploración 13220187
+    - Centro de Estudios de Conflicto y Cohesión Social (COES) (ANID/FONDAP/1523A0005)
+    - Beca ANID Doctoral (ANID/National Doctorate/2023-21231948)
+    
+- **Contact**: Monica Gerber (mmgerber@gmail.com)

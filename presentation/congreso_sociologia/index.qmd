@@ -210,19 +210,19 @@ data_ola0 <- readRDS("../data/esep_w0.rds") |>
 
 ## Qué es OLES?
 
-::: columns
+:::::: columns
 ::: column
 OLES agrupa investigadores/as de diferentes disciplinas y universidades en Chile con el objetivo de contribuir a la comprensión de los mecanismos de legitimidad policial y justificación de la violencia mediante el desarrollo de investigaciones bajo criterios de Ciencia Abierta y en diálogo con actores sociales.
 :::
 
-::: column
+:::: column
 ::: {layout-ncol="2"}
 ##### Alianzas OLES
 
 ![](img/logos.png)
 :::
-:::
-:::
+::::
+::::::
 
 ## Legitimidad Social
 
@@ -240,7 +240,7 @@ Fuente: Centro de Estudios Públicos (CEP)
 
 #### ¿Qué es y por qué importa?
 
-::: columns
+::::: columns
 ::: column
 -   Creencia en el derecho de las policías de ejercer su poder y dictar el comportamiento apropiado (Tyler & Jackson, 2013; Jackson, 2018)
 :::
@@ -249,7 +249,7 @@ Fuente: Centro de Estudios Públicos (CEP)
 -   Percepción de coincidencia entre los valores de la ciudadanía y los valores de las policías
 -   Creencia de que existe la obligación de obedecer a las policías
 :::
-:::
+:::::
 
 ------------------------------------------------------------------------
 
@@ -263,7 +263,7 @@ Fuente: Centro de Estudios Públicos (CEP)
 
 ### ¿Qué es la Justicia Procedimental?
 
-::: columns
+::::: columns
 ::: column
 -   Percepción de que las autoridades operan según procedimientos neutros y tratan a la ciudadanía de manera justa y respetuosa (Tyler & Blader, 2000)
 :::
@@ -271,7 +271,7 @@ Fuente: Centro de Estudios Públicos (CEP)
 ::: column
 -   Foco en las interacciones entre las policías y la ciudadanía
 :::
-:::
+:::::
 
 ------------------------------------------------------------------------
 

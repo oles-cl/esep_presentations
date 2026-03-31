@@ -1,0 +1,227 @@
+/* ════════════════════════════════════════════════════
+   OLES Presentation Theme · 2026
+   ════════════════════════════════════════════════════ */
+
+/* ── 1. Base ─────────────────────────────────────── */
+.reveal {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2d3748;
+  font-size: 32px;
+}
+
+/* ── 2. Title slide — sober, white, same style as content ── */
+#title-slide {
+  background: white;
+  text-align: center;
+}
+
+#title-slide h1.title {
+  color: #1B3A4B;
+  font-size: 1.55em;
+  font-weight: 700;
+  line-height: 1.25;
+  border-bottom: 3px solid #2a788e;
+  padding-bottom: 0.3em;
+  display: inline-block;
+}
+
+#title-slide p.subtitle {
+  color: #2a788e;
+  font-size: 0.88em;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.7em;
+}
+
+#title-slide .quarto-title-authors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.4em;
+  margin-top: 0.8em;
+  margin-bottom: 0.3em;
+}
+
+#title-slide .quarto-title-author {
+  text-align: center;
+}
+
+#title-slide .quarto-title-author-name {
+  color: #2d3748;
+  font-size: 0.7em;
+  font-weight: 600;
+}
+
+#title-slide .quarto-title-affiliation {
+  color: #718096;
+  font-size: 0.57em;
+  font-style: italic;
+}
+
+#title-slide .date {
+  color: #718096;
+  font-size: 0.62em;
+  letter-spacing: 0.06em;
+  margin-top: 0.6em;
+}
+
+/* ── 3. Regular slide headers ────────────────────── */
+.reveal h2 {
+  color: #1B3A4B;
+  font-size: 1.05em;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border-bottom: 3px solid #2a788e;
+  padding-bottom: 0.25em;
+  margin-bottom: 0.45em;
+}
+
+.reveal h3 {
+  color: #2a788e;
+  font-size: 0.78em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0;
+  margin-bottom: 0.4em;
+}
+
+/* Keep headers same size on .smaller slides */
+.reveal .slides section.smaller h2,
+.reveal .slides section .smaller h2 {
+  font-size: 1.05em;
+}
+
+.reveal .slides section.smaller h3,
+.reveal .slides section .smaller h3 {
+  font-size: 0.78em;
+}
+
+/* ── 4. Body text & lists ────────────────────────── */
+.reveal p,
+.reveal li {
+  font-size: 0.82em;
+  line-height: 1.7;
+}
+
+.reveal ul li {
+  margin-bottom: 0.3em;
+  padding-left: 0.1em;
+}
+
+.reveal ul li::marker {
+  color: #2a788e;
+}
+
+.reveal ol li::marker {
+  color: #2a788e;
+  font-weight: 600;
+}
+
+.reveal strong {
+  color: #1B3A4B;
+  font-weight: 700;
+}
+
+.reveal em {
+  color: #2a788e;
+}
+
+/* ── 5. Two-column layout ────────────────────────── */
+.reveal .columns {
+  gap: 2em;
+  align-items: flex-start;
+}
+
+/* ── 6. Highlight / callout box ──────────────────── */
+.highlight-box {
+  background: #e8f5f9;
+  border-left: 4px solid #2a788e;
+  padding: 0.55em 1em;
+  border-radius: 0 4px 4px 0;
+  margin: 0.6em 0;
+  font-size: 0.82em;
+}
+
+/* ── 7. Dual logos header (all slides) ──────────── */
+.logos-header {
+  position: fixed;
+  top: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 22px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.logos-header img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Push slide content down so it doesn't overlap logos */
+.reveal .slides section {
+  padding-top: 105px;
+}
+
+/* ── Grey / muted text utility ───────────────────── */
+.grey {
+  color: #c0c0c0;
+}
+
+/* ── Small footnote at slide bottom ─────────────── */
+.footnote {
+  position: absolute;
+  bottom: 1.2em;
+  left: 2em;
+  right: 2em;
+  font-size: 0.5em;
+  color: #999;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 0.4em;
+}
+
+/* ── 8. Footer & slide number ────────────────────── */
+.reveal .footer {
+  font-size: 0.48em;
+  color: #718096;
+}
+
+.reveal .slide-number {
+  font-size: 0.48em;
+  color: #2a788e;
+  background-color: transparent;
+}
+
+/* ── 9. Progress bar ─────────────────────────────── */
+.reveal .progress {
+  color: #2a788e;
+  height: 3px;
+}
+
+/* ── 10. Horizontal rule ─────────────────────────── */
+.reveal hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 0.5em 0;
+}
+
+/* ── 11. Section title slides ────────────────────── */
+.reveal .slide-background-content {
+  background-size: cover;
+}
+
+.reveal section[data-background-color] h2 {
+  color: white;
+  border-bottom-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── 12. Small text utility ──────────────────────── */
+.small-text {
+  font-size: 0.72em;
+  line-height: 1.5;
+}
