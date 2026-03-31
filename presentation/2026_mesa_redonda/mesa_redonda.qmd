@@ -4,7 +4,7 @@ subtitle: "Resultados de los Estudios de Percepción de Seguridad y Policías en
 author:
   - name: Monica Gerber
     affiliation: Escuela de Gobierno UC – Observatorio de Violencia y Legitimidad Social
-date: "31 de marzo 2026"
+date: 2026-03-31
 format:
   revealjs:
     theme: white
@@ -81,9 +81,9 @@ format:
 
 2. [La justicia procedimental es el principal predictor de la legitimidad policial, y la legitimidad es lo que sostiene el apoyo ciudadano a Carabineros]{.grey}
 
-3. [El miedo hacia Carabineros de Chile es un arma de doble filo: si bien puede mostrar a una fuerza policial fuerte, también disminuye las percepciones de eficacia, justicia procedimental y legitimidad]{.grey}
+3. [El miedo hacia Carabineros de Chile es un arma de doble filo: puede mostrar fuerza policial, pero disminuye las percepciones de eficacia, justicia procedimental y legitimidad]{.grey}
 
-4. [Existe un fuerte apoyo al empoderamiento policial, pero este depende fuertemente de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor]{.grey}
+4. [Existe un fuerte apoyo al empoderamiento policial, pero este depende de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor]{.grey}
 
 ## ¿Logran las policías controlar la delincuencia?
 
@@ -91,15 +91,15 @@ format:
 
 ![](img/efficacy_crime_bars.png){fig-align="center" width="90%"}
 
-## Percepción de Justicia Procedimental de Carabineros de Chile
+## Justicia procedimental de Carabineros de Chile
 
-![](img/jp.png){fig-align="center" width="90%"}
+![](img/pj_int1_w06_demographics_w06.png){fig-align="center" width="90%"}
 
 ## Legitimidad de Carabineros de Chile
 
-![](img/legitimidad.png){fig-align="center" width="90%"}
+![](img/leg_moral1_demographics_w06.png){fig-align="center" width="90%"}
 
-## Estudios de Percepciones de Policías y Sociedad en Chile {.smaller}
+## Estudios de Percepciones de Policías y Sociedad en Chile
 
 ### Cuatro observaciones
 
@@ -107,15 +107,15 @@ format:
 
 2. **La justicia procedimental es el principal predictor de la legitimidad policial, y la legitimidad es lo que sostiene el apoyo ciudadano a Carabineros**
 
-3. [El miedo hacia Carabineros de Chile es un arma de doble filo: si bien puede mostrar a una fuerza policial fuerte, también disminuye las percepciones de eficacia, justicia procedimental y legitimidad]{.grey}
+3. [El miedo hacia Carabineros de Chile es un arma de doble filo: puede mostrar fuerza policial, pero disminuye las percepciones de eficacia, justicia procedimental y legitimidad]{.grey}
 
-4. [Existe un fuerte apoyo al empoderamiento policial, pero este depende fuertemente de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor]{.grey}
+4. [Existe un fuerte apoyo al empoderamiento policial, pero este depende de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor]{.grey}
 
 ## Justicia procedimental y legitimidad de Carabineros
 
 ![](img/p3_legitimidad_x_justicia_proc.png){fig-align="center" width="85%"}
 
-## Estudios de Percepciones de Policías y Sociedad en Chile {.smaller}
+## Estudios de Percepciones de Policías y Sociedad en Chile
 
 ### Cuatro observaciones
 
@@ -123,9 +123,9 @@ format:
 
 2. [La justicia procedimental es el principal predictor de la legitimidad policial, y la legitimidad es lo que sostiene el apoyo ciudadano a Carabineros]{.grey}
 
-3. **El miedo hacia Carabineros de Chile es un arma de doble filo: si bien puede mostrar a una fuerza policial fuerte, también disminuye las percepciones de eficacia, justicia procedimental y legitimidad**
+3. **El miedo hacia Carabineros de Chile es un arma de doble filo: puede mostrar fuerza policial, pero disminuye las percepciones de eficacia, justicia procedimental y legitimidad**
 
-4. [Existe un fuerte apoyo al empoderamiento policial, pero este depende fuertemente de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor]{.grey}
+4. [Existe un fuerte apoyo al empoderamiento policial, pero este depende de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor]{.grey}
 
 ## Miedo a Carabineros
 
@@ -151,7 +151,7 @@ Fuente: EPSEP (2024–2025)
 Fuente: EPSEP (2024–2025)
 :::
 
-## Estudios de Percepciones de Policías y Sociedad en Chile {.smaller}
+## Estudios de Percepciones de Policías y Sociedad en Chile
 
 ### Cuatro observaciones
 
@@ -161,7 +161,7 @@ Fuente: EPSEP (2024–2025)
 
 3. [El miedo hacia Carabineros de Chile es un arma de doble filo: si bien puede mostrar a una fuerza policial fuerte, también disminuye las percepciones de eficacia, justicia procedimental y legitimidad]{.grey}
 
-4. **Existe un fuerte apoyo al empoderamiento policial, pero este depende fuertemente de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor**
+4. **Existe un fuerte apoyo al empoderamiento policial, pero este depende de que Carabineros sea percibido como justo y legítimo. Entre personas que han observado violencia policial, el apoyo al empoderamiento es mucho menor**
 
 ## Empoderamiento policial
 
@@ -169,13 +169,13 @@ Fuente: EPSEP (2024–2025)
 
 ## Empoderamiento policial y justicia procedimental
 
-![](img/emp_pol1_x_pj_int1_w06.png){fig-align="center" width="90%"}
+![](img/emp_pol1_x_pj_int1_rec_w06.png){fig-align="center" width="80%"}
 
 ## Empoderamiento policial y observación de violencia policial
 
 ![](img/emp_pol1_x_vio_pol_protest_w06_rec_w06.png){fig-align="center" width="90%"}
 
-## Justicia procedimental, legitimidad y empoderamiento policial {.smaller}
+## Justicia procedimental, legitimidad y empoderamiento policial
 
 ### Conclusiones
 
